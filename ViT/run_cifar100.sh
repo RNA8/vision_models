@@ -4,13 +4,14 @@
 # No patch-size sweep. Run names are prefixed c100_. A run is skipped if its results.json
 # exists, so rerunning after a failure only redoes the missing runs. Launch inside tmux:
 #   tmux new -s c100 'bash ViT/run_cifar100.sh'
-# Est. time: about the same as the CIFAR-10 ablations + the s_small run (same image count and
-# size; only the 100-way head differs).
+# Est. time: ~70-80 min at batch 256 with CUDA graphs (Tiny ~6 min/100 ep, Small ~14 min/200 ep).
 set -uo pipefail
 cd "$(dirname "$0")"
 source ./env.sh
 PY=../.venv/bin/python
-COMMON="--wandb --eval-every 5 --dataset cifar100"
+# Batch 256 (CIFAR-10: batch 1024 underfits; t5 72% vs t5c_bs256 82%), LR scaled by sqrt rule
+# (Tiny 2e-3@1024 -> 1e-3@256; Small 1e-3@1024 -> 5e-4@256), CUDA graphs for speed (~3.5 s/epoch).
+COMMON="--wandb --eval-every 5 --dataset cifar100 --batch-size 256 --lr 1e-3 --cudagraphs"
 
 run() {  # run <name> <args...>
   local name=$1; shift
@@ -29,5 +30,5 @@ run c100_t4_mix         --model tiny --epochs 100 --drop-path 0 --randaug
 run c100_t5_droppath    --model tiny --epochs 100 --randaug
 run c100_t6_full_300ep  --model tiny --epochs 300 --randaug
 run c100_r18_full       --model resnet18 --epochs 100 --randaug
-run c100_s_small_200ep  --model small --epochs 200 --randaug
+run c100_s_small_200ep  --model small --epochs 200 --randaug --lr 5e-4
 echo "== cifar100 finished $(date)"
