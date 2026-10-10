@@ -17,6 +17,9 @@ run() {  # run <name> <args...>
   [[ -f runs/$name/results.json ]] || echo "!! $name FAILED (see runs/$name/train.log)"
 }
 
+# Lighter regularization: t5_droppath underfit at 100 ep (clean train 74.5%), so mix only half the
+# batches (single change vs t5_droppath).
+run t5b_mix_half   --model tiny --epochs 100 --mix-prob 0.5
 run s_small_200ep  --model small --epochs 200
 run p8_tiny        --model tiny --epochs 100 --patch-size 8
 run p2_tiny        --model tiny --epochs 100 --patch-size 2
