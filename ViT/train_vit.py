@@ -404,15 +404,34 @@ def structured_init(model, mode):
         a.proj.weight.copy_(R.T.float())  # biases stay at timm's zero init
 
 
+def apply_lsa(m):
+    """Switch every timm Attention in `m` to LSA (same weights): learnable per-head temperature
+    initialized to head_dim^-0.5 plus diagonal masking. Works for the timm ViT and RecurrentViT."""
+    from timm.layers import Attention
+
+    lsa_cls = type("LSAAttention", (Attention,), {"forward": _lsa_forward})
+    for a in m.modules():
+        if type(a) is Attention:
+            a.__class__ = lsa_cls
+            a.lsa_temperature = nn.Parameter(torch.full((a.num_heads,), a.head_dim ** -0.5))
+
+
 def build_model(args, num_classes, img_size=32):
     if args.model.startswith("rd_"):
         from models.recurrent_vit import build_recurrent_vit
 
-        return build_recurrent_vit(
+        m = build_recurrent_vit(
             args.model, num_classes, img_size, args.patch_size, args.drop_path,
             r_mean=args.rd_r_mean, k_backprop=args.rd_k_backprop, depth_dist=args.rd_depth_dist,
             state_init=args.rd_state_init, inject=args.rd_inject, outer_norm=args.rd_outer_norm,
             qk_norm=args.qk_norm or None, r_eval=args.eval_r)  # train mode samples r inside forward()
+        if args.init != "default":
+            print(f"note: --init {args.init} is only implemented for the standard ViT; ignored for {args.model}")
+        if args.lsa:
+            apply_lsa(m)
+        if args.pool == "seqpool":
+            m.attn_pool = SeqPool(m.embed_dim)  # decode() pools the patch tokens instead of reading CLS
+        return m
     if args.model == "resnet18":
         import timm
 
@@ -442,11 +461,7 @@ def build_model(args, num_classes, img_size=32):
     if args.init != "default":
         structured_init(m, args.init)
     if args.lsa:
-        lsa_cls = type("LSAAttention", (Attention,), {"forward": _lsa_forward})
-        for blk in m.blocks:
-            a = blk.attn
-            a.__class__ = lsa_cls  # same weights, LSA forward
-            a.lsa_temperature = nn.Parameter(torch.full((a.num_heads,), a.head_dim ** -0.5))
+        apply_lsa(m)
     if args.pool == "seqpool":
         m.attn_pool = SeqPool(m.embed_dim)  # timm's pool() runs attn_pool on x[:, num_prefix_tokens:]
     return m

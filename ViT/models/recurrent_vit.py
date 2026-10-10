@@ -132,6 +132,7 @@ class RecurrentViT(nn.Module):
         self.outer_norm = _norm(outer_norm, embed_dim)
         self.norm = nn.LayerNorm(embed_dim, eps=1e-6)
         self.head = nn.Linear(embed_dim, num_classes)
+        self.attn_pool = None  # optional pooling over patch tokens (e.g. SeqPool); None = read CLS
 
         trunc_normal_(self.pos_embed, std=0.02)
         nn.init.normal_(self.cls_token, std=1e-6)
@@ -178,10 +179,11 @@ class RecurrentViT(nn.Module):
         return self.outer_norm(s)
 
     def decode(self, s):
-        """Coda + final norm + head on CLS -> logits (B, C)."""
+        """Coda + final norm + head on CLS (or attn_pool over the patch tokens) -> logits (B, C)."""
         for blk in self.coda:
             s = blk(s)
-        return self.head(self.norm(s)[:, 0])
+        s = self.norm(s)
+        return self.head(s[:, 0] if self.attn_pool is None else self.attn_pool(s[:, 1:]))
 
     def sample_r(self):
         return sample_depth(self.r_mean, self.depth_dist, self.depth_sigma, self.r_max)
