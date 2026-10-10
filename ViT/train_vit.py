@@ -110,6 +110,8 @@ def parse_args():
     g.add_argument("--rd-state-init", default=None, choices=["normal", "zeros"])
     g.add_argument("--rd-inject", default=None, choices=["concat", "add", "none"], help="input re-injection")
     g.add_argument("--rd-outer-norm", default=None, choices=["ln", "rms", "none"], help="norm on the state per loop")
+    g.add_argument("--rd-coda-every-step", action="store_true",
+                   help="deep supervision: decode every loop in training and average the logits")
     g.add_argument("--qk-norm", action="store_true", help="QK-norm in attention (rd_* models)")
     g.add_argument("--eval-r", type=int, default=None, help="recurrence used by evaluate() (default r_mean)")
     return p.parse_args()
@@ -424,7 +426,8 @@ def build_model(args, num_classes, img_size=32):
             args.model, num_classes, img_size, args.patch_size, args.drop_path,
             r_mean=args.rd_r_mean, k_backprop=args.rd_k_backprop, depth_dist=args.rd_depth_dist,
             state_init=args.rd_state_init, inject=args.rd_inject, outer_norm=args.rd_outer_norm,
-            qk_norm=args.qk_norm or None, r_eval=args.eval_r)  # train mode samples r inside forward()
+            qk_norm=args.qk_norm or None, r_eval=args.eval_r,
+            coda_every_step=args.rd_coda_every_step or None)  # train mode samples r inside forward()
         if args.init != "default":
             print(f"note: --init {args.init} is only implemented for the standard ViT; ignored for {args.model}")
         if args.lsa:
