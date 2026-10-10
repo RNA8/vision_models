@@ -9,9 +9,18 @@ Given a run dir with model.pt + results.json, on the test set:
       2502.05171 use tau = 5e-4) or |max p_t - max p_{t-1}| < tau. A tau sweep gives accuracy vs average
       iterations, against the fixed-r curve. An oracle exit (first step that is correct, if any) is an upper bound.
   (c) difficulty: Spearman between exit step and (i) per-image loss under a reference model
-      (--ref-run-dir, e.g. a ResNet-18 run) and (ii) CIFAR-10-C corruption severity (--cifar10c-dir;
-      skipped if absent). tau for (c) is --tau, or automatically the largest KL tau whose accuracy is at
-      least the fixed r = r_mean accuracy (fewest iterations at no accuracy loss).
+      (--ref-run-dir, e.g. a ResNet-18 run), (ii) CIFAR-10-C corruption severity (--cifar10c-dir;
+      0 = clean, 1-5; a seeded subset of --c10c-per-severity test indices, the same indices at every
+      severity, on --c10c-corruptions) and (iii) human uncertainty from CIFAR-10H (--cifar10h; Peterson
+      et al. 2019, ~51 annotators per test image): entropy of the human label distribution and
+      1 - p_human(true label). (ii) and (iii) apply to cifar10 runs only and are skipped if the files are
+      absent. tau for (c) is --tau, or automatically the largest KL tau whose accuracy is at least the
+      fixed r = r_mean accuracy (fewest iterations at no accuracy loss).
+
+Data (all optional, under data/): CIFAR-10-C/ (Zenodo 2535967: <corruption>.npy (50000, 32, 32, 3) =
+5 severities x the 10k test images in test-set order, labels.npy), cifar10h-probs.npy (10000, 10), rows
+in the same order as the CIFAR-10 test set (the uoft-cs/cifar10 HF test split matches the original
+test_batch order; argmax agrees with our labels on 99.21%).
   (d) state convergence: ||s_t - s_{t-1}|| / ||s_t|| vs t.
 
 The exit is simulated offline from the full R-step rollout, which gives exactly what an online
@@ -39,6 +48,8 @@ sys.path.insert(0, HERE)
 import train_vit  # noqa: E402
 
 GEIPING_TAU = 5e-4
+# one noise, one blur, one weather and two digital corruptions
+C10C_DEFAULT = ("gaussian_noise", "motion_blur", "snow", "contrast", "jpeg_compression")
 
 
 def parse_args():
@@ -53,8 +64,13 @@ def parse_args():
     p.add_argument("--ref-run-dir", default=None, help="reference model run dir for per-image loss (c.i)")
     p.add_argument("--cifar10c-dir", default=os.path.join(HERE, "data", "CIFAR-10-C"),
                    help="dir with <corruption>.npy + labels.npy (standard CIFAR-10-C layout)")
-    p.add_argument("--c10c-n", type=int, default=1000, help="images per severity per corruption")
-    p.add_argument("--c10c-corruptions", default=None, help="comma list; default: all .npy found")
+    p.add_argument("--c10c-per-severity", "--c10c-n", dest="c10c_n", type=int, default=1000,
+                   help="test images per corruption-severity (a seeded subset, shared by all severities)")
+    p.add_argument("--c10c-corruptions", default=",".join(C10C_DEFAULT),
+                   help="comma list of corruption names, or 'all' for every .npy found")
+    p.add_argument("--cifar10h", default=os.path.join(HERE, "data", "cifar10h-probs.npy"),
+                   help="CIFAR-10H human label distributions (10000, 10), CIFAR-10 test order")
+    p.add_argument("--device", default="auto", help="auto | cpu | cuda")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--tag", default="", help="suffix for output files")
     return p.parse_args()
@@ -144,49 +160,106 @@ def evaluate_exit(logp, y, steps, model):
 
 
 # --------------------------------------------------------------------------- CIFAR-10-C
-def cifar10c(model, args, mean, std, device, tau, r_max, n_clean_x, n_clean_y):
+def cifar10c(model, args, mean, std, device, tau, r_max, x_clean, y_clean):
+    """Mean exit step and accuracy vs severity (0 = clean). Every severity uses the same seeded subset
+    of test indices, so severity is the only thing that changes between groups."""
     d = args.cifar10c_dir
     if not d or not os.path.isfile(os.path.join(d, "labels.npy")):
         print(f"(c.ii) CIFAR-10-C not found at {d}; skipping")
         return None
     labels = np.load(os.path.join(d, "labels.npy"))
     m = len(labels) // 5  # images per severity (10000 in the official release)
-    n = min(args.c10c_n, m, n_clean_x.size(0))
-    names = (args.c10c_corruptions.split(",") if args.c10c_corruptions else
-             sorted(os.path.basename(f)[:-4] for f in glob.glob(os.path.join(d, "*.npy"))
-                    if not f.endswith("labels.npy")))
-    # severity 0 = the clean test images with the same indices
-    lp0, _ = rollout_all(model, n_clean_x[:n], mean, std, r_max, args.bs, device)
-    st0 = exit_steps(exit_metrics(lp0)["kl"], tau)
-    acc0 = 100.0 * (lp0[-1].argmax(-1) == n_clean_y[:n]).double().mean().item()
-    out = {"tau": tau, "n_per_severity": n, "severity0": {"mean_exit": st0.double().mean().item()},
-           "corruptions": {}}
+    avail = min(m, x_clean.size(0))
+    n = min(args.c10c_n, avail)
+    idx = np.sort(np.random.default_rng(args.seed).choice(avail, n, replace=False))
+    if not np.array_equal(labels[idx], y_clean.numpy()[idx]):
+        print("(c.ii) WARNING: CIFAR-10-C labels.npy does not match the test labels at the sampled indices")
+    if args.c10c_corruptions.strip().lower() == "all":
+        names = sorted(os.path.basename(f)[:-4] for f in glob.glob(os.path.join(d, "*.npy"))
+                       if not f.endswith("labels.npy"))
+    else:
+        names = [c.strip() for c in args.c10c_corruptions.split(",") if c.strip()]
+    missing = [c for c in names if not os.path.isfile(os.path.join(d, f"{c}.npy"))]
+    if missing:
+        print(f"(c.ii) missing corruption files, skipped: {missing}")
+    names = [c for c in names if c not in missing]
+    if not names:
+        print("(c.ii) no CIFAR-10-C corruptions to evaluate; skipping")
+        return None
+
+    def run(x, yy):
+        lp, _ = rollout_all(model, x, mean, std, r_max, args.bs, device)
+        st = exit_steps(exit_metrics(lp)["kl"], tau)
+        pred = lp.argmax(-1).gather(0, (st - 1)[None]).squeeze(0)
+        r_m = min(model.r_mean, r_max) - 1
+        return st, 100.0 * (pred == yy).double().mean().item(), 100.0 * (lp[r_m].argmax(-1) == yy).double().mean().item()
+
+    t0 = time.time()
+    st0, acc0, accr0 = run(x_clean[torch.from_numpy(idx)], y_clean[torch.from_numpy(idx)])
+    out = {"tau": tau, "n_per_severity": int(n), "seed": args.seed, "corruptions": {},
+           "severity0": {"mean_exit": st0.double().mean().item(), "acc_at_exit": acc0, "acc_at_r_mean": accr0}}
     all_sev, all_st = [np.zeros(n)], [st0.numpy()]
     for name in names:
         arr = np.load(os.path.join(d, f"{name}.npy"), mmap_mode="r")
-        rec = {"mean_exit": [st0.double().mean().item()], "acc_at_exit": [], "sev_spearman": None}
+        rec = {"mean_exit": [out["severity0"]["mean_exit"]], "acc_at_exit": [acc0], "acc_at_r_mean": [accr0]}
         sevs, sts = [np.zeros(n)], [st0.numpy()]
         for s in range(1, 6):
-            rows = np.arange((s - 1) * m, (s - 1) * m + n)
+            rows = (s - 1) * m + idx
             x = torch.from_numpy(np.ascontiguousarray(arr[rows])).permute(0, 3, 1, 2).contiguous()
-            yy = torch.from_numpy(labels[rows]).long()
-            lp, _ = rollout_all(model, x, mean, std, r_max, args.bs, device)
-            st = exit_steps(exit_metrics(lp)["kl"], tau)
-            pred = lp.argmax(-1).gather(0, (st - 1)[None]).squeeze(0)
+            st, acc, accr = run(x, torch.from_numpy(labels[rows]).long())
             rec["mean_exit"].append(st.double().mean().item())
-            rec["acc_at_exit"].append(100.0 * (pred == yy).double().mean().item())
+            rec["acc_at_exit"].append(acc)
+            rec["acc_at_r_mean"].append(accr)
             sevs.append(np.full(n, s))
             sts.append(st.numpy())
-        rec["acc_at_exit"].insert(0, acc0)
         rec["sev_spearman"] = spearman(np.concatenate(sts), np.concatenate(sevs))
         out["corruptions"][name] = rec
         all_sev += sevs[1:]
         all_st += sts[1:]
-        print(f"  C10-C {name:20s} mean exit by severity 0..5: "
-              + " ".join(f"{v:5.2f}" for v in rec["mean_exit"]) + f" | rho {rec['sev_spearman']:+.3f}")
+        print(f"  C10-C {name:18s} mean exit sev 0..5: " + " ".join(f"{v:5.2f}" for v in rec["mean_exit"])
+              + f" | acc@exit " + " ".join(f"{v:5.1f}" for v in rec["acc_at_exit"])
+              + f" | rho {rec['sev_spearman']:+.3f}")
     out["pooled_sev_spearman"] = spearman(np.concatenate(all_st), np.concatenate(all_sev))
-    out["mean_exit_by_severity"] = [float(np.mean([c["mean_exit"][s] for c in out["corruptions"].values()]))
-                                    for s in range(6)] if names else []
+    for k in ("mean_exit", "acc_at_exit", "acc_at_r_mean"):
+        out[f"{k}_by_severity"] = [float(np.mean([c[k][s] for c in out["corruptions"].values()])) for s in range(6)]
+    out["seconds"] = time.time() - t0
+    return out
+
+
+# --------------------------------------------------------------------------- CIFAR-10H
+def cifar10h(args, st, pred, y):
+    """Spearman of exit step vs human uncertainty; st/pred/y are for test images 0..N-1."""
+    path = args.cifar10h
+    if not path or not os.path.isfile(path):
+        print(f"(c.iii) CIFAR-10H not found at {path}; skipping")
+        return None
+    probs = np.load(path).astype(np.float64)
+    n = st.size(0)
+    if probs.ndim != 2 or probs.shape[0] < n:
+        print(f"(c.iii) CIFAR-10H shape {probs.shape} does not cover {n} test images; skipping")
+        return None
+    probs, yy, st_np = probs[:n], y.numpy(), st.numpy().astype(np.float64)
+    agree = float((probs.argmax(1) == yy).mean())
+    if agree < 0.9:
+        print(f"(c.iii) WARNING: CIFAR-10H argmax agrees with the test labels on only {100 * agree:.1f}% "
+              "(wrong order or fake data?)")
+    ent = -(probs * np.log(np.clip(probs, 1e-12, 1.0))).sum(1)
+    unc = 1.0 - probs[np.arange(n), yy]
+    # equal-count entropy deciles; ~44% of CIFAR-10H images have entropy exactly 0, so ties are broken
+    # at random (seeded) and the lowest deciles all hold zero-entropy images
+    tie = np.random.default_rng(args.seed).random(n)
+    order = np.lexsort((tie, ent))
+    bins = np.array_split(order, min(10, n))
+    correct = (pred == y).numpy()
+    out = {"path": path, "n": int(n), "argmax_agreement": agree,
+           "spearman_exit_vs_entropy": spearman(st_np, ent),
+           "spearman_exit_vs_1_minus_p_true": spearman(st_np, unc),
+           "frac_zero_entropy": float((ent < 1e-12).mean()), "mean_entropy": float(ent.mean()),
+           "decile_mean_entropy": [float(ent[b].mean()) for b in bins],
+           "decile_mean_exit": [float(st_np[b].mean()) for b in bins],
+           "decile_acc_at_exit": [float(100.0 * correct[b].mean()) for b in bins]}
+    nz = ent > 1e-12
+    out["spearman_exit_vs_entropy_nonzero_only"] = spearman(st_np[nz], ent[nz]) if nz.sum() > 2 else None
     return out
 
 
@@ -194,7 +267,7 @@ def cifar10c(model, args, mean, std, device, tau, r_max, n_clean_x, n_clean_y):
 def main():
     args = parse_args()
     torch.manual_seed(args.seed)
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = ("cuda" if torch.cuda.is_available() else "cpu") if args.device == "auto" else args.device
     t0 = time.time()
 
     run_args = load_run_args(args.run_dir)
@@ -277,13 +350,21 @@ def main():
                     ref_mean_loss=ref_loss.mean().item())
         print(f"(c.i) Spearman(exit step, {ref_args.model} loss) = {diff['spearman_exit_vs_ref_loss']:+.3f}")
     print(f"(c.i) Spearman(exit step, own loss at r_mean) = {diff['spearman_exit_vs_own_loss_at_r_mean']:+.3f}")
-    c10c = None
+    c10c = c10h = None
     if run_args.dataset == "cifar10":
         c10c = cifar10c(model, args, mean, std, device, tau_c, R, xte, y)
+        c10h = cifar10h(args, st_c, pred_c, y)
     else:
-        print("(c.ii) CIFAR-10-C only applies to cifar10 runs; skipping")
+        print("(c.ii/iii) CIFAR-10-C and CIFAR-10H only apply to cifar10 runs; skipping")
     if c10c:
-        print(f"(c.ii) pooled Spearman(exit step, severity) = {c10c['pooled_sev_spearman']:+.3f}")
+        print(f"(c.ii) mean exit by severity 0..5: " + " ".join(f"{v:.2f}" for v in c10c["mean_exit_by_severity"])
+              + f" | pooled Spearman(exit step, severity) = {c10c['pooled_sev_spearman']:+.3f}"
+              + f" ({c10c['n_per_severity']}/severity, {len(c10c['corruptions'])} corruptions, {c10c['seconds']:.0f}s)")
+    if c10h:
+        print(f"(c.iii) CIFAR-10H: Spearman(exit, human entropy) = {c10h['spearman_exit_vs_entropy']:+.3f}, "
+              f"Spearman(exit, 1 - p_human(true)) = {c10h['spearman_exit_vs_1_minus_p_true']:+.3f} "
+              f"(argmax agreement {100 * c10h['argmax_agreement']:.1f}%)")
+        print("(c.iii) mean exit by human-entropy decile: " + " ".join(f"{v:.2f}" for v in c10h["decile_mean_exit"]))
 
     # (d) state convergence
     dn = delta.numpy()
@@ -296,7 +377,7 @@ def main():
            "k_backprop": model.k_backprop, "inject": model.inject, "n_test": int(xte.size(0)), "r_max": R,
            "device": device, "seed": args.seed, "depth_sweep": sweep,
            "adaptive_exit": {"kl": exits["kl"], "maxprob": exits["maxprob"], "oracle": oracle},
-           "difficulty": diff, "cifar10c": c10c, "state_convergence": conv,
+           "difficulty": diff, "cifar10c": c10c, "cifar10h": c10h, "state_convergence": conv,
            "seconds": time.time() - t0}
     tag = f"_{args.tag}" if args.tag else ""
     path = os.path.join(args.run_dir, f"recurrent_eval{tag}.json")
@@ -352,8 +433,8 @@ def make_plots(out, run_dir, tag, st_c, ref_loss):
     plt.close(fig)
 
     # (c) difficulty
-    diff, c10c = out["difficulty"], out["cifar10c"]
-    n = 1 + (ref_loss is not None) + (c10c is not None)
+    diff, c10c, c10h = out["difficulty"], out["cifar10c"], out["cifar10h"]
+    n = 1 + (ref_loss is not None) + (c10c is not None) + (c10h is not None)
     fig, ax = plt.subplots(1, n, figsize=(4.5 * n, 3.8), squeeze=False)
     ax = ax[0]
     ax[0].bar(range(1, len(diff["exit_hist"]) + 1), diff["exit_hist"])
@@ -373,6 +454,17 @@ def make_plots(out, run_dir, tag, st_c, ref_loss):
         ax[j].set(xlabel="CIFAR-10-C severity (0 = clean)", ylabel="mean exit step",
                   title=f"pooled Spearman rho = {c10c['pooled_sev_spearman']:+.3f}")
         ax[j].legend(fontsize=7)
+        j += 1
+    if c10h is not None:
+        dec = range(1, len(c10h["decile_mean_exit"]) + 1)
+        ax[j].plot(dec, c10h["decile_mean_exit"], "o-")
+        ax[j].set(xlabel="CIFAR-10H human-entropy decile (1 = most agreed)", ylabel="mean exit step",
+                  title=f"rho(exit, H) = {c10h['spearman_exit_vs_entropy']:+.3f}, "
+                        f"rho(exit, 1-p) = {c10h['spearman_exit_vs_1_minus_p_true']:+.3f}")
+        ax[j].title.set_fontsize(8)
+        a2 = ax[j].twinx()
+        a2.plot(dec, c10h["decile_mean_entropy"], color="C3", alpha=0.5)
+        a2.set_ylabel("mean human entropy (nats)", color="C3")
     fig.suptitle(title, fontsize=9)
     fig.tight_layout()
     fig.savefig(os.path.join(run_dir, f"recurrent_difficulty{tag}.png"), dpi=110)
