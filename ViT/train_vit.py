@@ -14,6 +14,8 @@ Quick start:
   python train_vit.py                            # full recipe, ViT-Tiny, 100 epochs
   python train_vit.py --model small --epochs 200 # bigger model, longer run
   python train_vit.py --model resnet18           # CNN control
+  python train_vit.py --model slvit --batch-size 128 --lr 3e-3 --warmup-epochs 10 --randaug \
+      --repeat-aug 3 --reprob 0.25 --init impulse    # SL-ViT-style recipe (see run_baseline_fix.sh)
 """
 import argparse
 import json
@@ -28,11 +30,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+from models.recurrent_vit import RD_PRESETS  # recurrent-depth ViT presets (rd_*), see models/recurrent_vit.py
 
 VIT_CFGS = {
     "tiny": dict(embed_dim=192, depth=12, num_heads=3),
     "small": dict(embed_dim=384, depth=12, num_heads=6),
     "base": dict(embed_dim=768, depth=12, num_heads=12),
+    # SL-ViT's plain-ViT baseline (arXiv 2112.13492, 93.58% C10) = the best shape in Gani et al. Tab. 15
+    "slvit": dict(embed_dim=192, depth=9, num_heads=12, mlp_ratio=2),
 }
 
 
@@ -41,11 +46,22 @@ def parse_args():
     p = argparse.ArgumentParser(description="Fast ViT training on CIFAR")
     p.add_argument("--dataset", default="cifar10", help="module name in vit_data/")
     p.add_argument("--data-dir", default=os.path.join(HERE, "data"))
-    p.add_argument("--model", default="tiny", choices=list(VIT_CFGS) + ["resnet18"])
+    p.add_argument("--model", default="tiny", choices=list(VIT_CFGS) + ["resnet18"] + list(RD_PRESETS))
     p.add_argument("--patch-size", type=int, default=4, help="ViT patch size: (img_size/p)^2 tokens")
+    p.add_argument("--embed-dim", type=int, default=None, help="override VIT_CFGS[model] width")
+    p.add_argument("--depth", type=int, default=None, help="override VIT_CFGS[model] depth")
+    p.add_argument("--heads", type=int, default=None, help="override VIT_CFGS[model] num_heads")
+    p.add_argument("--mlp-ratio", type=float, default=None, help="override VIT_CFGS[model] mlp_ratio (timm default 4)")
+    p.add_argument("--pool", default="cls", choices=["cls", "seqpool"],
+                   help="cls = class token; seqpool = CCT attention pooling over the patch tokens")
+    p.add_argument("--lsa", action="store_true",
+                   help="Locality Self-Attention (SL-ViT): learnable per-head temperature + diagonal mask")
+    p.add_argument("--init", default="default", choices=["default", "mimetic", "impulse"],
+                   help="attention init: mimetic (Trockman & Kolter 2023) or impulse (Zheng et al. 2025)")
     p.add_argument("--epochs", type=int, default=100)
     p.add_argument("--batch-size", type=int, default=1024)
-    p.add_argument("--lr", type=float, default=2e-3, help="peak LR (for batch 1024)")
+    p.add_argument("--lr", type=float, default=2e-3,
+                   help="peak LR, used exactly as given: no automatic batch-size scaling (2e-3 was tuned for batch 1024)")
     p.add_argument("--min-lr", type=float, default=1e-5)
     p.add_argument("--warmup-epochs", type=int, default=5)
     p.add_argument("--weight-decay", type=float, default=0.05)
@@ -53,6 +69,13 @@ def parse_args():
     p.add_argument("--mixup", type=float, default=0.8, help="MixUp alpha; 0 disables")
     p.add_argument("--cutmix", type=float, default=1.0, help="CutMix alpha; 0 disables")
     p.add_argument("--mix-prob", type=float, default=1.0, help="prob. a batch gets mixed")
+    p.add_argument("--mix-off-epoch", type=int, default=0,
+                   help="no MixUp/CutMix from this epoch on (CCT: 175 of 300); 0 = never switch off")
+    p.add_argument("--repeat-aug", type=int, default=1,
+                   help="repeated augmentation: each batch = bs/K unique images x K independent augmentations. "
+                        "An epoch still covers every training image once, so steps/epoch = n_train // (bs/K), K x more")
+    p.add_argument("--reprob", type=float, default=0.0,
+                   help="random-erasing prob. per sample (timm 'pixel' mode: area 2-33%%, aspect 0.3-3.3, noise fill)")
     p.add_argument("--drop-path", type=float, default=0.1, help="stochastic depth rate")
     p.add_argument("--no-aug", action="store_true", help="disable random crop + flip")
     p.add_argument("--randaug", action="store_true", help="enable GPU RandAugment")
@@ -79,6 +102,16 @@ def parse_args():
     p.add_argument("--ckpt-every", type=int, default=10, help="save runs/<name>/ckpt.pt every N epochs")
     p.add_argument("--no-resume", action="store_true", help="ignore an existing ckpt.pt")
     p.add_argument("--keep-ckpt", action="store_true", help="keep ckpt.pt after the run finishes")
+    # recurrent-depth ViT (--model rd_*); None = use the preset's value. See models/recurrent_vit.py.
+    g = p.add_argument_group("recurrent depth (rd_* models)")
+    g.add_argument("--rd-r-mean", type=int, default=None, help="mean training recurrence r")
+    g.add_argument("--rd-k-backprop", type=int, default=None, help="backprop through last k loops (default r_mean)")
+    g.add_argument("--rd-depth-dist", default=None, choices=["poisson_lognormal", "uniform", "fixed"])
+    g.add_argument("--rd-state-init", default=None, choices=["normal", "zeros"])
+    g.add_argument("--rd-inject", default=None, choices=["concat", "add", "none"], help="input re-injection")
+    g.add_argument("--rd-outer-norm", default=None, choices=["ln", "rms", "none"], help="norm on the state per loop")
+    g.add_argument("--qk-norm", action="store_true", help="QK-norm in attention (rd_* models)")
+    g.add_argument("--eval-r", type=int, default=None, help="recurrence used by evaluate() (default r_mean)")
     return p.parse_args()
 
 
@@ -224,8 +257,162 @@ def mix_batch(x, t, args, rng):
     return x, lam * t + (1.0 - lam) * t[perm]
 
 
+def random_erasing(x, p, min_area=0.02, max_area=1 / 3, min_aspect=0.3, tries=10):
+    """Batched timm RandomErasing(mode='pixel') on a normalized batch: with prob. p a sample gets one
+    rectangle of area U(min_area, max_area) and log-uniform aspect in [min_aspect, 1/min_aspect],
+    filled with per-pixel N(0, 1) noise. Like timm, up to `tries` boxes are drawn and the first that
+    fits is used (none fits -> no erase). All on the GPU, no host syncs."""
+    B, C, H, W = x.shape
+    dev = x.device
+    area = torch.empty(B, tries, device=dev).uniform_(min_area, max_area) * (H * W)
+    log_r = torch.empty(B, tries, device=dev).uniform_(math.log(min_aspect), -math.log(min_aspect))
+    h = torch.sqrt(area * log_r.exp()).round().long()
+    w = torch.sqrt(area / log_r.exp()).round().long()
+    fits = (h < H) & (w < W)
+    first = fits.int().argmax(1, keepdim=True)  # first box that fits (0 if none; masked out below)
+    h, w = h.gather(1, first)[:, 0], w.gather(1, first)[:, 0]
+    top = (torch.rand(B, device=dev) * (H - h + 1)).long()  # randint(0, H - h) inclusive
+    lft = (torch.rand(B, device=dev) * (W - w + 1)).long()
+    erase = (torch.rand(B, device=dev) < p) & fits.any(1)
+    r = torch.arange(H, device=dev)[None, :, None]
+    c = torch.arange(W, device=dev)[None, None, :]
+    m = (r >= top[:, None, None]) & (r < (top + h)[:, None, None]) \
+        & (c >= lft[:, None, None]) & (c < (lft + w)[:, None, None]) & erase[:, None, None]
+    return torch.where(m[:, None], torch.randn_like(x), x)
+
+
 # --------------------------------------------------------------------------- model
+class SeqPool(nn.Module):
+    """CCT sequence pooling (arXiv 2104.05704, Eq. 2-4): w = softmax(Linear(d, 1)(x_L)) over tokens,
+    z = w^T x_L. Plugged into timm's `attn_pool` slot, so it sees the final-LayerNorm output with the
+    class token already dropped (timm pool_include_prefix=False). The class token is kept in the
+    sequence (it still attends and is attended to), it is just not pooled or read by the head."""
+
+    def __init__(self, dim):
+        super().__init__()
+        self.attention_pool = nn.Linear(dim, 1)
+        nn.init.trunc_normal_(self.attention_pool.weight, std=0.02)  # CCT init
+        nn.init.zeros_(self.attention_pool.bias)
+
+    def forward(self, x):  # (B, N, D) -> (B, D)
+        w = self.attention_pool(x).softmax(dim=1)  # (B, N, 1)
+        return (w * x).sum(dim=1)
+
+
+def _lsa_forward(self, x, attn_mask=None, is_causal=False):
+    """Forward of a timm Attention subclass (built in build_model).
+    Locality Self-Attention (SL-ViT, arXiv 2112.13492, Eq. 5-7 / official code): logits =
+    (q k^T) * tau_h with a learnable per-head temperature tau_h (init head_dim^-0.5, replacing the
+    fixed scale), and the diagonal masked (official code sets it to -987654321; a boolean mask
+    passed to SDPA is the same as -inf), so no token attends to itself. CLS is masked too, as in the
+    official code. Stays on F.scaled_dot_product_attention (mask -> mem-efficient/math kernel)."""
+    B, N, C = x.shape
+    qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 4)
+    q, k, v = qkv.unbind(0)
+    q, k = self.q_norm(q), self.k_norm(k)
+    q = q * self.lsa_temperature.view(1, -1, 1, 1).to(q.dtype)
+    keep = ~torch.eye(N, dtype=torch.bool, device=x.device)  # True = may attend
+    x = F.scaled_dot_product_attention(q, k, v, attn_mask=keep, scale=1.0,
+                                       dropout_p=self.attn_drop.p if self.training else 0.0)
+    x = self.norm(x.transpose(1, 2).reshape(B, N, self.attn_dim))
+    return self.proj_drop(self.proj(x))
+
+
+def _ortho_like(d, alpha, beta, sign, dist="normal"):
+    """Mimetic factorization (Trockman & Kolter, arXiv 2305.09828, Sec. 4): sample
+    A = alpha * Z + sign * beta * I with Z ~ N(0, I/d) (Eq. 1-2), SVD A = U S V^T (Eq. 3, 5), and return
+    L = U S^1/2, R = S^1/2 V^T so that L @ R = A exactly. (Eq. 4 as printed, W_V = U S, W_proj = V S^1/2,
+    does not multiply back to A; the symmetric split is the one in Zheng et al.'s released code.)
+    dist='uniform' = U(+-sqrt(3/d)), same variance, as in Zheng et al.'s code for V/proj."""
+    if dist == "normal":
+        Z = torch.randn(d, d, dtype=torch.float64) / math.sqrt(d)
+    else:
+        Z = (torch.rand(d, d, dtype=torch.float64) * 2 - 1) * math.sqrt(3.0 / d)
+    U, S, Vh = torch.linalg.svd(alpha * Z + sign * beta * torch.eye(d, dtype=torch.float64))
+    return U * S.sqrt(), S.sqrt()[:, None] * Vh
+
+
+def _impulse_qk(heads, grid, rank, pe, kernel=3, scale=1000.0):
+    """Impulse init (Zheng et al., arXiv 2505.19985, Sec. 4 / Alg. 1; ported from the official
+    timm fork, github.com/osiriszjq/structured_initialization, `impulse_init`). Per head:
+      M~ = scale * H_impulse + noise          (Alg. 1: alpha*H + beta*Z; code: 1000*H + 3*TN(0, 0.6) off-support)
+      X~ = LayerNorm(P),  P_inv = (X~^T X~)^+ X~^T   (pseudo-inverse truncated to `rank` singular values)
+      M^ = P_inv M~ P_inv^T,  M^ = U S V^T,  Q~ = U[:, :r] S^1/2,  K~ = V[:, :r] S^1/2
+      Q = Q~ / ||Q~||_F,  K = K~ / ||K~||_F   (the code's gamma is applied by the caller)
+    H_impulse is the zero-padded (non-wrapping) 3x3 single-tap convolution on the token grid; head i
+    gets tap k[i % 9] with the code's order k = [4,1,5,3,7,0,2,6,8] (centre first). Returns Q, K as
+    (heads, D, r) so that q = x Q[h], k = x K[h] and Q[h] K[h]^T ~ M^."""
+    order = [4, 1, 5, 3, 7, 0, 2, 6, 8]
+    n = grid * grid
+    Hm = torch.zeros(heads, n, n, dtype=torch.float64)
+    ii = torch.arange(grid)
+    for h in range(heads):
+        dy, dx = order[h % kernel**2] // kernel - kernel // 2, order[h % kernel**2] % kernel - kernel // 2
+        r, c = torch.meshgrid(ii, ii, indexing="ij")
+        ok = (r + dy >= 0) & (r + dy < grid) & (c + dx >= 0) & (c + dx < grid)
+        src = (r * grid + c)[ok]
+        Hm[h, src, ((r + dy) * grid + (c + dx))[ok]] = 1.0
+    noise = nn.init.trunc_normal_(torch.empty_like(Hm), std=0.6)
+    M = scale * Hm + 3.0 * noise * (Hm == 0)
+    X = F.layer_norm(pe.double(), [pe.size(-1)])  # (N, D)
+    U, S, Vh = torch.linalg.svd(X.T @ X)
+    s_inv = torch.zeros_like(S)
+    s_inv[:rank] = 1.0 / S[:rank]
+    P_inv = (Vh.T * s_inv) @ U.T @ X.T  # (D, N)
+    U, S, Vh = torch.linalg.svd(P_inv @ M @ P_inv.T)  # batched over heads
+    s = S[:, :rank].sqrt()
+    Q = U[:, :, :rank] * s[:, None]
+    K = Vh.transpose(1, 2)[:, :, :rank] * s[:, None]
+    Q = Q / Q.norm(dim=(1, 2), keepdim=True)
+    K = K / K.norm(dim=(1, 2), keepdim=True)
+    return Q, K
+
+
+@torch.no_grad()
+def structured_init(model, mode):
+    """Overwrite the attention weights of a timm ViT in place. timm's qkv weight is (3D, D), rows
+    ordered [q | k | v], head-major, applied as x @ W^T; so for q = x Wq_h we write Wq_h^T into rows."""
+    D = model.embed_dim
+    if mode == "impulse":
+        # official code: pos_embed *= 18, Q/K *= 7 (its norm_p, norm_q defaults); P excludes CLS
+        model.pos_embed.mul_(18.0)
+        pe = model.pos_embed[0, model.num_prefix_tokens:].detach().cpu()
+        grid = math.isqrt(pe.size(0))
+    for blk in model.blocks:
+        a = blk.attn
+        H, hd = a.num_heads, a.head_dim
+        W = a.qkv.weight
+        if mode == "mimetic":
+            # W_Q W_K^T ~ alpha1 Z1 + beta1 I (Eq. 1), W_Q/W_K = first hd columns of U S^1/2, V S^1/2
+            # (Eq. 6-7, i.e. the rank-hd truncation), Z resampled per head ("we resample Z2 for each head",
+            # Eq. 5 labelling); alpha1 = beta1 = 0.7 (Sec. 5.1)
+            for h in range(H):
+                L, R = _ortho_like(D, 0.7, 0.7, +1)
+                W[h * hd:(h + 1) * hd] = L[:, :hd].T.float()
+                W[D + h * hd:D + (h + 1) * hd] = R[:hd].float()
+            dist = "normal"
+        else:
+            Q, K = _impulse_qk(H, grid, hd, pe)
+            for h in range(H):
+                W[h * hd:(h + 1) * hd] = 7.0 * Q[h].T.float()
+                W[D + h * hd:D + (h + 1) * hd] = 7.0 * K[h].T.float()
+            dist = "uniform"
+        # W_V W_proj ~ alpha2 Z2 - beta2 I (Eq. 2), alpha2 = beta2 = 0.4, one Z2 across heads (as in the
+        # official impulse code, which uses the same mimetic V/proj init): x W_V W_proj = x (L R)
+        L, R = _ortho_like(D, 0.4, 0.4, -1, dist)
+        W[2 * D:] = L.T.float()
+        a.proj.weight.copy_(R.T.float())  # biases stay at timm's zero init
+
+
 def build_model(args, num_classes, img_size=32):
+    if args.model.startswith("rd_"):
+        from models.recurrent_vit import build_recurrent_vit
+
+        return build_recurrent_vit(
+            args.model, num_classes, img_size, args.patch_size, args.drop_path,
+            r_mean=args.rd_r_mean, k_backprop=args.rd_k_backprop, depth_dist=args.rd_depth_dist,
+            state_init=args.rd_state_init, inject=args.rd_inject, outer_norm=args.rd_outer_norm,
+            qk_norm=args.qk_norm or None, r_eval=args.eval_r)  # train mode samples r inside forward()
     if args.model == "resnet18":
         import timm
 
@@ -236,15 +423,33 @@ def build_model(args, num_classes, img_size=32):
         m.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=stride, padding=1, bias=False)
         m.maxpool = nn.Identity()
         return m
+    from timm.layers import Attention
     from timm.models.vision_transformer import VisionTransformer
 
-    return VisionTransformer(
+    cfg = dict(VIT_CFGS[args.model])
+    for k, v in [("embed_dim", args.embed_dim), ("depth", args.depth), ("num_heads", args.heads),
+                 ("mlp_ratio", args.mlp_ratio)]:
+        if v is not None:
+            cfg[k] = v
+    m = VisionTransformer(
         img_size=img_size,
         patch_size=args.patch_size,
         num_classes=num_classes,
         drop_path_rate=args.drop_path,
-        **VIT_CFGS[args.model],
+        **cfg,
     )
+    # everything below only runs for non-default flags, so default runs consume the same RNG stream
+    if args.init != "default":
+        structured_init(m, args.init)
+    if args.lsa:
+        lsa_cls = type("LSAAttention", (Attention,), {"forward": _lsa_forward})
+        for blk in m.blocks:
+            a = blk.attn
+            a.__class__ = lsa_cls  # same weights, LSA forward
+            a.lsa_temperature = nn.Parameter(torch.full((a.num_heads,), a.head_dim ** -0.5))
+    if args.pool == "seqpool":
+        m.attn_pool = SeqPool(m.embed_dim)  # timm's pool() runs attn_pool on x[:, num_prefix_tokens:]
+    return m
 
 
 def make_optimizer(model, args, fused):
@@ -346,17 +551,31 @@ def main():
     n_train = xtr.size(0)
     bs = min(args.batch_size, n_train)
     clean_idx = torch.randperm(n_train, generator=torch.Generator().manual_seed(0))[:10000].to(device)
-    steps_per_epoch = n_train // bs  # drop the last partial batch: keeps shapes static for compile
+    # Repeated augmentation (DeiT): a batch is ubs = bs/K unique images, each repeated K times and
+    # augmented independently. An epoch is one pass over the unique images, so it has K x the steps
+    # (and K x the samples) of a K=1 epoch; the batch shape stays (bs, ...). Note: SL-ViT's "--ra 3"
+    # (official code: RASampler(repetitions=1, len_factor=3)) also makes an epoch 3x longer, but
+    # without in-batch repeats; this definition matches its step count per epoch.
+    K = args.repeat_aug
+    assert K >= 1 and bs % K == 0, f"--batch-size {bs} must be divisible by --repeat-aug {K}"
+    ubs = bs // K
+    steps_per_epoch = n_train // ubs  # drop the last partial batch: keeps shapes static for compile
 
     model = build_model(args, num_classes, img_size).to(device)
     n_params = sum(p.numel() for p in model.parameters())
     print(f"Model: {args.model}  params: {n_params / 1e6:.2f}M  train images: {n_train}  "
-          f"batch: {bs}  steps/epoch: {steps_per_epoch}")
+          f"batch: {bs}" + (f" ({ubs} unique x {K})" if K > 1 else "") + f"  steps/epoch: {steps_per_epoch}")
 
     opt = make_optimizer(model, args, fused=(device == "cuda"))
     sched = make_schedule(opt, args, steps_per_epoch)
-    train_model = model if args.no_compile else torch.compile(
-        model, mode="reduce-overhead" if args.cudagraphs else None)
+    if args.model.startswith("rd_") and not args.no_compile:
+        # variable r would recompile a whole-model graph per r: compile the pieces, loop in Python
+        train_model = model.compile_parts(*(("reduce-overhead", ("core",)) if args.cudagraphs else ()))
+        if args.cudagraphs:
+            print("NOTE: rd_* model with --cudagraphs: only the core step is compiled (CUDA graphs, experimental)")
+    else:
+        train_model = model if args.no_compile else torch.compile(
+            model, mode="reduce-overhead" if args.cudagraphs else None)
 
     # resume: ckpt.pt holds everything needed to continue exactly (model, opt, sched, RNGs, history)
     ckpt_path = os.path.join(out_dir, "ckpt.pt")
@@ -401,16 +620,21 @@ def main():
         t0 = time.time()
 
         for k in range(steps_per_epoch):
-            idx = perm[k * bs : (k + 1) * bs]
+            idx = perm[k * ubs : (k + 1) * ubs]
+            if K > 1:
+                idx = idx.repeat_interleave(K)  # K consecutive copies of each image
             x = xtr[idx].float().div_(255.0)
             if not args.no_aug:
                 x = random_crop_flip(x, pad=img_size // 8)
             if args.randaug:
                 x = rand_augment(x, args.randaug_n, args.randaug_m / 10.0)
             x = (x - mean) / std
+            if args.reprob > 0:
+                x = random_erasing(x, args.reprob)
             y = ytr[idx]
             t = smooth_one_hot(y, num_classes, args.label_smoothing)
-            x, t = mix_batch(x, t, args, rng)
+            if not (0 < args.mix_off_epoch <= epoch):
+                x, t = mix_batch(x, t, args, rng)
 
             with amp():
                 logits = train_model(x)
