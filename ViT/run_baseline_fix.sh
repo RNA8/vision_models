@@ -25,7 +25,7 @@ cd "$(dirname "$0")"
 source ./env.sh
 PY=../.venv/bin/python
 COMMON="--wandb --eval-every 5 --dataset cifar10 --cudagraphs"
-RECIPE="--batch-size 128 --lr 3e-3 --weight-decay 0.05 --warmup-epochs 10 --randaug --repeat-aug 3 \
+RECIPE="--batch-size 128 --lr 3e-3 --weight-decay 0.05 --warmup-epochs 10 --randaug \
   --label-smoothing 0.1 --drop-path 0.1 --reprob 0.25"
 
 run() {  # run <name> <args...>
@@ -37,8 +37,13 @@ run() {  # run <name> <args...>
   [[ -f runs/$name/results.json ]] || echo "!! $name FAILED (see runs/$name/train.log)"
 }
 
+# SL-ViT's "Repeated Augment x3" is RASampler(len_factor=3): each epoch = 3 data passes, so its
+# "100 epochs" = 300 plain epochs (~117k steps at batch 128). In-batch --repeat-aug needs bs % K == 0,
+# so we use plain epochs instead. Screen at 100 ep (~39k steps, ~10 min at 6.1 s/epoch), then spend
+# the full ~117k-step budget on the combined run (~31 min). Total ~65 min.
 run bf1_slvit             --model slvit $RECIPE --epochs 100
 run bf1b_tiny_samerecipe  --model tiny  $RECIPE --epochs 100
 run bf2_slvit_init        --model slvit $RECIPE --epochs 100 --init impulse
-run bf3_slvit_300ep       --model slvit $RECIPE --epochs 300 --init impulse --mix-off-epoch 175 --pool seqpool --lsa
-echo "== baseline fix finished $(date)"
+run bf3_slvit_300ep       --model slvit $RECIPE --epochs 300 --warmup-epochs 30 --init impulse \
+                          --mix-off-epoch 175 --pool seqpool --lsa
+echo "== baseline-fix finished $(date)"

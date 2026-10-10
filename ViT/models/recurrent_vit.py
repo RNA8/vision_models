@@ -235,7 +235,10 @@ class RecurrentViT(nn.Module):
         if "embed" in parts:
             self._embed_fn = torch.compile(self.embed, **kw)
         if "core" in parts:
-            self._core_fn = torch.compile(self.core_step, **kw)
+            core = torch.compile(self.core_step, **kw)
+            # CUDA graphs reuse their output buffer on every replay, and the loop feeds each output back
+            # in; clone so iteration t+1 doesn't overwrite the state iteration t returned.
+            self._core_fn = (lambda s, e: core(s, e).clone()) if mode == "reduce-overhead" else core
         if "decode" in parts:
             self._decode_fn = torch.compile(self.decode, **kw)
         return self
