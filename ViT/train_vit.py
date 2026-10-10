@@ -30,6 +30,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+from models.recurrent_vit import RD_PRESETS  # recurrent-depth ViT presets (rd_*), see models/recurrent_vit.py
 
 VIT_CFGS = {
     "tiny": dict(embed_dim=192, depth=12, num_heads=3),
@@ -45,7 +46,7 @@ def parse_args():
     p = argparse.ArgumentParser(description="Fast ViT training on CIFAR")
     p.add_argument("--dataset", default="cifar10", help="module name in vit_data/")
     p.add_argument("--data-dir", default=os.path.join(HERE, "data"))
-    p.add_argument("--model", default="tiny", choices=list(VIT_CFGS) + ["resnet18"])
+    p.add_argument("--model", default="tiny", choices=list(VIT_CFGS) + ["resnet18"] + list(RD_PRESETS))
     p.add_argument("--patch-size", type=int, default=4, help="ViT patch size: (img_size/p)^2 tokens")
     p.add_argument("--embed-dim", type=int, default=None, help="override VIT_CFGS[model] width")
     p.add_argument("--depth", type=int, default=None, help="override VIT_CFGS[model] depth")
@@ -101,6 +102,16 @@ def parse_args():
     p.add_argument("--ckpt-every", type=int, default=10, help="save runs/<name>/ckpt.pt every N epochs")
     p.add_argument("--no-resume", action="store_true", help="ignore an existing ckpt.pt")
     p.add_argument("--keep-ckpt", action="store_true", help="keep ckpt.pt after the run finishes")
+    # recurrent-depth ViT (--model rd_*); None = use the preset's value. See models/recurrent_vit.py.
+    g = p.add_argument_group("recurrent depth (rd_* models)")
+    g.add_argument("--rd-r-mean", type=int, default=None, help="mean training recurrence r")
+    g.add_argument("--rd-k-backprop", type=int, default=None, help="backprop through last k loops (default r_mean)")
+    g.add_argument("--rd-depth-dist", default=None, choices=["poisson_lognormal", "uniform", "fixed"])
+    g.add_argument("--rd-state-init", default=None, choices=["normal", "zeros"])
+    g.add_argument("--rd-inject", default=None, choices=["concat", "add", "none"], help="input re-injection")
+    g.add_argument("--rd-outer-norm", default=None, choices=["ln", "rms", "none"], help="norm on the state per loop")
+    g.add_argument("--qk-norm", action="store_true", help="QK-norm in attention (rd_* models)")
+    g.add_argument("--eval-r", type=int, default=None, help="recurrence used by evaluate() (default r_mean)")
     return p.parse_args()
 
 
@@ -394,6 +405,14 @@ def structured_init(model, mode):
 
 
 def build_model(args, num_classes, img_size=32):
+    if args.model.startswith("rd_"):
+        from models.recurrent_vit import build_recurrent_vit
+
+        return build_recurrent_vit(
+            args.model, num_classes, img_size, args.patch_size, args.drop_path,
+            r_mean=args.rd_r_mean, k_backprop=args.rd_k_backprop, depth_dist=args.rd_depth_dist,
+            state_init=args.rd_state_init, inject=args.rd_inject, outer_norm=args.rd_outer_norm,
+            qk_norm=args.qk_norm or None, r_eval=args.eval_r)  # train mode samples r inside forward()
     if args.model == "resnet18":
         import timm
 
@@ -549,8 +568,14 @@ def main():
 
     opt = make_optimizer(model, args, fused=(device == "cuda"))
     sched = make_schedule(opt, args, steps_per_epoch)
-    train_model = model if args.no_compile else torch.compile(
-        model, mode="reduce-overhead" if args.cudagraphs else None)
+    if args.model.startswith("rd_") and not args.no_compile:
+        # variable r would recompile a whole-model graph per r: compile the pieces, loop in Python
+        train_model = model.compile_parts(*(("reduce-overhead", ("core",)) if args.cudagraphs else ()))
+        if args.cudagraphs:
+            print("NOTE: rd_* model with --cudagraphs: only the core step is compiled (CUDA graphs, experimental)")
+    else:
+        train_model = model if args.no_compile else torch.compile(
+            model, mode="reduce-overhead" if args.cudagraphs else None)
 
     # resume: ckpt.pt holds everything needed to continue exactly (model, opt, sched, RNGs, history)
     ckpt_path = os.path.join(out_dir, "ckpt.pt")
