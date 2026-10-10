@@ -1,0 +1,62 @@
+{
+  "run_name": "smoke_real",
+  "args": {
+    "dataset": "cifar10",
+    "data_dir": "/home/ubuntu/workspace/vision_models/ViT/data",
+    "model": "tiny",
+    "patch_size": 4,
+    "epochs": 2,
+    "batch_size": 1024,
+    "lr": 0.002,
+    "min_lr": 1e-05,
+    "warmup_epochs": 5,
+    "weight_decay": 0.05,
+    "label_smoothing": 0.1,
+    "mixup": 0.8,
+    "cutmix": 1.0,
+    "mix_prob": 1.0,
+    "drop_path": 0.1,
+    "no_aug": false,
+    "randaug": true,
+    "randaug_n": 2,
+    "randaug_m": 9,
+    "grad_clip": 1.0,
+    "eval_every": 1,
+    "no_compile": false,
+    "fake_data": false,
+    "plot": false,
+    "wandb": true,
+    "wandb_entity": "softeye",
+    "wandb_project": "vision_transformers",
+    "run_name": "smoke_real",
+    "out_dir": "/home/ubuntu/workspace/vision_models/ViT/runs",
+    "seed": 0
+  },
+  "params_M": 5.362762,
+  "total_minutes": 0.19469495217005411,
+  "epoch_sec_steady": 2.2957234382629395,
+  "img_per_sec_steady": 21410.24444877859,
+  "final_val_acc": 27.21,
+  "final_train_acc_clean": 27.27,
+  "best_val_acc": 27.21,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.2577595710754395,
+      "lr": 0.00040833333333333336,
+      "epoch_sec": 7.673275470733643,
+      "img_per_sec": 6405.608685295977,
+      "val_acc": 25.33,
+      "train_acc_clean": 25.8
+    },
+    {
+      "epoch": 2,
+      "train_loss": 2.2322084108988443,
+      "lr": 0.0008083333333333333,
+      "epoch_sec": 2.2957234382629395,
+      "img_per_sec": 21410.24444877859,
+      "val_acc": 27.21,
+      "train_acc_clean": 27.27
+    }
+  ]
+}
