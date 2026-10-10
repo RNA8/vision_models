@@ -74,7 +74,16 @@ def load_model_and_data(runs_dir, name, res, device):
     ds = importlib.import_module(f"vit_data.{a['dataset']}")
     _, _, xte, yte = ds.load(a.get("data_dir") or os.path.join(HERE, "data"))
     xte = xte.permute(0, 3, 1, 2).contiguous()  # uint8 NCHW
-    model = build_model(_ap.Namespace(**a), ds.NUM_CLASSES, xte.size(-1))
+    # runs saved before new CLI flags existed lack those keys: fill from train_vit's defaults
+    import train_vit
+    saved_argv = sys.argv
+    try:
+        sys.argv = [saved_argv[0]]
+        full = vars(train_vit.parse_args())
+    finally:
+        sys.argv = saved_argv
+    full.update(a)
+    model = build_model(_ap.Namespace(**full), ds.NUM_CLASSES, xte.size(-1))
     sd = torch.load(os.path.join(runs_dir, name, "model.pt"), map_location="cpu")
     model.load_state_dict(sd)
     return model.to(device).eval().float(), xte, yte, ds
@@ -293,6 +302,9 @@ def main():
     p.add_argument("--prefix", default="", help="dataset prefix filter, e.g. 'c100_'")
     p.add_argument("--curve-runs", nargs="+", default=None,
                    help="runs for curves (default: ablation ladder for the prefix that exist)")
+    p.add_argument("--curves-tag", default="",
+                   help="if set (e.g. 'followups_'), write only {prefix}{tag}acc_curves.png / loss / throughput for "
+                        "--curve-runs and skip the pos-embed/attention plots")
     p.add_argument("--runs-dir", default=os.path.join(HERE, "runs"))
     p.add_argument("--out", default=os.path.join(HERE, "report_assets"))
     p.add_argument("--n-images", type=int, default=8)
@@ -304,7 +316,10 @@ def main():
 
     torch.manual_seed(0)
     name = args.run or pick_run(args.runs_dir, pre)
-    if name is None:
+    if args.curves_tag:
+        name = None
+        print("curves-tag set: skipping plots 1-2")
+    elif name is None:
         print(f"WARNING: no ViT run found for prefix '{pre}'; skipping plots 1-2")
     else:
         res = load_results(args.runs_dir, name)
@@ -330,8 +345,9 @@ def main():
         print("WARNING: no runs for curves; done.")
         return
     extra = f"[{pre.rstrip('_') or 'cifar10'}]"
-    plot_acc_curves(runs, extra, out("acc_curves.png"))
-    plot_loss_and_throughput(runs, extra, out("loss_curves.png"), out("throughput.png"))
+    t = args.curves_tag
+    plot_acc_curves(runs, extra, out(t + "acc_curves.png"))
+    plot_loss_and_throughput(runs, extra, out(t + "loss_curves.png"), out(t + "throughput.png"))
 
 
 if __name__ == "__main__":
