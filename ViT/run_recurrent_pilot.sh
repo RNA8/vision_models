@@ -21,7 +21,7 @@ set -uo pipefail
 cd "$(dirname "$0")"
 source ./env.sh
 PY=../.venv/bin/python
-COMMON="--wandb --eval-every 5 --randaug --batch-size 256 --lr 1e-3 --epochs 100"
+COMMON="--wandb --eval-every 5 --randaug --batch-size 256 --lr 1e-3 --epochs 100 --lsa --pool seqpool --cudagraphs"
 REF=""; [[ -f runs/r18_full/model.pt ]] && REF="--ref-run-dir runs/r18_full"
 
 run() {  # run <name> <args...>
