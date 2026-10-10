@@ -26,8 +26,10 @@ def main():
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
     dev, bs = "cuda", a.batch_size
-    args = argparse.Namespace(model=a.model, patch_size=a.patch_size, drop_path=0.1, mixup=0.8, cutmix=1.0,
-                              mix_prob=1.0, lr=1e-3, weight_decay=0.05, r18_stem="cifar")
+    import sys
+    argv, sys.argv = sys.argv, ["train_vit.py", "--model", a.model, "--patch-size", str(a.patch_size), "--lr", "1e-3"]
+    args = T.parse_args()  # train_vit defaults for every other flag (full recipe: mixup/cutmix, drop-path)
+    sys.argv = argv
     xu = torch.randint(0, 256, (50000, 3, 32, 32), dtype=torch.uint8, device=dev)
     yu = torch.randint(0, 10, (50000,), device=dev)
     mean = torch.tensor((0.49, 0.48, 0.45), device=dev).view(1, 3, 1, 1)
