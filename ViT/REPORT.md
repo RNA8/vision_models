@@ -1,6 +1,6 @@
 # ViT training report
 
-_Generated 2026-10-10 18:42 from `/home/ubuntu/workspace/vision_models/ViT/runs`; 24 runs included._
+_Generated 2026-10-10 23:23 from `/home/ubuntu/workspace/vision_models/ViT/runs`; 51 runs included._
 
 Gap = clean train acc minus val acc (points). Val acc shows final epoch, best in parentheses when different.
 
@@ -8,14 +8,14 @@ Gap = clean train acc minus val acc (points). Val acc shows final epoch, best in
 
 | section | runs done | pending | GPU minutes | cost |
 |---|---|---|---|---|
-| CIFAR-10 | 16 | 8 | 121.9 | $6.68 |
-| CIFAR-100 | 8 | 0 | 63.7 | $3.49 |
-| Tiny-ImageNet | 0 | 8 | 0.0 | $0.00 |
-| ImageNet-64 | 0 | 4 | 0.0 | $0.00 |
-| **Total (sum of run-minutes)** | 24 | 20 | **185.6** (3.09 h) | $10.18 at $3.29/h (upper bound) |
+| CIFAR-10 | 31 | 0 | 487.6 | $26.74 |
+| CIFAR-100 | 9 | 0 | 115.9 | $6.35 |
+| Tiny-ImageNet | 8 | 0 | 256.9 | $14.09 |
+| ImageNet-64 | 3 | 1 | 216.8 | $11.89 |
+| **Total (sum of run-minutes)** | 51 | 1 | **1077.2** (17.95 h) | $59.07 at $3.29/h (upper bound) |
 
-**Wall-clock (estimated, counting in-progress runs up to now):** 223 min (3.71 h) from the earliest run start (2026-10-10 15:00) to the latest run end (2026-10-10 18:42); **GPU cost on wall-clock: $12.21** at $3.29/h.
-Sum of completed run-minutes is 186 min. Completed runs rarely overlapped (peak 1), so the span exceeds the sum of run-minutes by idle gaps and startup/eval time (the sum will overstate wall-clock once the concurrent queues complete); 3 runs currently in progress (24 min elapsed so far; peak concurrency now 3) are counted in the span but not in the sum; time with at least one run active is 200 min ($10.99). Start = run-directory creation time (falls back to results.json mtime minus total_minutes), end = results.json mtime (in-progress runs end at report time). Per-run minutes and img/s of overlapping runs are inflated by GPU sharing.
+**Wall-clock (estimated, counting in-progress runs up to now):** 503 min (8.39 h) from the earliest run start (2026-10-10 15:00) to the latest run end (2026-10-10 23:23); **GPU cost on wall-clock: $27.61** at $3.29/h.
+Sum of completed run-minutes is 1077 min. Completed runs rarely overlapped (peak 4), so the span exceeds the sum of run-minutes by idle gaps and startup/eval time (the sum will overstate wall-clock once the concurrent queues complete); 1 runs currently in progress (3 min elapsed so far; peak concurrency now 4) are counted in the span but not in the sum; time with at least one run active is 481 min ($26.38). Start = run-directory creation time (falls back to results.json mtime minus total_minutes), end = results.json mtime (in-progress runs end at report time). Per-run minutes and img/s of overlapping runs are inflated by GPU sharing.
 
 ## CIFAR-10
 
@@ -37,16 +37,23 @@ Sum of completed run-minutes is 186 min. Completed runs rarely overlapped (peak 
 | bf1_slvit | 100 | 2.70 | 78.21 | 75.84 | 2.4 | 10.7 | 8,163 | vs t5c_bs256: model tiny->slvit, batch 256->128, lr 0.001->0.003, warmup 5->10: val -6.2 pts, gap 3->2, img/s x1.57. SL-ViT shape (9 layers, 12 heads, MLP 2, 2.7M params) with the SL-ViT recipe (batch 128, lr 3e-3, warmup 10, reprob 0.25), compared with the best same-budget Tiny run |
 | bf1b_tiny_samerecipe | 100 | 5.36 | 48.77 | 48.59 (48.87) | 0.2 | 11.8 | 7,092 | vs bf1_slvit: model slvit->tiny: val -27.2 pts, gap 2->0, img/s x0.87. shape effect: identical SL-ViT recipe, but our 12-layer / 3-head / MLP-4 Tiny; train acc is also low, so it is an optimization stall, not overfitting |
 | bf2_slvit_init | 100 | 2.70 | 49.62 | 49.33 (49.36) | 0.3 | 10.3 | 8,299 | vs bf1_slvit: init default->impulse: val -26.5 pts, gap 2->0, img/s x1.02. init effect: identical to bf1 but impulse init; train acc is also low, so training stalled (suspect lr 3e-3 with this init; bf1_slvit_lr* will tell) |
-| bf3_slvit_300ep | pending | pending | pending | pending | pending | pending | pending | running (epoch 88/300, log updated 0 min ago); result pending |
-| bf4_slvit_300ep_mixhalf | pending | pending | pending | pending | pending | pending | pending | not started |
-| bf1_slvit_lr1e-3 | pending | pending | pending | pending | pending | pending | pending | running (epoch 55/100, log updated 0 min ago); result pending |
-| bf1_slvit_lr5e-4 | pending | pending | pending | pending | pending | pending | pending | not started |
-| rd_pilot_a | pending | pending | pending | pending | pending | pending | pending | running (epoch 39/100, log updated 0 min ago); result pending |
-| rd_pilot_b | pending | pending | pending | pending | pending | pending | pending | not started |
-| rd_pilot_noinject | pending | pending | pending | pending | pending | pending | pending | not started |
-| rd_flat6 | pending | pending | pending | pending | pending | pending | pending | not started |
+| bf3_slvit_300ep | 300 | 2.70 | 97.94 | 90.40 (90.53) | 7.5 | 37.8 | 6,674 | no comparison available |
+| bf4_slvit_300ep_mixhalf | 300 | 2.70 | 99.39 | 93.44 (93.50) | 6.0 | 53.4 | 4,762 | no comparison available |
+| bf1_slvit_lr1e-3 | 100 | 2.70 | 85.50 | 82.40 | 3.1 | 11.7 | 7,416 | no comparison available |
+| bf1_slvit_lr5e-4 | 100 | 2.70 | 86.70 | 83.67 | 3.0 | 11.7 | 7,323 | no comparison available |
+| rd_pilot_a | 100 | 2.77 | 82.29 | 80.19 | 2.1 | 15.7 | 5,602 | no comparison available |
+| rd_pilot_b | 100 | 2.69 | 87.41 | 84.66 | 2.8 | 15.5 | 5,651 | no comparison available |
+| rd_pilot_noinject | 100 | 2.69 | 82.98 | 80.82 | 2.2 | 14.5 | 6,029 | no comparison available |
+| rd_flat6 | 100 | 2.69 | 86.33 | 83.48 | 2.8 | 13.0 | 6,896 | no comparison available |
+| bf3b_slvit_300ep_lr5e-4 | 300 | 2.70 | 99.04 | 93.37 | 5.7 | 43.8 | 6,392 | no comparison available |
+| rd_deep_r8 | 100 | 2.77 | 83.89 | 81.99 | 1.9 | 22.0 | 3,678 | no comparison available |
+| rd_deep_r8_add | 100 | 2.69 | 87.33 | 84.42 | 2.9 | 22.3 | 3,795 | no comparison available |
+| rd_deep_r8_add_ds | 100 | 2.69 | 88.14 | 85.23 | 2.9 | 31.9 | 2,473 | no comparison available |
+| rd_deep_r8_ds | 100 | 2.77 | 83.78 | 81.76 | 2.0 | 35.6 | 2,374 | no comparison available |
+| rd_deep_single | 100 | 2.32 | 82.95 | 80.51 | 2.4 | 20.8 | 4,092 | no comparison available |
+| rd_deep_single_add | 100 | 2.25 | 85.80 | 83.57 (83.59) | 2.2 | 16.1 | 5,387 | no comparison available |
 
-Subtotal: **121.9 GPU min** (2.03 h), **$6.68**
+Subtotal: **487.6 GPU min** (8.13 h), **$26.74**
 
 ### Comparison with published results
 
@@ -54,22 +61,22 @@ Reference rows are from `REFERENCES.md` (verified 2026-10-10; epochs/batch diffe
 
 | model | params | setting | acc (%) | our best ViT minus ref | our best CNN minus ref | type | source |
 |---|---|---|---|---|---|---|---|
-| **ours: t6_full_300ep** (tiny, 300 ep, batch 1024) | 5.4M | this repo | 87.96 |  |  | ViT | this repo |
+| **ours: bf4_slvit_300ep_mixhalf** (slvit, 300 ep, batch 128) | 2.7M | this repo | 93.44 |  |  | ViT | this repo |
 | **ours: r18_full** (resnet18, 100 ep, batch 1024) | 11.2M | this repo | 93.16 |  |  | CNN | this repo |
-| ViT-Tiny 192/12/3 p4, plain init (mimetic-init paper baseline) | ~5.4M | 100 ep, batch 512, RandAug+Cutout | 88.43 | -0.5 | +4.7 | ViT | [arXiv 2305.09828 Tab. 7](https://arxiv.org/html/2305.09828) |
-| DeiT-T patch 2 (NesT authors) | 5.3M | n/s | 88.39 | -0.4 | +4.8 | ViT | [arXiv 2105.12723 Tab. A3](https://arxiv.org/html/2105.12723) |
-| ViT-Lite-7/4, no aug / no tuning | 3.72M | 300 ep | 83.59 | +4.4 | +9.6 | ViT | [arXiv 2104.05704 Tab. 8](https://arxiv.org/html/2104.05704v4) |
-| ViT-12/16 | 85.6M | 300 ep, batch 128 | 83.04 | +4.9 | +10.1 | ViT | [arXiv 2104.05704 Tab. 1](https://arxiv.org/html/2104.05704v4) |
-| omihub777/ViT-CIFAR (7L, dim 384) | 6.3M | 200 ep, batch 128 | 90.92 | -3.0 | +2.2 | ViT | [GitHub](https://github.com/omihub777/ViT-CIFAR) |
-| ViT-Lite-7/4, full DeiT-style recipe | 3.72M | 300 ep, batch 128 | 93.57 | -5.6 | -0.4 | ViT | [arXiv 2104.05704 Tab. 1](https://arxiv.org/html/2104.05704v4) |
-| ViT baseline (depth 9, dim 192), SPT/LSA paper | 2.8M | 100 ep, batch 128 | 93.58 | -5.6 | -0.4 | ViT | [arXiv 2112.13492 Tab. 2](https://arxiv.org/html/2112.13492v1) |
-| SL-ViT (ViT + SPT + LSA) | 2.9M | 100 ep, batch 128 | 94.53 | -6.6 | -1.4 | ViT (locality) | [arXiv 2112.13492 Tab. 2](https://arxiv.org/html/2112.13492v1) |
-| CCT-7/3x1 (conv tokenizer, hybrid) | 3.76M | 300 ep, batch 128 | 96.53 | -8.6 | -3.4 | hybrid | [arXiv 2104.05704 Tab. 1](https://arxiv.org/html/2104.05704v4) |
-| ResNet-110 (He et al.) | 1.7M | ~164 ep, batch 128 | 93.57 | -5.6 | -0.4 | CNN | [arXiv 1512.03385 Tab. 6](https://ar5iv.labs.arxiv.org/html/1512.03385) |
-| ResNet18 (kuangliu/pytorch-cifar) | 11M | n/s | 93.02 | -5.1 | +0.1 | CNN | [GitHub](https://github.com/kuangliu/pytorch-cifar) |
-| ResNet18 (Cutout paper), crop+flip | 11M | 200 ep, batch 128 | 95.28 | -7.3 | -2.1 | CNN | [arXiv 1708.04552](https://ar5iv.labs.arxiv.org/html/1708.04552) |
-| WRN-28-10 | 36.5M | 200 ep | 96.00 | -8.0 | -2.8 | CNN | [arXiv 1605.07146](https://ar5iv.labs.arxiv.org/html/1605.07146) |
-| airbench94 (Keller Jordan) | small CNN | 3.29 s on 1x A100 | 94.00 | -6.0 | -0.8 | CNN | [arXiv 2404.00498](https://arxiv.org/abs/2404.00498) |
+| ViT-Tiny 192/12/3 p4, plain init (mimetic-init paper baseline) | ~5.4M | 100 ep, batch 512, RandAug+Cutout | 88.43 | +5.0 | +4.7 | ViT | [arXiv 2305.09828 Tab. 7](https://arxiv.org/html/2305.09828) |
+| DeiT-T patch 2 (NesT authors) | 5.3M | n/s | 88.39 | +5.0 | +4.8 | ViT | [arXiv 2105.12723 Tab. A3](https://arxiv.org/html/2105.12723) |
+| ViT-Lite-7/4, no aug / no tuning | 3.72M | 300 ep | 83.59 | +9.8 | +9.6 | ViT | [arXiv 2104.05704 Tab. 8](https://arxiv.org/html/2104.05704v4) |
+| ViT-12/16 | 85.6M | 300 ep, batch 128 | 83.04 | +10.4 | +10.1 | ViT | [arXiv 2104.05704 Tab. 1](https://arxiv.org/html/2104.05704v4) |
+| omihub777/ViT-CIFAR (7L, dim 384) | 6.3M | 200 ep, batch 128 | 90.92 | +2.5 | +2.2 | ViT | [GitHub](https://github.com/omihub777/ViT-CIFAR) |
+| ViT-Lite-7/4, full DeiT-style recipe | 3.72M | 300 ep, batch 128 | 93.57 | -0.1 | -0.4 | ViT | [arXiv 2104.05704 Tab. 1](https://arxiv.org/html/2104.05704v4) |
+| ViT baseline (depth 9, dim 192), SPT/LSA paper | 2.8M | 100 ep, batch 128 | 93.58 | -0.1 | -0.4 | ViT | [arXiv 2112.13492 Tab. 2](https://arxiv.org/html/2112.13492v1) |
+| SL-ViT (ViT + SPT + LSA) | 2.9M | 100 ep, batch 128 | 94.53 | -1.1 | -1.4 | ViT (locality) | [arXiv 2112.13492 Tab. 2](https://arxiv.org/html/2112.13492v1) |
+| CCT-7/3x1 (conv tokenizer, hybrid) | 3.76M | 300 ep, batch 128 | 96.53 | -3.1 | -3.4 | hybrid | [arXiv 2104.05704 Tab. 1](https://arxiv.org/html/2104.05704v4) |
+| ResNet-110 (He et al.) | 1.7M | ~164 ep, batch 128 | 93.57 | -0.1 | -0.4 | CNN | [arXiv 1512.03385 Tab. 6](https://ar5iv.labs.arxiv.org/html/1512.03385) |
+| ResNet18 (kuangliu/pytorch-cifar) | 11M | n/s | 93.02 | +0.4 | +0.1 | CNN | [GitHub](https://github.com/kuangliu/pytorch-cifar) |
+| ResNet18 (Cutout paper), crop+flip | 11M | 200 ep, batch 128 | 95.28 | -1.8 | -2.1 | CNN | [arXiv 1708.04552](https://ar5iv.labs.arxiv.org/html/1708.04552) |
+| WRN-28-10 | 36.5M | 200 ep | 96.00 | -2.6 | -2.8 | CNN | [arXiv 1605.07146](https://ar5iv.labs.arxiv.org/html/1605.07146) |
+| airbench94 (Keller Jordan) | small CNN | 3.29 s on 1x A100 | 94.00 | -0.6 | -0.8 | CNN | [arXiv 2404.00498](https://arxiv.org/abs/2404.00498) |
 
 ![Ablation ladder: train (dashed) vs validation (solid) accuracy and gap](report_assets/acc_curves.png)
 
@@ -101,8 +108,9 @@ Reference rows are from `REFERENCES.md` (verified 2026-10-10; epochs/batch diffe
 | c100_t6_full_300ep | 300 | 5.38 | 95.38 | 70.49 | 24.9 | 16.7 | 14,250 | epochs 100->300: val +13.2 pts, gap grows 8→25 |
 | c100_r18_full | 100 | 11.22 | 84.00 | 73.22 (73.30) | 10.8 | 3.6 | 27,102 | vs matching ViT (c100_t5_droppath): val +15.9 pts (better), gap 11 vs 8, 0.4x the time; conv inductive bias helps at this budget |
 | c100_s_small_200ep | 200 | 21.38 | 95.25 | 68.01 (68.32) | 27.2 | 13.9 | 12,947 | ViT-Small vs Tiny (c100_t5_droppath): val +10.7 pts, 21.4M vs 5.4M params, 200 vs 100 epochs |
+| c100_bf3b_slvit_300ep_lr5e-4 | 300 | 2.72 | 97.81 | 75.69 | 22.1 | 52.1 | 4,897 | no comparison available |
 
-Subtotal: **63.7 GPU min** (1.06 h), **$3.49**
+Subtotal: **115.9 GPU min** (1.93 h), **$6.35**
 
 ### Comparison with published results
 
@@ -110,17 +118,17 @@ Rows tagged [verified] are from `REFERENCES.md` (CIFAR-100 section, re-checked a
 
 | model | params | setting | acc (%) | our best ViT minus ref | our best CNN minus ref | type | source |
 |---|---|---|---|---|---|---|---|
-| **ours: c100_t6_full_300ep** (tiny, 300 ep, batch 256) | 5.4M | this repo | 70.49 |  |  | ViT | this repo |
+| **ours: c100_bf3b_slvit_300ep_lr5e-4** (slvit, 300 ep, batch 128) | 2.7M | this repo | 75.69 |  |  | ViT | this repo |
 | **ours: c100_r18_full** (resnet18, 100 ep, batch 256) | 11.2M | this repo | 73.22 |  |  | CNN | this repo |
-| ViT 12L/3h/MLP4 (same shape as ours), Gani et al. recipe [not re-checked] | n/s | n/s | 68.09 | +2.4 | +5.1 | ViT | [arXiv 2210.07240 Tab. 15 (quoted by research agent, RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2210.07240) |
-| L-ViT (+LSA), SL-ViT paper ablation [not re-checked] | n/s | n/s | 74.87 | -4.4 | -1.7 | ViT (locality) | [arXiv 2112.13492 (quoted by research agent, RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2112.13492) |
-| ViTRM (Vision Tiny Recursion Model) [verified] | ~3.6M | n/s | 72.10 | -1.6 | +1.1 | ViT (recurrent) | [arXiv 2603.19503 (REFERENCES.md)](https://arxiv.org/abs/2603.19503) |
-| ViT baseline (depth 9, dim 192), SPT/LSA paper [verified] | 2.8M | 100 ep, batch 128 | 73.81 | -3.3 | -0.6 | ViT | [arXiv 2112.13492 Tab. 2 (REFERENCES.md)](https://arxiv.org/html/2112.13492v1) |
-| SL-ViT (ViT + SPT + LSA) [verified] | 2.9M | 100 ep, batch 128 | 76.92 | -6.4 | -3.7 | ViT (locality) | [arXiv 2112.13492 Tab. 2 (REFERENCES.md)](https://arxiv.org/html/2112.13492v1) |
-| ViT-Lite-7/4 [verified] | 3.72M | 300 ep, batch 128 | 73.94 | -3.5 | -0.7 | ViT | [arXiv 2104.05704 Tab. 1 (REFERENCES.md)](https://arxiv.org/html/2104.05704v4) |
-| ViT + SSL pretraining on CIFAR (Gani et al.) [verified] | 2.8M | 200 SSL + 100 ep | 79.15 | -8.7 | -5.9 | ViT, 2-stage | [arXiv 2210.07240 Tab. 3 (REFERENCES.md)](https://arxiv.org/html/2210.07240) |
-| CCT-7/3x1 (conv tokenizer, hybrid) [verified] | 3.76M | 300 ep, batch 128 | 80.92 | -10.4 | -7.7 | hybrid | [arXiv 2104.05704 Tab. 1 (REFERENCES.md)](https://arxiv.org/html/2104.05704v4) |
-| CCT-7/3x1, long schedule [verified] | 3.76M | 5000 ep | 82.87 | -12.4 | -9.7 | hybrid | [arXiv 2104.05704 Tab. 2 (REFERENCES.md)](https://arxiv.org/html/2104.05704v4) |
+| ViT 12L/3h/MLP4 (same shape as ours), Gani et al. recipe [not re-checked] | n/s | n/s | 68.09 | +7.6 | +5.1 | ViT | [arXiv 2210.07240 Tab. 15 (quoted by research agent, RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2210.07240) |
+| L-ViT (+LSA), SL-ViT paper ablation [not re-checked] | n/s | n/s | 74.87 | +0.8 | -1.7 | ViT (locality) | [arXiv 2112.13492 (quoted by research agent, RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2112.13492) |
+| ViTRM (Vision Tiny Recursion Model) [verified] | ~3.6M | n/s | 72.10 | +3.6 | +1.1 | ViT (recurrent) | [arXiv 2603.19503 (REFERENCES.md)](https://arxiv.org/abs/2603.19503) |
+| ViT baseline (depth 9, dim 192), SPT/LSA paper [verified] | 2.8M | 100 ep, batch 128 | 73.81 | +1.9 | -0.6 | ViT | [arXiv 2112.13492 Tab. 2 (REFERENCES.md)](https://arxiv.org/html/2112.13492v1) |
+| SL-ViT (ViT + SPT + LSA) [verified] | 2.9M | 100 ep, batch 128 | 76.92 | -1.2 | -3.7 | ViT (locality) | [arXiv 2112.13492 Tab. 2 (REFERENCES.md)](https://arxiv.org/html/2112.13492v1) |
+| ViT-Lite-7/4 [verified] | 3.72M | 300 ep, batch 128 | 73.94 | +1.8 | -0.7 | ViT | [arXiv 2104.05704 Tab. 1 (REFERENCES.md)](https://arxiv.org/html/2104.05704v4) |
+| ViT + SSL pretraining on CIFAR (Gani et al.) [verified] | 2.8M | 200 SSL + 100 ep | 79.15 | -3.5 | -5.9 | ViT, 2-stage | [arXiv 2210.07240 Tab. 3 (REFERENCES.md)](https://arxiv.org/html/2210.07240) |
+| CCT-7/3x1 (conv tokenizer, hybrid) [verified] | 3.76M | 300 ep, batch 128 | 80.92 | -5.2 | -7.7 | hybrid | [arXiv 2104.05704 Tab. 1 (REFERENCES.md)](https://arxiv.org/html/2104.05704v4) |
+| CCT-7/3x1, long schedule [verified] | 3.76M | 5000 ep | 82.87 | -7.2 | -9.7 | hybrid | [arXiv 2104.05704 Tab. 2 (REFERENCES.md)](https://arxiv.org/html/2104.05704v4) |
 
 ![Ablation ladder: train (dashed) vs validation (solid) accuracy and gap](report_assets/c100_acc_curves.png)
 
@@ -134,33 +142,29 @@ Rows tagged [verified] are from `REFERENCES.md` (CIFAR-100 section, re-checked a
 
 ## Tiny-ImageNet
 
-_No runs yet; all rows pending._
-
 | run | epochs | params (M) | clean train acc | val acc | train-val gap | minutes | img/s | what this step taught |
 |---|---|---|---|---|---|---|---|---|
-| tin_t1_plain | pending | pending | pending | pending | pending | pending | pending | not started |
-| tin_t2_ls_wd | pending | pending | pending | pending | pending | pending | pending | not started |
-| tin_t3_randaug | pending | pending | pending | pending | pending | pending | pending | not started |
-| tin_t4_mix | pending | pending | pending | pending | pending | pending | pending | not started |
-| tin_t5_droppath | pending | pending | pending | pending | pending | pending | pending | not started |
-| tin_r18_full | pending | pending | pending | pending | pending | pending | pending | not started |
-| tin_s_small_200ep | pending | pending | pending | pending | pending | pending | pending | not started |
-| tin_p4_tiny | pending | pending | pending | pending | pending | pending | pending | not started |
+| tin_t1_plain | 100 | 5.43 | 99.98 | 40.69 (40.91) | 59.3 | 16.1 | 10,386 | baseline (crop+flip only) |
+| tin_t2_ls_wd | 100 | 5.43 | 99.98 | 40.56 (40.88) | 59.4 | 15.2 | 11,082 | +label smoothing+weight decay: val -0.1 pts, gap grows 59→59 |
+| tin_t3_randaug | 100 | 5.43 | 98.17 | 45.07 (45.11) | 53.1 | 26.7 | 5,944 | +RandAugment: val +4.5 pts, gap shrinks 59→53 |
+| tin_t4_mix | 100 | 5.43 | 60.53 | 46.72 (47.05) | 13.8 | 30.0 | 5,639 | +MixUp/CutMix: val +1.6 pts, gap shrinks 53→14 |
+| tin_t5_droppath | 100 | 5.43 | 58.72 | 46.59 | 12.1 | 28.9 | 5,723 | +drop-path: val -0.1 pts, gap shrinks 14→12 |
+| tin_r18_full | 100 | 11.27 | 75.49 | 61.56 | 13.9 | 28.0 | 5,963 | vs matching ViT (tin_t5_droppath): val +15.0 pts (better), gap 14 vs 12, 1.0x the time; conv inductive bias helps at this budget |
+| tin_s_small_200ep | 200 | 21.47 | 97.00 | 53.30 (53.58) | 43.7 | 69.8 | 6,032 | ViT-Small vs Tiny (tin_t5_droppath): val +6.7 pts, 21.5M vs 5.4M params, 200 vs 100 epochs |
+| tin_p4_tiny | 100 | 5.44 | 63.74 | 49.55 | 14.2 | 42.2 | 4,056 | patch 4: tokens = (64/4)^2 = 256 vs 64 for patch 8; val +3.0 pts, 0.71x img/s (slower); more tokens cost throughput for accuracy |
 
-Subtotal: **0.0 GPU min** (0.00 h), **$0.00**
+Subtotal: **256.9 GPU min** (4.28 h), **$14.09**
 
 ## ImageNet-64
 
-_No runs yet; all rows pending._
-
 | run | epochs | params (M) | clean train acc | val acc | train-val gap | minutes | img/s | what this step taught |
 |---|---|---|---|---|---|---|---|---|
-| in64_t1_plain | pending | pending | pending | pending | pending | pending | pending | not started |
-| in64_t5_full | pending | pending | pending | pending | pending | pending | pending | not started |
-| in64_r18_full | pending | pending | pending | pending | pending | pending | pending | not started |
-| in64_s_small_full | pending | pending | pending | pending | pending | pending | pending | not started |
+| in64_t1_plain | 30 | 5.58 | 77.50 | 46.93 (47.47) | 30.6 | 84.7 | 7,491 | baseline (crop+flip only) |
+| in64_t5_full | 30 | 5.58 | 52.26 | 46.17 | 6.1 | 80.0 | 8,069 | +label smoothing+weight decay, +RandAugment, +MixUp/CutMix, +drop-path: val -0.8 pts, gap shrinks 31→6 |
+| in64_r18_full | 30 | 11.68 | 57.60 | 51.23 | 6.4 | 52.1 | 12,178 | vs matching ViT (in64_t5_full): val +5.1 pts (better), gap 6 vs 6, 0.7x the time; conv inductive bias helps at this budget |
+| in64_s_small_full | pending | pending | pending | pending | pending | pending | pending | running (epoch 1/40, log updated 1 min ago); result pending |
 
-Subtotal: **0.0 GPU min** (0.00 h), **$0.00**
+Subtotal: **216.8 GPU min** (3.61 h), **$11.89**
 
 ## What I learned
 
