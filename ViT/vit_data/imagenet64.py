@@ -74,7 +74,7 @@ def process_shard(args):
     return out
 
 
-def prepare_shards(data_dir, workers=26, dl_threads=8):
+def prepare_shards(data_dir, workers=int(os.environ.get("IMAGENET64_WORKERS", 26)), dl_threads=8):
     """Download (threads) + decode (process pool) every shard; skips shards already processed."""
     from huggingface_hub import hf_hub_download
 
