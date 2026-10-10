@@ -8,7 +8,7 @@ Sources were fetched by research agents. The novelty-critical papers (reViT, ViT
 
 | Lever | Evidence | Expected gain | Cost |
 |---|---|---|---|
-| **Recipe: batch 128, lr 3e-3, wd 0.05, warmup 10, AutoAugment/RandAugment, Repeated Augment ×3** | SL-ViT paper ([2112.13492](https://arxiv.org/abs/2112.13492)) Tab. 2: plain ViT 2.8M, **93.58%** in 100 ep at batch 128 (~39k steps; our 300 ep at batch 1024 is ~14.6k). DeiT: disabling repeated aug costs 81.8→76.5 on ImageNet | large | ~7 min / 100 ep |
+| **Recipe: batch 128, lr 3e-3, wd 0.05, warmup 10, AutoAugment/RandAugment, Repeated Augment ×3** | SL-ViT paper ([2112.13492](https://arxiv.org/abs/2112.13492)) Tab. 2: plain ViT 2.8M, **93.58%** in 100 ep at batch 128 (**correction:** their official code uses `RASampler(len_factor=3)`, so each "epoch" is 3 passes over the data and "100 ep" is ~117k steps; our 300 ep at batch 1024 is ~14.6k). DeiT: disabling repeated aug costs 81.8→76.5 on ImageNet | large | ~20 min / "100 ep" (×3 passes) |
 | **Shape: depth 9, 12 heads (head dim 16), MLP ratio 2** (vs our 12 layers, 3 heads, MLP 4) | Gani et al. ([2210.07240](https://arxiv.org/abs/2210.07240)) Tab. 15, same recipe on C100: 12L/3h/mlp4 → 68.09 vs 9L/12h/mlp2 → 73.81 (+5.7). ViT-Lite-7/4: 7 layers, MLP ratio 2, 93.57% | +2–6 | free |
 | **Structured / impulse init** | Zheng et al., "Structured Initialization for ViTs" ([2505.19985](https://arxiv.org/abs/2505.19985)), ViT-Tiny CIFAR-10 300 ep: default 92.29 / mimetic 93.50 / impulse 94.67. Mimetic ([2305.09828](https://arxiv.org/abs/2305.09828)): 88.43 → 90.47 at 100 ep | +1–2 | free |
 | SeqPool instead of CLS | CCT ([2104.05704](https://arxiv.org/abs/2104.05704)) Tab. 1: ViT-Lite-7/4 93.57 → CVT-7/4 94.01 | +0.4 | free |
@@ -20,7 +20,7 @@ Sources were fetched by research agents. The novelty-critical papers (reViT, ViT
 | Muon / SAM / EMA / registers / QK-norm | No consistent small-ViT CIFAR gain found (e.g. Polar Express [2505.16932]: "do not show a consistent advantage") | low | — |
 
 **Plan to reach ≥93% (pure ViT):**
-- R1: SL-ViT recipe and shape, 100 ep, ~7 min. Run a twin with our 12/3/4 shape to isolate the shape effect.
+- R1: SL-ViT recipe and shape, 100 ep with `--repeat-aug 3` (= ~117k steps), ~20 min. Run a twin with our 12/3/4 shape to isolate the shape effect.
 - R2: R1 + impulse/mimetic init.
 - R3: best of R1/R2 at 300 ep, with SeqPool + LSA and mixup off at 175.
 
