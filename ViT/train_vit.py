@@ -68,6 +68,13 @@ def parse_args():
     p.add_argument("--run-name", default=None)
     p.add_argument("--out-dir", default=os.path.join(HERE, "runs"))
     p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--r18-stem", default="cifar", choices=["cifar", "stride2"],
+                   help="ResNet-18 stem: cifar = 3x3 s1; stride2 = 3x3 s2 (for 64x64 inputs), both no max-pool")
+    p.add_argument("--eval-bs", type=int, default=2048)
+    p.add_argument("--log-every-steps", type=int, default=0, help="wandb train loss/lr every N steps; 0 = off")
+    p.add_argument("--ckpt-every", type=int, default=10, help="save runs/<name>/ckpt.pt every N epochs")
+    p.add_argument("--no-resume", action="store_true", help="ignore an existing ckpt.pt")
+    p.add_argument("--keep-ckpt", action="store_true", help="keep ckpt.pt after the run finishes")
     return p.parse_args()
 
 
@@ -219,8 +226,10 @@ def build_model(args, num_classes, img_size=32):
         import timm
 
         m = timm.create_model("resnet18", num_classes=num_classes, drop_path_rate=args.drop_path)
-        # CIFAR stem: 3x3 conv, stride 1, no max-pool (the ImageNet stem throws away 32x32 detail)
-        m.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        # CIFAR stem: 3x3 conv, stride 1, no max-pool (the ImageNet stem throws away 32x32 detail).
+        # stride2: same but stride 2, so 64x64 inputs give the same feature-map cost as 32x32 with stride 1.
+        stride = 2 if args.r18_stem == "stride2" else 1
+        m.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=stride, padding=1, bias=False)
         m.maxpool = nn.Identity()
         return m
     from timm.models.vision_transformer import VisionTransformer
@@ -344,16 +353,41 @@ def main():
     sched = make_schedule(opt, args, steps_per_epoch)
     train_model = model if args.no_compile else torch.compile(model)
 
+    # resume: ckpt.pt holds everything needed to continue exactly (model, opt, sched, RNGs, history)
+    ckpt_path = os.path.join(out_dir, "ckpt.pt")
+    history, best_val, start_epoch, elapsed, wb_id = [], 0.0, 1, 0.0, None
+    if os.path.exists(ckpt_path) and not args.no_resume:
+        ck = torch.load(ckpt_path, map_location="cpu", weights_only=False)
+        model.load_state_dict(ck["model"])
+        opt.load_state_dict(ck["opt"])
+        sched.load_state_dict(ck["sched"])
+        history, best_val, elapsed, wb_id = ck["history"], ck["best_val"], ck["elapsed"], ck["wandb_id"]
+        start_epoch = ck["epoch"] + 1
+        torch.set_rng_state(ck["torch_rng"])
+        if device == "cuda" and ck["cuda_rng"] is not None:
+            torch.cuda.set_rng_state_all(ck["cuda_rng"])
+        rng.bit_generator.state = ck["np_rng"]
+        print(f"Resumed from {ckpt_path}: continuing at epoch {start_epoch}/{args.epochs}")
+
     wb = None
     if args.wandb:
         import wandb
 
+        wb_id = wb_id or wandb.util.generate_id()
         wb = wandb.init(entity=args.wandb_entity, project=args.wandb_project, name=run_name,
-                        config=vars(args), dir=out_dir)
+                        config=vars(args), dir=out_dir, id=wb_id, resume="allow")
 
-    history, best_val = [], 0.0
+    def save_ckpt(epoch):
+        ck = {"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(),
+              "epoch": epoch, "history": history, "best_val": best_val, "wandb_id": wb_id,
+              "elapsed": elapsed + time.time() - t_start, "torch_rng": torch.get_rng_state(),
+              "cuda_rng": torch.cuda.get_rng_state_all() if device == "cuda" else None,
+              "np_rng": rng.bit_generator.state}
+        torch.save(ck, ckpt_path + ".tmp")
+        os.replace(ckpt_path + ".tmp", ckpt_path)
+
     t_start = time.time()
-    for epoch in range(1, args.epochs + 1):
+    for epoch in range(start_epoch, args.epochs + 1):
         train_model.train()
         perm = torch.randperm(n_train, device=device)
         loss_sum = torch.zeros((), device=device)
@@ -384,6 +418,9 @@ def main():
             opt.step()
             sched.step()
             loss_sum += loss.detach()
+            gstep = (epoch - 1) * steps_per_epoch + k + 1
+            if wb and args.log_every_steps > 0 and gstep % args.log_every_steps == 0:
+                wb.log({"step_loss": loss.item(), "step_lr": sched.get_last_lr()[0]}, step=gstep)  # only sync here
 
         if device == "cuda":
             torch.cuda.synchronize()
@@ -399,18 +436,21 @@ def main():
             line += "  (includes torch.compile warm-up)"
 
         if epoch % args.eval_every == 0 or epoch == args.epochs:
-            val = evaluate(model, xte, yte, mean, std, amp)
+            val = evaluate(model, xte, yte, mean, std, amp, args.eval_bs)
             # clean (no-aug) accuracy on 10k training images: shows the train/val gap
-            tr_acc = evaluate(model, xtr[clean_idx], ytr[clean_idx], mean, std, amp)
+            tr_acc = evaluate(model, xtr[clean_idx], ytr[clean_idx], mean, std, amp, args.eval_bs)
             best_val = max(best_val, val)
             rec.update(val_acc=val, train_acc_clean=tr_acc)
             line += f" | train acc {tr_acc:6.2f} | val acc {val:6.2f}"
         print(line, flush=True)
         history.append(rec)
         if wb:
-            wb.log(rec, step=epoch)
+            # with step logging on, wandb's step axis is the global step; else the epoch
+            wb.log(rec, step=epoch * steps_per_epoch if args.log_every_steps > 0 else epoch)
+        if (args.ckpt_every > 0 and epoch % args.ckpt_every == 0) or epoch == args.epochs:
+            save_ckpt(epoch)
 
-    total_min = (time.time() - t_start) / 60
+    total_min = (elapsed + time.time() - t_start) / 60
     final = history[-1]
     steady = history[1:] or history  # epoch 1 includes the torch.compile warm-up
     epoch_sec_steady = float(np.median([h["epoch_sec"] for h in steady]))
@@ -430,6 +470,8 @@ def main():
     with open(os.path.join(out_dir, "results.json"), "w") as f:
         json.dump(summary, f, indent=2)
     torch.save(model.state_dict(), os.path.join(out_dir, "model.pt"))
+    if not args.keep_ckpt and os.path.exists(ckpt_path):
+        os.remove(ckpt_path)
     if args.plot:
         save_pos_embed_plot(model, os.path.join(out_dir, "pos_embed_similarity.png"))
 
