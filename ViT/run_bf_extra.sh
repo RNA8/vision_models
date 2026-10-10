@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Follow-up to run_baseline_fix.sh: bf3 with SL-ViT's lighter mixing (mix-prob 0.5, mixup and
+# Follow-up to run_baseline_fix.sh: bf3 at the working LR, then with SL-ViT's lighter mixing (mix-prob 0.5, mixup and
 # cutmix alpha 1.0; our default is mix-prob 1.0, mixup 0.8). bf1 underfit at 100 ep (74% val vs
 # 77% clean train), pointing at too much regularization. Single change vs bf3. ~31 min.
 #   tmux new -s vit 'bash ViT/run_bf_extra.sh'
@@ -20,6 +20,10 @@ run() {  # run <name> <args...>
   [[ -f runs/$name/results.json ]] || echo "!! $name FAILED (see runs/$name/train.log)"
 }
 
+# LR check (bf1 at 100 ep): 3e-3 -> 75.8%, 1e-3 -> 82.4%, 5e-4 -> 83.7%. bf3 used 3e-3, so rerun it at
+# 5e-4 (bf3b), then bf4 = bf3b + lighter mixing (single change vs bf3b). ~31 min each alone.
+run bf3b_slvit_300ep_lr5e-4  --model slvit $RECIPE --epochs 300 --warmup-epochs 30 --init impulse \
+                             --mix-off-epoch 175 --pool seqpool --lsa --lr 5e-4
 run bf4_slvit_300ep_mixhalf  --model slvit $RECIPE --epochs 300 --warmup-epochs 30 --init impulse \
-                             --mix-off-epoch 175 --pool seqpool --lsa --mix-prob 0.5 --mixup 1.0 --cutmix 1.0
+                             --mix-off-epoch 175 --pool seqpool --lsa --lr 5e-4 --mix-prob 0.5 --mixup 1.0 --cutmix 1.0
 echo "== bf-extra finished $(date)"
