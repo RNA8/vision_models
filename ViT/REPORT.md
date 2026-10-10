@@ -1,6 +1,6 @@
 # ViT training report
 
-_Generated 2026-10-10 18:41 from `/home/ubuntu/workspace/vision_models/ViT/runs`; 24 runs included._
+_Generated 2026-10-10 18:42 from `/home/ubuntu/workspace/vision_models/ViT/runs`; 24 runs included._
 
 Gap = clean train acc minus val acc (points). Val acc shows final epoch, best in parentheses when different.
 
@@ -14,8 +14,8 @@ Gap = clean train acc minus val acc (points). Val acc shows final epoch, best in
 | ImageNet-64 | 0 | 4 | 0.0 | $0.00 |
 | **Total (sum of run-minutes)** | 24 | 20 | **185.6** (3.09 h) | $10.18 at $3.29/h (upper bound) |
 
-**Wall-clock (estimated, counting in-progress runs up to now):** 222 min (3.70 h) from the earliest run start (2026-10-10 15:00) to the latest run end (2026-10-10 18:41); **GPU cost on wall-clock: $12.16** at $3.29/h.
-Sum of completed run-minutes is 186 min. Completed runs rarely overlapped (peak 1), so the span exceeds the sum of run-minutes by idle gaps and startup/eval time (the sum will overstate wall-clock once the concurrent queues complete); 3 runs currently in progress (21 min elapsed so far; peak concurrency now 3) are counted in the span but not in the sum; time with at least one run active is 199 min ($10.94). Start = run-directory creation time (falls back to results.json mtime minus total_minutes), end = results.json mtime (in-progress runs end at report time). Per-run minutes and img/s of overlapping runs are inflated by GPU sharing.
+**Wall-clock (estimated, counting in-progress runs up to now):** 223 min (3.71 h) from the earliest run start (2026-10-10 15:00) to the latest run end (2026-10-10 18:42); **GPU cost on wall-clock: $12.21** at $3.29/h.
+Sum of completed run-minutes is 186 min. Completed runs rarely overlapped (peak 1), so the span exceeds the sum of run-minutes by idle gaps and startup/eval time (the sum will overstate wall-clock once the concurrent queues complete); 3 runs currently in progress (24 min elapsed so far; peak concurrency now 3) are counted in the span but not in the sum; time with at least one run active is 200 min ($10.99). Start = run-directory creation time (falls back to results.json mtime minus total_minutes), end = results.json mtime (in-progress runs end at report time). Per-run minutes and img/s of overlapping runs are inflated by GPU sharing.
 
 ## CIFAR-10
 
@@ -37,11 +37,11 @@ Sum of completed run-minutes is 186 min. Completed runs rarely overlapped (peak 
 | bf1_slvit | 100 | 2.70 | 78.21 | 75.84 | 2.4 | 10.7 | 8,163 | vs t5c_bs256: model tiny->slvit, batch 256->128, lr 0.001->0.003, warmup 5->10: val -6.2 pts, gap 3->2, img/s x1.57. SL-ViT shape (9 layers, 12 heads, MLP 2, 2.7M params) with the SL-ViT recipe (batch 128, lr 3e-3, warmup 10, reprob 0.25), compared with the best same-budget Tiny run |
 | bf1b_tiny_samerecipe | 100 | 5.36 | 48.77 | 48.59 (48.87) | 0.2 | 11.8 | 7,092 | vs bf1_slvit: model slvit->tiny: val -27.2 pts, gap 2->0, img/s x0.87. shape effect: identical SL-ViT recipe, but our 12-layer / 3-head / MLP-4 Tiny; train acc is also low, so it is an optimization stall, not overfitting |
 | bf2_slvit_init | 100 | 2.70 | 49.62 | 49.33 (49.36) | 0.3 | 10.3 | 8,299 | vs bf1_slvit: init default->impulse: val -26.5 pts, gap 2->0, img/s x1.02. init effect: identical to bf1 but impulse init; train acc is also low, so training stalled (suspect lr 3e-3 with this init; bf1_slvit_lr* will tell) |
-| bf3_slvit_300ep | pending | pending | pending | pending | pending | pending | pending | running (epoch 80/300, log updated 0 min ago); result pending |
+| bf3_slvit_300ep | pending | pending | pending | pending | pending | pending | pending | running (epoch 88/300, log updated 0 min ago); result pending |
 | bf4_slvit_300ep_mixhalf | pending | pending | pending | pending | pending | pending | pending | not started |
-| bf1_slvit_lr1e-3 | pending | pending | pending | pending | pending | pending | pending | running (epoch 47/100, log updated 0 min ago); result pending |
+| bf1_slvit_lr1e-3 | pending | pending | pending | pending | pending | pending | pending | running (epoch 55/100, log updated 0 min ago); result pending |
 | bf1_slvit_lr5e-4 | pending | pending | pending | pending | pending | pending | pending | not started |
-| rd_pilot_a | pending | pending | pending | pending | pending | pending | pending | running (epoch 33/100, log updated 0 min ago); result pending |
+| rd_pilot_a | pending | pending | pending | pending | pending | pending | pending | running (epoch 39/100, log updated 0 min ago); result pending |
 | rd_pilot_b | pending | pending | pending | pending | pending | pending | pending | not started |
 | rd_pilot_noinject | pending | pending | pending | pending | pending | pending | pending | not started |
 | rd_flat6 | pending | pending | pending | pending | pending | pending | pending | not started |
@@ -106,16 +106,21 @@ Subtotal: **63.7 GPU min** (1.06 h), **$3.49**
 
 ### Comparison with published results
 
-CIFAR-100 references come from `RESEARCH_DIRECTIONS.md` (fetched by research agents; not in the verified `REFERENCES.md` tables). No verified published CIFAR-100 ResNet-18 number is recorded, so the CNN comparison is our own r18_full only.
+Rows tagged [verified] are from `REFERENCES.md` (CIFAR-100 section, re-checked against the source pages). The same-shape ViT (68.09) and L-ViT (74.87) rows were quoted by a research agent in `RESEARCH_DIRECTIONS.md` and are not independently re-checked. No verified published CIFAR-100 ResNet-18 number is recorded, so the CNN comparison is our own r18_full only.
 
 | model | params | setting | acc (%) | our best ViT minus ref | our best CNN minus ref | type | source |
 |---|---|---|---|---|---|---|---|
 | **ours: c100_t6_full_300ep** (tiny, 300 ep, batch 256) | 5.4M | this repo | 70.49 |  |  | ViT | this repo |
 | **ours: c100_r18_full** (resnet18, 100 ep, batch 256) | 11.2M | this repo | 73.22 |  |  | CNN | this repo |
-| ViT 12L/3h/MLP4 (same shape as ours), Gani et al. recipe | n/s | n/s | 68.09 | +2.4 | +5.1 | ViT | [arXiv 2210.07240 Tab. 15 (via RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2210.07240) |
-| ViT 9L/12h/MLP2, Gani et al. recipe | n/s | n/s | 73.81 | -3.3 | -0.6 | ViT | [arXiv 2210.07240 Tab. 15 (via RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2210.07240) |
-| L-ViT (+LSA), SL-ViT paper ablation | n/s | n/s | 74.87 | -4.4 | -1.7 | ViT (locality) | [arXiv 2112.13492 (via RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2112.13492) |
-| ViTRM (Vision Tiny Recursion Model) | ~3.6M | n/s | 72.10 | -1.6 | +1.1 | ViT (recurrent) | [arXiv 2603.19503 (via RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2603.19503) |
+| ViT 12L/3h/MLP4 (same shape as ours), Gani et al. recipe [not re-checked] | n/s | n/s | 68.09 | +2.4 | +5.1 | ViT | [arXiv 2210.07240 Tab. 15 (quoted by research agent, RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2210.07240) |
+| L-ViT (+LSA), SL-ViT paper ablation [not re-checked] | n/s | n/s | 74.87 | -4.4 | -1.7 | ViT (locality) | [arXiv 2112.13492 (quoted by research agent, RESEARCH_DIRECTIONS.md)](https://arxiv.org/abs/2112.13492) |
+| ViTRM (Vision Tiny Recursion Model) [verified] | ~3.6M | n/s | 72.10 | -1.6 | +1.1 | ViT (recurrent) | [arXiv 2603.19503 (REFERENCES.md)](https://arxiv.org/abs/2603.19503) |
+| ViT baseline (depth 9, dim 192), SPT/LSA paper [verified] | 2.8M | 100 ep, batch 128 | 73.81 | -3.3 | -0.6 | ViT | [arXiv 2112.13492 Tab. 2 (REFERENCES.md)](https://arxiv.org/html/2112.13492v1) |
+| SL-ViT (ViT + SPT + LSA) [verified] | 2.9M | 100 ep, batch 128 | 76.92 | -6.4 | -3.7 | ViT (locality) | [arXiv 2112.13492 Tab. 2 (REFERENCES.md)](https://arxiv.org/html/2112.13492v1) |
+| ViT-Lite-7/4 [verified] | 3.72M | 300 ep, batch 128 | 73.94 | -3.5 | -0.7 | ViT | [arXiv 2104.05704 Tab. 1 (REFERENCES.md)](https://arxiv.org/html/2104.05704v4) |
+| ViT + SSL pretraining on CIFAR (Gani et al.) [verified] | 2.8M | 200 SSL + 100 ep | 79.15 | -8.7 | -5.9 | ViT, 2-stage | [arXiv 2210.07240 Tab. 3 (REFERENCES.md)](https://arxiv.org/html/2210.07240) |
+| CCT-7/3x1 (conv tokenizer, hybrid) [verified] | 3.76M | 300 ep, batch 128 | 80.92 | -10.4 | -7.7 | hybrid | [arXiv 2104.05704 Tab. 1 (REFERENCES.md)](https://arxiv.org/html/2104.05704v4) |
+| CCT-7/3x1, long schedule [verified] | 3.76M | 5000 ep | 82.87 | -12.4 | -9.7 | hybrid | [arXiv 2104.05704 Tab. 2 (REFERENCES.md)](https://arxiv.org/html/2104.05704v4) |
 
 ![Ablation ladder: train (dashed) vs validation (solid) accuracy and gap](report_assets/c100_acc_curves.png)
 
@@ -204,15 +209,14 @@ All numbers below are single-seed runs from `runs/*/results.json`; differences o
 - Our best CIFAR-10 ViT-Tiny (87.96%, 300 epochs) is within 0.5 points of the closest matched published baseline (88.43%, same 192/12/3 p4 shape, 100 epochs, Trockman & Kolter). It is 5.6 points below tuned pure ViTs (ViT-Lite-7/4 93.57, SPT-paper ViT 93.58, SL-ViT 94.53), which are shallower, use batch 128, and use tuned lr and wd.
 - Our recipe port of those results has not matched them yet: `bf1_slvit` (their shape and recipe, 100 ep) got 75.84%. Part of the gap is step count: their repeated-aug sampler makes "100 epochs" about 117k steps versus our 39k. The 300-epoch `bf3_slvit_300ep` is **pending**.
 - Our ResNet-18 (93.16%) matches kuangliu's 93.02% but is 2.1 points under the Cutout-paper 95.28% (200 epochs, batch 128).
-- CIFAR-100: our 70.49% beats the same-shape 12L/3h ViT in Gani et al. (68.09) but is below their 9L/12h/MLP-2 ViT (73.81), SL-ViT's L-ViT (74.87) and ViTRM (72.1). These C100 references come from `RESEARCH_DIRECTIONS.md`, not the verified table, and their training budgets are not recorded.
+- CIFAR-100 (verified in `REFERENCES.md`): our 70.49% is 1.6 below ViTRM (72.1), 3.3 below the SPT-paper plain ViT (73.81), 3.4 below ViT-Lite-7/4 (73.94), 6.4 below SL-ViT (76.92), and well below SSL-pretrained ViT (79.15) and CCT-7/3x1 (80.92; 82.87 at 5000 epochs). Our 73.22% ResNet-18 is level with the plain small ViTs. The same-shape 12L/3h ViT at 68.09 (Gani Tab. 15) is quoted by a research agent and not re-checked.
 - Results above ~96% under 10M params in the references use convolutional tokenizers (CCT 96.53), self-supervised pretraining, or very long schedules (CCT 98.00 at 5000 epochs).
 
 ### Throughput engineering
 
-- CUDA graphs (`--cudagraphs`, `torch.compile` reduce-overhead) sped up training about 2.7x (figure from the comments in `run_tiny_imagenet.sh` / `run_imagenet64.sh`, measured with `bench_step.py`; the flag help says 1.6 to 3x; not re-measured for this report). Small ViTs are kernel-launch bound, so removing launch overhead is what matters, not FLOPs.
-- The un-graphed `t5c_bs256` ran at 9.6 s/epoch (5.2k img/s). The graphed CIFAR-100 batch-256 runs run at about 3 to 4 s/epoch.
-- Because small models are launch-bound, they leave the GPU underused, so running several queues in parallel on one GPU is worthwhile. The report now gives both the sum of run-minutes and an estimated wall-clock span (see Compute summary).
-- Per-run img/s in this report is not clean when queues overlap (GPU sharing inflates run times). How much parallel queues slow each run, and the net wall-clock gain, is **pending** until the current chains (`bf3`, `bf1_slvit_lr*`, `rd_pilot_*`) finish.
+- CUDA graphs (`--cudagraphs`, `torch.compile` reduce-overhead) give 2.7x, measured. A 10-epoch real CIFAR-10 run (batch 256, ViT-Tiny, RandAugment) took 9.45 s/epoch without vs 3.48 s/epoch with graphs, with the same accuracy within noise (val 53.2% vs 53.0%). `bench_step.py` (the reproduction script) gives 49.3 vs 16.6-17.5 ms/step at batch 256 and 50.6 vs 32.1 ms/step at batch 1024 (1.6x), so the win is largest at small batch, where small ViTs are kernel-launch bound.
+- The un-graphed `t5c_bs256` ran at 9.6 s/epoch (5.2k img/s) for the same reason; graphed CIFAR-100 batch-256 runs take about 3 to 4 s/epoch.
+- Parallel queues were measured: with 3 concurrent jobs, per-job epoch time rose 9 to 55% (bf3 6.1 to 6.65 s; recurrent pilot ~5.6 to 8.8 s) for roughly 2x the total throughput, at 9 GB of 80 GB memory and 226 W of 350 W. Small launch-bound models leave the GPU underused, so parallel queues are worth it. The report gives both the sum of run-minutes and an estimated wall-clock span (see Compute summary); per-run img/s of overlapping runs is lower than solo.
 
 ### Scaling to bigger datasets
 

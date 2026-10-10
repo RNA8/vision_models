@@ -50,3 +50,19 @@ The Papers with Code leaderboard is offline: it redirects to huggingface.co/pape
 - **Results above ~96% under 10M params** need CNN-like inductive bias (CCT, NesT), self-supervised pretraining (Gani et al.), or very long schedules (CCT at 5000 epochs).
 - **Our ResNet-18 (93.2% at 100 epochs)** matches kuangliu's 93.02% and is ~2 points under the tuned 95.28% bar (200 epochs, batch 128).
 - **Speed:** airbench reaches 94% in ~3 s on an A100. Our recipe optimizes for teaching (ablations), not for record times.
+
+## CIFAR-100 (verified by the main agent against the source pages, 2026-10-10)
+
+All from scratch, 32x32, no extra data unless noted.
+
+| Model | Params | Epochs | Acc | Source | Evidence |
+|---|---|---|---|---|---|
+| ViTRM (Vision Tiny Recursion Model) | ~3.6M | n/s | 72.1 | [arXiv 2603.19503](https://arxiv.org/abs/2603.19503) | "On CIFAR-100, ViTRM (72.1%)" |
+| ViT baseline (depth 9, dim 192), SPT/LSA paper | 2.8M | 100 (128) | 73.81 | [arXiv 2112.13492](https://arxiv.org/html/2112.13492v1) Tab. 2 | "ViT 8593 189.8 2.8 93.58 73.81 ..." |
+| SL-ViT (ViT + SPT + LSA) | 2.9M | 100 (128) | 76.92 | arXiv 2112.13492 Tab. 2 | "SL-ViT 7697 199.2 2.9 94.53 {76.92} ..." |
+| ViT + self-supervised pretraining on CIFAR itself (Gani et al.) | 2.8M | 200 SSL + 100 | 79.15 | [arXiv 2210.07240](https://arxiv.org/html/2210.07240) Tab. 3 | "ViT (Ours) 2.8 63.36 96.41 79.15" |
+| ViT-Lite-7/4 | 3.72M | 300 (128) | 73.94 | [arXiv 2104.05704](https://arxiv.org/html/2104.05704v4) Tab. 1 | "ViT-Lite-7/4 93.57 % 73.94 % 95.16 % 99.77 % 3.72 M" (C10, C100, …) |
+| CCT-7/3x1 (hybrid) | 3.76M | 300 (128) | 80.92 | arXiv 2104.05704 Tab. 1 | "CCT-7/3×1 96.53 % 80.92 % 95.56 % 99.82 % 3.76 M" (C10, C100, …) |
+| CCT-7/3x1, long schedule (hybrid) | 3.76M | 5000 | 82.87 | arXiv 2104.05704 Tab. 2 | "5000 Sinusoidal 98.00% 82.87%" |
+
+Not independently re-checked (quoted by a research agent in `RESEARCH_DIRECTIONS.md`): Gani et al. Tab. 15 same-shape ViT 12L/3h/MLP4 = 68.09 (and 9L/12h/MLP2 = 73.81), and the SL-ViT-paper L-ViT (+LSA) ablation = 74.87.

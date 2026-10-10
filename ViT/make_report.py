@@ -257,15 +257,20 @@ REFS = {
   ("airbench94 (Keller Jordan)", "small CNN", "3.29 s on 1x A100", 94.0, "CNN", "arXiv 2404.00498", "https://arxiv.org/abs/2404.00498"),
  ],
  "cifar100": [
-  ("ViT 12L/3h/MLP4 (same shape as ours), Gani et al. recipe", "n/s", "n/s", 68.09, "ViT", "arXiv 2210.07240 Tab. 15 (via RESEARCH_DIRECTIONS.md)", "https://arxiv.org/abs/2210.07240"),
-  ("ViT 9L/12h/MLP2, Gani et al. recipe", "n/s", "n/s", 73.81, "ViT", "arXiv 2210.07240 Tab. 15 (via RESEARCH_DIRECTIONS.md)", "https://arxiv.org/abs/2210.07240"),
-  ("L-ViT (+LSA), SL-ViT paper ablation", "n/s", "n/s", 74.87, "ViT (locality)", "arXiv 2112.13492 (via RESEARCH_DIRECTIONS.md)", "https://arxiv.org/abs/2112.13492"),
-  ("ViTRM (Vision Tiny Recursion Model)", "~3.6M", "n/s", 72.1, "ViT (recurrent)", "arXiv 2603.19503 (via RESEARCH_DIRECTIONS.md)", "https://arxiv.org/abs/2603.19503"),
+  ("ViT 12L/3h/MLP4 (same shape as ours), Gani et al. recipe [not re-checked]", "n/s", "n/s", 68.09, "ViT", "arXiv 2210.07240 Tab. 15 (quoted by research agent, RESEARCH_DIRECTIONS.md)", "https://arxiv.org/abs/2210.07240"),
+  ("L-ViT (+LSA), SL-ViT paper ablation [not re-checked]", "n/s", "n/s", 74.87, "ViT (locality)", "arXiv 2112.13492 (quoted by research agent, RESEARCH_DIRECTIONS.md)", "https://arxiv.org/abs/2112.13492"),
+  ("ViTRM (Vision Tiny Recursion Model) [verified]", "~3.6M", "n/s", 72.1, "ViT (recurrent)", "arXiv 2603.19503 (REFERENCES.md)", "https://arxiv.org/abs/2603.19503"),
+  ("ViT baseline (depth 9, dim 192), SPT/LSA paper [verified]", "2.8M", "100 ep, batch 128", 73.81, "ViT", "arXiv 2112.13492 Tab. 2 (REFERENCES.md)", "https://arxiv.org/html/2112.13492v1"),
+  ("SL-ViT (ViT + SPT + LSA) [verified]", "2.9M", "100 ep, batch 128", 76.92, "ViT (locality)", "arXiv 2112.13492 Tab. 2 (REFERENCES.md)", "https://arxiv.org/html/2112.13492v1"),
+  ("ViT-Lite-7/4 [verified]", "3.72M", "300 ep, batch 128", 73.94, "ViT", "arXiv 2104.05704 Tab. 1 (REFERENCES.md)", "https://arxiv.org/html/2104.05704v4"),
+  ("ViT + SSL pretraining on CIFAR (Gani et al.) [verified]", "2.8M", "200 SSL + 100 ep", 79.15, "ViT, 2-stage", "arXiv 2210.07240 Tab. 3 (REFERENCES.md)", "https://arxiv.org/html/2210.07240"),
+  ("CCT-7/3x1 (conv tokenizer, hybrid) [verified]", "3.76M", "300 ep, batch 128", 80.92, "hybrid", "arXiv 2104.05704 Tab. 1 (REFERENCES.md)", "https://arxiv.org/html/2104.05704v4"),
+  ("CCT-7/3x1, long schedule [verified]", "3.76M", "5000 ep", 82.87, "hybrid", "arXiv 2104.05704 Tab. 2 (REFERENCES.md)", "https://arxiv.org/html/2104.05704v4"),
  ],
 }
 REF_NOTE = {
  "cifar10": "Reference rows are from `REFERENCES.md` (verified 2026-10-10; epochs/batch differ from ours, so this is a rough yardstick, not a controlled comparison).",
- "cifar100": "CIFAR-100 references come from `RESEARCH_DIRECTIONS.md` (fetched by research agents; not in the verified `REFERENCES.md` tables). "
+ "cifar100": "Rows tagged [verified] are from `REFERENCES.md` (CIFAR-100 section, re-checked against the source pages). The same-shape ViT (68.09) and L-ViT (74.87) rows were quoted by a research agent in `RESEARCH_DIRECTIONS.md` and are not independently re-checked. "
              "No verified published CIFAR-100 ResNet-18 number is recorded, so the CNN comparison is our own r18_full only.",
 }
 
