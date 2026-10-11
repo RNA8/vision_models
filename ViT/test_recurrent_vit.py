@@ -122,7 +122,7 @@ def test_presets_and_flops():
         layers = m.n_prelude + m.n_core * m.r_mean + m.n_coda
         print(f"  {name:10s} params {n:5.2f}M  layers at r_mean: {layers:2d}  "
               f"GFLOPs@r_mean {m.flops(m.r_mean) / 1e9:.3f}")
-        assert layers in (6, 12)
+        assert layers in (6, 12, 20)
     from timm.models.vision_transformer import VisionTransformer
     vit = VisionTransformer(img_size=32, patch_size=4, num_classes=10, embed_dim=192, depth=12, num_heads=3)
     print(f"  vit-tiny   params {sum(p.numel() for p in vit.parameters()) / 1e6:5.2f}M")
@@ -140,6 +140,80 @@ def test_compile_parts_cpu():
     m.train()
     m(x_batch(), r=5).sum().backward()  # no_grad prefix + grad suffix graphs
     assert out.shape == ref.shape
+
+
+def _copy_base(dst, src):
+    missing = dst.load_state_dict(src.state_dict(), strict=False)
+    assert not missing.unexpected_keys
+    return missing.missing_keys
+
+
+def test_lora_zero_init_matches_base_and_grads_per_iteration():
+    from train_vit import apply_lsa
+
+    for lsa in (False, True):
+        for inject in ("add", "concat"):
+            torch.manual_seed(0)
+            base = small(inject=inject, state_init="zeros")
+            lo = small(inject=inject, state_init="zeros", lora_rank=4)
+            if lsa:
+                apply_lsa(base), apply_lsa(lo)
+            missing = _copy_base(lo, base)
+            assert missing and all("core_extras" in k for k in missing)
+            base.eval(), lo.eval()
+            x = x_batch()
+            with torch.no_grad():
+                assert torch.allclose(base(x, r=5), lo(x, r=5), atol=1e-5), (lsa, inject)
+            lo.train()
+            lo(x, r=3).float().pow(2).mean().backward()  # r_mean=3: iteration t uses adapter t
+            b = lo.core_extras[0].qkv.B.grad  # B is zero, so only B gets gradient at first
+            assert b is not None and all(b[t].abs().sum() > 0 for t in range(3)), "every iteration's LoRA is used"
+            assert float(lo.core_extras[0].qkv.A.grad.abs().sum()) == 0.0  # dL/dA = 0 while B = 0
+    # iterations beyond n_lora_iter reuse the last adapter
+    lo.eval()
+    assert lo(x, r=7).shape == (4, 10)
+    assert lo.t_idx(100).item() == lo.n_lora_iter - 1
+
+
+def test_sandwich_and_lora_modes_run():
+    for inject in ("add", "concat"):
+        for rank, sw in ((0, True), (4, False), (4, True)):
+            torch.manual_seed(0)
+            m = small(inject=inject, lora_rank=rank, sandwich=sw, drop_path=0.1).train()
+            out = m(x_batch())
+            out.float().pow(2).mean().backward()
+            assert all(torch.isfinite(p.grad).all() for p in m.parameters() if p.grad is not None)
+            if sw:
+                assert any("n2" in n for n, _ in m.named_parameters())
+            m.eval()
+            with torch.no_grad():
+                lg = m(x_batch(), return_all=True)
+            assert lg.shape == (m.r_mean, 4, 10) and torch.isfinite(lg).all()
+
+
+def test_lora_params_and_flops_overhead():
+    base = build_recurrent_vit("rd_tiny4", 100, r_mean=8, inject="add")
+    n0 = sum(p.numel() for p in base.parameters())
+    for rank in (8, 32):
+        m = build_recurrent_vit("rd_tiny4", 100, r_mean=8, inject="add", lora_rank=rank)
+        extra = sum(p.numel() for p in m.parameters()) - n0
+        # per iteration per block: rank * (768 + 384 + 960 + 960) = 3072 * rank; 8 iterations, 2 core blocks
+        assert extra == 3072 * rank * 8 * 2, extra
+        assert m.flops(8) > base.flops(8)
+    flat20 = build_recurrent_vit("rd_flat20", 100)
+    # equal-MACs control: 20 blocks once == (2 + 2 * 8 + 2) block applications
+    assert abs(flat20.flops(1) / base.flops(8) - 1) < 0.01
+
+
+def test_lora_compile_parts_cpu():
+    torch.manual_seed(0)
+    m = small(state_init="zeros", lora_rank=2, sandwich=True)
+    m.compile_parts()
+    m.train()
+    m(x_batch(), r=5).sum().backward()
+    m.eval()
+    with torch.no_grad():
+        assert m(x_batch(), r=4).shape == (4, 10)
 
 
 if __name__ == "__main__":

@@ -112,6 +112,8 @@ def parse_args():
     g.add_argument("--rd-outer-norm", default=None, choices=["ln", "rms", "none"], help="norm on the state per loop")
     g.add_argument("--rd-coda-every-step", action="store_true",
                    help="deep supervision: decode every loop in training and average the logits")
+    g.add_argument("--rd-lora-rank", type=int, default=None, help="per-iteration LoRA rank on the core's qkv/proj/MLP")
+    g.add_argument("--rd-sandwich", action="store_true", help="sandwich norm in the core (RMSNorm after attn/MLP sums)")
     g.add_argument("--qk-norm", action="store_true", help="QK-norm in attention (rd_* models)")
     g.add_argument("--eval-r", type=int, default=None, help="recurrence used by evaluate() (default r_mean)")
     return p.parse_args()
@@ -427,7 +429,8 @@ def build_model(args, num_classes, img_size=32):
             r_mean=args.rd_r_mean, k_backprop=args.rd_k_backprop, depth_dist=args.rd_depth_dist,
             state_init=args.rd_state_init, inject=args.rd_inject, outer_norm=args.rd_outer_norm,
             qk_norm=args.qk_norm or None, r_eval=args.eval_r,
-            coda_every_step=args.rd_coda_every_step or None)  # train mode samples r inside forward()
+            coda_every_step=args.rd_coda_every_step or None,
+            lora_rank=args.rd_lora_rank, sandwich=args.rd_sandwich or None)  # train mode samples r inside forward()
         if args.init != "default":
             print(f"note: --init {args.init} is only implemented for the standard ViT; ignored for {args.model}")
         if args.lsa:

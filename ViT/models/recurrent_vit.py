@@ -61,6 +61,10 @@ RD_PRESETS = {
     # (the inject norm) on the residual stream after layer 2.
     "rd_flat6": dict(embed_dim=192, num_heads=3, n_prelude=2, n_core=2, n_coda=2, r_mean=1,
                      depth_dist="fixed", inject="none", outer_norm="none", state_init="zeros"),
+    # Equal-MACs NON-recurrent control for rd_tiny4 at r = 8: 2 + 16 + 2 = 20 distinct blocks run once
+    # (same MACs as the looped model at r = 8, ~2.6x the parameters).
+    "rd_flat20": dict(embed_dim=192, num_heads=3, n_prelude=2, n_core=16, n_coda=2, r_mean=1,
+                      depth_dist="fixed", inject="none", outer_norm="none", state_init="zeros"),
 }
 
 DEPTH_DISTS = ("poisson_lognormal", "uniform", "fixed")
@@ -94,12 +98,99 @@ def _norm(kind, dim):
     raise ValueError(f"unknown norm {kind!r}; choose ln, rms or none")
 
 
+class LoRABank(nn.Module):
+    """Per-iteration low-rank update of one linear map (Relaxed Recursive Transformers, 2410.20672):
+    y = base(x) + (x A[t]) B[t]. A: (L, in, rank) ~ N(0, 1/in), B: (L, rank, out) = 0, so the model starts
+    as the plain tied one. Iterations t >= L reuse the adapter L-1. `t` is a (1,) long tensor (indexing
+    with a tensor keeps the compiled / CUDA-graph core step static across iterations)."""
+
+    def __init__(self, n_iter, d_in, d_out, rank):
+        super().__init__()
+        self.A = nn.Parameter(torch.randn(n_iter, d_in, rank) / math.sqrt(d_in))
+        self.B = nn.Parameter(torch.zeros(n_iter, rank, d_out))
+
+    def forward(self, x, t):
+        return (x @ self.A.index_select(0, t)[0].to(x.dtype)) @ self.B.index_select(0, t)[0].to(x.dtype)
+
+
+class CoreExtras(nn.Module):
+    """Optional per-core-block extras: sandwich norms (n2 after the attention residual sum, n4 after the
+    MLP residual sum; RMSNorm as in Geiping et al. 2502.05171 Sec. 3.2) and per-iteration LoRA banks on
+    qkv / proj / fc1 / fc2."""
+
+    def __init__(self, dim, hidden, n_iter, rank, sandwich):
+        super().__init__()
+        self.n2 = nn.RMSNorm(dim, eps=1e-6) if sandwich else None
+        self.n4 = nn.RMSNorm(dim, eps=1e-6) if sandwich else None
+        if rank:
+            self.qkv, self.proj = LoRABank(n_iter, dim, 3 * dim, rank), LoRABank(n_iter, dim, dim, rank)
+            self.fc1, self.fc2 = LoRABank(n_iter, dim, hidden, rank), LoRABank(n_iter, hidden, dim, rank)
+        self.rank = rank
+
+
+def _attention(a, x, qkv_delta=None):
+    """timm Attention (plain or LSA-patched by train_vit.apply_lsa) with an optional additive qkv delta."""
+    B, N, C = x.shape
+    qkv = a.qkv(x)
+    if qkv_delta is not None:
+        qkv = qkv + qkv_delta
+    q, k, v = qkv.reshape(B, N, 3, a.num_heads, a.head_dim).permute(2, 0, 3, 1, 4).unbind(0)
+    q, k = a.q_norm(q), a.k_norm(k)
+    if hasattr(a, "lsa_temperature"):
+        q = q * a.lsa_temperature.view(1, -1, 1, 1).to(q.dtype)
+        keep = ~torch.eye(N, dtype=torch.bool, device=x.device)
+        o = F.scaled_dot_product_attention(q, k, v, attn_mask=keep, scale=1.0)
+    else:
+        o = F.scaled_dot_product_attention(q, k, v)
+    return o.transpose(1, 2).reshape(B, N, C)
+
+
+def extras_block(blk, ex, x, t):
+    """timm Block forward with the sandwich norms and per-iteration LoRA of `ex` (CoreExtras).
+    Pre-norm baseline: x += attn(n1 x); x += mlp(n3 x). Sandwich: x = n2(x + attn(n1 x)); x = n4(x + mlp(n3 x))."""
+    lora = ex.rank > 0
+    h = blk.norm1(x)
+    a = blk.attn
+    B, N, C = h.shape
+    qkv = a.qkv(h)
+    if lora:
+        qkv = qkv + ex.qkv(h, t)
+    q, k, v = qkv.reshape(B, N, 3, a.num_heads, a.head_dim).permute(2, 0, 3, 1, 4).unbind(0)
+    q, k = a.q_norm(q), a.k_norm(k)
+    if hasattr(a, "lsa_temperature"):  # LSA: learnable temperature, diagonal masked
+        q = q * a.lsa_temperature.view(1, -1, 1, 1).to(q.dtype)
+        keep = ~torch.eye(N, dtype=torch.bool, device=h.device)
+        o = F.scaled_dot_product_attention(q, k, v, attn_mask=keep, scale=1.0)
+    else:
+        o = F.scaled_dot_product_attention(q, k, v)
+    o = o.transpose(1, 2).reshape(B, N, C)
+    y = a.proj(o)
+    if lora:
+        y = y + ex.proj(o, t)
+    x = x + blk.drop_path1(y)
+    if ex.n2 is not None:
+        x = ex.n2(x)
+    h = blk.norm2(x)
+    m = blk.mlp
+    u = m.fc1(h)
+    if lora:
+        u = u + ex.fc1(h, t)
+    u = m.drop1(m.act(u))
+    y = m.fc2(u)
+    if lora:
+        y = y + ex.fc2(u, t)
+    x = x + blk.drop_path2(m.drop2(y))
+    if ex.n4 is not None:
+        x = ex.n4(x)
+    return x
+
+
 class RecurrentViT(nn.Module):
     def __init__(self, img_size=32, patch_size=4, in_chans=3, num_classes=10, embed_dim=192, num_heads=3,
                  mlp_ratio=4.0, n_prelude=2, n_core=2, n_coda=2, r_mean=4, k_backprop=None,
                  depth_dist="poisson_lognormal", depth_sigma=0.5, r_max=None, state_init="normal",
                  state_std=math.sqrt(2 / 5), inject="concat", outer_norm="ln", qk_norm=False,
-                 drop_path=0.0, coda_every_step=False, r_eval=None):
+                 drop_path=0.0, coda_every_step=False, r_eval=None, lora_rank=0, sandwich=False):
         super().__init__()
         assert n_core >= 1, "the core needs at least one block"
         assert inject in ("concat", "add", "none"), inject
@@ -127,6 +218,12 @@ class RecurrentViT(nn.Module):
         self.prelude = nn.ModuleList([mk(i) for i in range(n_prelude)])
         self.core = nn.ModuleList([mk(n_prelude + i) for i in range(n_core)])
         self.coda = nn.ModuleList([mk(n_prelude + n_core + i) for i in range(n_coda)])
+        self.lora_rank, self.sandwich = int(lora_rank), bool(sandwich)
+        self.n_lora_iter = self.r_mean  # one LoRA set per iteration t < r_mean; later iterations reuse the last
+        self.core_extras = nn.ModuleList(
+            [CoreExtras(embed_dim, int(embed_dim * mlp_ratio), self.n_lora_iter, self.lora_rank, self.sandwich)
+             for _ in range(n_core)]) if (self.lora_rank or self.sandwich) else None
+        self.register_buffer("t_all", torch.arange(self.n_lora_iter), persistent=False)
         self.inject_norm = nn.LayerNorm(embed_dim, eps=1e-6)
         self.adapter = nn.Linear(2 * embed_dim, embed_dim) if inject == "concat" else None
         self.outer_norm = _norm(outer_norm, embed_dim)
@@ -168,14 +265,25 @@ class RecurrentViT(nn.Module):
         s = torch.randn_like(e) * self.state_std  # Geiping: truncated at 3 sigma
         return s.clamp_(-3 * self.state_std, 3 * self.state_std)
 
-    def core_step(self, s, e):
-        """One recurrence: s <- OuterNorm(Core(inject(s, e)))."""
+    def t_idx(self, t):
+        """(1,) long tensor selecting the LoRA set of iteration t (None when there is no LoRA)."""
+        if not self.lora_rank:
+            return None
+        i = min(t, self.n_lora_iter - 1)
+        return self.t_all[i:i + 1]
+
+    def core_step(self, s, e, t=None):
+        """One recurrence: s <- OuterNorm(Core(inject(s, e))). t: LoRA index tensor from t_idx()."""
         if self.inject == "concat":
             s = self.adapter(torch.cat([s, e], dim=-1))
         elif self.inject == "add":
             s = s + e
-        for blk in self.core:
-            s = blk(s)
+        if self.core_extras is None:
+            for blk in self.core:
+                s = blk(s)
+        else:
+            for blk, ex in zip(self.core, self.core_extras):
+                s = extras_block(blk, ex, s, t)
         return self.outer_norm(s)
 
     def decode(self, s):
@@ -202,11 +310,11 @@ class RecurrentViT(nn.Module):
         n_nograd = max(0, r - self.k_backprop) if (self.training and torch.is_grad_enabled()) else 0
         if n_nograd:
             with torch.no_grad():
-                for _ in range(n_nograd):
-                    s = self._core_fn(s, e)
+                for i in range(n_nograd):
+                    s = self._core_fn(s, e, self.t_idx(i))
         outs = []
-        for _ in range(r - n_nograd):
-            s = self._core_fn(s, e)
+        for i in range(n_nograd, r):
+            s = self._core_fn(s, e, self.t_idx(i))
             if self.coda_every_step and self.training:
                 outs.append(self._decode_fn(s))
         if outs:  # average of per-step logits: a deep-supervision variant (off by default)
@@ -221,8 +329,8 @@ class RecurrentViT(nn.Module):
         e = self._embed_fn(x)
         s = self.init_state(e)
         logits, delta = [], []
-        for _ in range(r):
-            s_new = self._core_fn(s, e)
+        for i in range(r):
+            s_new = self._core_fn(s, e, self.t_idx(i))
             d = (s_new - s).float().flatten(1).norm(dim=1) / s_new.float().flatten(1).norm(dim=1).clamp_min(1e-12)
             s = s_new
             delta.append(d)
@@ -240,7 +348,7 @@ class RecurrentViT(nn.Module):
             core = torch.compile(self.core_step, **kw)
             # CUDA graphs reuse their output buffer on every replay, and the loop feeds each output back
             # in; clone so iteration t+1 doesn't overwrite the state iteration t returned.
-            self._core_fn = (lambda s, e: core(s, e).clone()) if mode == "reduce-overhead" else core
+            self._core_fn = (lambda s, e, t=None: core(s, e, t).clone()) if mode == "reduce-overhead" else core
         if "decode" in parts:
             self._decode_fn = torch.compile(self.decode, **kw)
         return self
@@ -255,8 +363,13 @@ class RecurrentViT(nn.Module):
         blk = (4 + 2 * self.mlp_ratio) * n * d * d + 2 * n * n * d  # qkv+proj+mlp, QK^T and AV
         patch = self.num_patches * d * self.patch_embed.proj.in_channels * p[0] * p[1]
         adapter = n * 2 * d * d if self.inject == "concat" else 0
+        if self.lora_rank:  # qkv (d->3d), proj (d->d), fc1 (d->4d), fc2 (4d->d) low-rank updates per core block
+            h = int(d * self.mlp_ratio)
+            lora = n * self.lora_rank * ((d + 3 * d) + (d + d) + (d + h) + (h + d))
+        else:
+            lora = 0
         head = d * self.num_classes
-        macs = patch + self.n_prelude * blk + r * (self.n_core * blk + adapter) \
+        macs = patch + self.n_prelude * blk + r * (self.n_core * (blk + lora) + adapter) \
             + coda_evals * (self.n_coda * blk + head)
         return 2 * macs
 
