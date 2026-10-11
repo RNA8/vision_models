@@ -1,0 +1,144 @@
+{
+  "moe_spec": "cc:k=8,stages=3",
+  "best_val": 87.31,
+  "final_val": 87.31,
+  "moe_entropy": 0.4751622131667458,
+  "moe_min_share": 0.016861538402736187,
+  "load_per_layer": {
+    "stages.3.downsample.pre_block.token_mixer.conv.c": [
+      0.1151,
+      0.0121,
+      0.0998,
+      0.2481,
+      0.1475,
+      0.1168,
+      0.2125,
+      0.0481
+    ],
+    "stages.3.downsample.pre_block.channel_mixer.conv1.c": [
+      0.056,
+      0.225,
+      0.1521,
+      0.0852,
+      0.1388,
+      0.1064,
+      0.1187,
+      0.1178
+    ],
+    "stages.3.downsample.pre_block.channel_mixer.conv2.c": [
+      0.1692,
+      0.8308,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "stages.3.downsample.spatial_downsample.c": [
+      0.1184,
+      0.1272,
+      0.0064,
+      0.0898,
+      0.2318,
+      0.062,
+      0.124,
+      0.2404
+    ],
+    "stages.3.downsample.channel_downsample.c": [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "stages.3.downsample.ffn.conv1.c": [
+      0.1204,
+      0.0883,
+      0.0968,
+      0.123,
+      0.132,
+      0.131,
+      0.1483,
+      0.1602
+    ],
+    "stages.3.downsample.ffn.conv2.c": [
+      0.0,
+      0.0,
+      0.9959,
+      0.0,
+      0.0039,
+      0.0002,
+      0.0,
+      0.0
+    ],
+    "stages.3.blocks.0.token_mixer.conv.c": [
+      0.0866,
+      0.0239,
+      0.046,
+      0.4912,
+      0.0594,
+      0.0447,
+      0.1983,
+      0.0499
+    ],
+    "stages.3.blocks.0.channel_mixer.conv1.c": [
+      0.0376,
+      0.1157,
+      0.1923,
+      0.333,
+      0.0972,
+      0.0283,
+      0.0902,
+      0.1057
+    ],
+    "stages.3.blocks.0.channel_mixer.conv2.c": [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "stages.3.blocks.1.token_mixer.conv.c": [
+      0.0574,
+      0.0042,
+      0.6659,
+      0.0057,
+      0.0304,
+      0.0581,
+      0.0061,
+      0.1722
+    ],
+    "stages.3.blocks.1.channel_mixer.conv1.c": [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "stages.3.blocks.1.channel_mixer.conv2.c": [
+      0.0,
+      0.9959,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0041,
+      0.0
+    ]
+  },
+  "params_total": 18846608,
+  "params_active": 4839440,
+  "macs_active": 282885120.0,
+  "cpu_ms_bs1_t4_pytorch_eager": 27.287483506370336,
+  "cpu_ms_bs1_t1_pytorch_eager": 41.156936502375174
+}

@@ -1,0 +1,38 @@
+{
+  "moe_spec": "mlp:e=4,last=4",
+  "best_val": 74.91,
+  "final_val": 74.68,
+  "moe_entropy": 0.994822546839714,
+  "moe_min_share": 0.2118000015616417,
+  "load_per_layer": {
+    "blocks.8.mlp": [
+      0.2664,
+      0.2831,
+      0.2175,
+      0.233
+    ],
+    "blocks.9.mlp": [
+      0.2694,
+      0.2768,
+      0.1733,
+      0.2805
+    ],
+    "blocks.10.mlp": [
+      0.2187,
+      0.2547,
+      0.2749,
+      0.2517
+    ],
+    "blocks.11.mlp": [
+      0.2832,
+      0.2413,
+      0.2377,
+      0.2378
+    ]
+  },
+  "params_total": 7160601,
+  "params_active": 5384217,
+  "macs_active": 345671424.0,
+  "cpu_ms_bs1_t4_pytorch_eager": 6.674392003333196,
+  "cpu_ms_bs1_t1_pytorch_eager": 11.142876493977383
+}

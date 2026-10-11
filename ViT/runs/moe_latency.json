@@ -1,0 +1,12 @@
+{
+ "vit32_dense": 5.21,
+ "vit32_e4_last4": 5.88,
+ "vit32_e8_last4": 5.85,
+ "vit64p8_dense": 5.15,
+ "vit64p8_upcycle_e4": 5.63,
+ "repvit128_dense_unfused": 12.88,
+ "repvit128_cc_k4": 15.4,
+ "repvit128_cc_k8": 16.0,
+ "repvit224_dense_unfused": 18.75,
+ "repvit224_cc_k4": 21.36
+}
