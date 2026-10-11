@@ -1,0 +1,18 @@
+== start ec100_fm_tinyvit5m_224_e200 (Sun Oct 11 14:07:12 UTC 2026)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run bdebd11d
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/ec100_fm_tinyvit5m_224_e200/wandb/run-20261011_140735-bdebd11d
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ec100_fm_tinyvit5m_224_e200
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/bdebd11d
+GPU: NVIDIA H100 PCIe
+loaded runs/ec100_T_vitb_ar2_224/model_ema.pt
+teacher runs/ec100_T_vitb_ar2_224: 85.88M params, 224px, val acc 93.52
+Model: tiny_vit_5m_224.dist_in22k_ft_in1k  params: 5.10M  input 32->224px  mean/std [0.485, 0.456, 0.406]/[0.229, 0.224, 0.225]  train images: 50000  batch: 256  steps/epoch: 195
+ep    1/200 | loss 2.3982 | lr 1.01e-04 | 103.62s |     482 img/s
+ep    2/200 | loss 2.1470 | lr 2.01e-04 |  88.09s |     567 img/s
+ep    3/200 | loss 1.6831 | lr 3.01e-04 |  88.22s |     566 img/s
+ep    4/200 | loss 1.3609 | lr 4.01e-04 |  83.62s |     597 img/s

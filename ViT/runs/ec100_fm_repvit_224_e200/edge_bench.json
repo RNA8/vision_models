@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_fm_repvit_224_e200",
+    "img_size": 224,
+    "num_classes": 100,
+    "time": "2026-10-11 18:47:59",
+    "torch": "2.11.0+cu128",
+    "params_M": 4.796328,
+    "params_M_deploy": 4.720556,
+    "GMACs": 0.815271744,
+    "act_MB_est_bs1_fp32": 4.01953125,
+    "weights_MB_fp32": 18.007492065429688,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 18.11043643951416,
+    "ort_lat_ms_fp32_t1": 14.406949005206116,
+    "ort_lat_ms_fp32_t4": 6.401720005669631,
+    "onnx_max_abs_diff": 2.0265579223632812e-06,
+    "onnx_ref_abs_max": 2.265897035598755,
+    "onnx_int8_MB": 18.0330228805542,
+    "ort_lat_ms_int8_t1": 14.26699649891816,
+    "ort_lat_ms_int8_t4": 6.402007493306883,
+    "bench_sec": 19.19318985939026
+  }
+]

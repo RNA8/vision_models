@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_repvit_m0_9_288",
+    "img_size": 288,
+    "num_classes": 100,
+    "time": "2026-10-11 17:07:55",
+    "torch": "2.11.0+cu128",
+    "params_M": 4.796328,
+    "params_M_deploy": 4.720556,
+    "GMACs": 1.347532608,
+    "act_MB_est_bs1_fp32": 6.64453125,
+    "weights_MB_fp32": 18.007492065429688,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 18.11043643951416,
+    "ort_lat_ms_fp32_t1": 52.722728993103374,
+    "ort_lat_ms_fp32_t4": 45.986502496816684,
+    "onnx_max_abs_diff": 4.708766937255859e-06,
+    "onnx_ref_abs_max": 2.0937886238098145,
+    "onnx_int8_MB": 18.033034324645996,
+    "ort_lat_ms_int8_t1": 55.21798299741931,
+    "ort_lat_ms_int8_t4": 38.0240330050583,
+    "bench_sec": 41.148584604263306
+  }
+]
