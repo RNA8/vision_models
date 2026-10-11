@@ -1,0 +1,22 @@
+[
+  {
+    "model": "runs/ec100_T_eva02s_224",
+    "img_size": 224,
+    "num_classes": 100,
+    "time": "2026-10-11 02:08:14",
+    "torch": "2.11.0+cu128",
+    "params_M": 21.65962,
+    "params_M_deploy": 21.65962,
+    "GMACs": 5.5148928,
+    "act_MB_est_bs1_fp32": 5.521484375,
+    "weights_MB_fp32": 82.62489318847656,
+    "onnx_exporter": "dynamo",
+    "onnx_MB": 83.76151943206787,
+    "ort_lat_ms_fp32_t1": 92.69502650204231,
+    "ort_lat_ms_fp32_t4": 51.20759649798856,
+    "onnx_max_abs_diff": 4.0531158447265625e-06,
+    "onnx_ref_abs_max": 5.403990268707275,
+    "int8_error": "InferenceError: [ShapeInferenceError] Inferred shape and existing shape differ in dimension 0: (384) vs (100)",
+    "bench_sec": 31.328078031539917
+  }
+]

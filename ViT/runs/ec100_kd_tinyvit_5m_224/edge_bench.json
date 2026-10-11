@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_kd_tinyvit_5m_224",
+    "img_size": 224,
+    "num_classes": 100,
+    "time": "2026-10-11 03:12:15",
+    "torch": "2.11.0+cu128",
+    "params_M": 5.103864,
+    "params_M_deploy": 5.098936,
+    "GMACs": 1.25488672,
+    "act_MB_est_bs1_fp32": 7.65625,
+    "weights_MB_fp32": 19.450897216796875,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 19.931961059570312,
+    "ort_lat_ms_fp32_t1": 45.041580000543036,
+    "ort_lat_ms_fp32_t4": 16.04295200013439,
+    "onnx_max_abs_diff": 7.152557373046875e-07,
+    "onnx_ref_abs_max": 3.32831072807312,
+    "onnx_int8_MB": 6.530191421508789,
+    "ort_lat_ms_int8_t1": 21.691951500542928,
+    "ort_lat_ms_int8_t4": 9.447914497286547,
+    "bench_sec": 18.559977293014526
+  }
+]
