@@ -164,8 +164,10 @@ def flags_from_args(r):
     if not a:
         return None
     if "img_size" in a:  # finetune.py
-        s = f"finetune.py --run-name {r['name']} --model {a['model']} --img-size {a['img_size']} --lr {a['lr']:g}"
-        if a.get("lr_decay") and a["lr_decay"] != 0.75 or "vit_" in a["model"] or "deit" in a["model"]:
+        mdl = a.get("model") or ""
+        src = f"--model {mdl}" if mdl else f"--init-ckpt {a.get('init_ckpt')}"
+        s = f"finetune.py --run-name {r['name']} {src} --img-size {a['img_size']} --lr {a['lr']:g}"
+        if a.get("lr_decay") and a["lr_decay"] != 0.75 or "vit_" in mdl or "deit" in mdl:
             s += f" --lr-decay {a.get('lr_decay', 0):g}" if a.get("lr_decay") else ""
         if a.get("teacher"):
             s += f" --teacher {a['teacher']} --kd {a['kd']} --kd-alpha {a['kd_alpha']:g} --kd-tau {a['kd_tau']:g}"
@@ -583,16 +585,23 @@ def edge_info(name):
         kd = "soft"
     fam, disp = EDGE_FAMILY.get(stem, ("mute", stem))
     teacher = stem.startswith("T_")
-    return dict(stem=stem, px=px, kd=kd, fam=fam, disp=disp, teacher=teacher)
+    lr = m.group(4)[3:] if m and m.group(4) else None
+    # lr-sweep runs are variants, not the default-recipe run; the MNv4-HybridM lr 1e-4 run replaces the diverged lr 5e-4 default
+    variant = bool(lr) and not (stem == "mnv4_hm")
+    if lr:
+        disp += f" (lr {lr})"
+    return dict(stem=stem, px=px, kd=kd, fam=fam, disp=disp, teacher=teacher, lr=lr, variant=variant, superseded=False)
 
 
 EDGE = []
+SUPERSEDED = {"ec100_mnv4_hm_128": "ec100_mnv4_hm_128_lr1e-4", "ec100_mnv4_hm_224": "ec100_mnv4_hm_224_lr1e-4"}
 for n, r in RUNS_D.items():
     if not n.startswith("ec100_"):
         continue
     info = edge_info(n)
     info["name"] = n
     info["status"] = r["status"]
+    info["superseded"] = n in SUPERSEDED and SUPERSEDED[n] in RUNS_D and bool(RUNS_D[SUPERSEDED[n]]["res"])
     res = r["res"]
     if res:
         info["acc"] = res["final_val_acc"]
@@ -615,7 +624,7 @@ for n, r in RUNS_D.items():
 TEACHERS = [e for e in EDGE if e["teacher"] and e.get("acc")]
 TEACH_ACC = max((e["acc"] for e in TEACHERS), default=None)
 TEACH = max(TEACHERS, key=lambda e: e["acc"]) if TEACHERS else None
-STUDENTS = [e for e in EDGE if not e["teacher"] and e.get("acc") is not None and not e.get("collapsed")]
+STUDENTS = [e for e in EDGE if not e["teacher"] and e.get("acc") is not None and not e.get("collapsed") and not e["superseded"]]
 SMALL = [e for e in STUDENTS if (e.get("params") or 99) <= 6.0]
 BEST_SMALL = max(SMALL, key=lambda e: e["acc"]) if SMALL else None
 SOTA_PRE = P("effl2sam_c100")
@@ -699,7 +708,7 @@ def scoreboard():
 
 
 def pareto_chart(xkey, xlabel, title):
-    pts = [e for e in EDGE if e.get("acc") is not None and not e.get("collapsed") and e.get(xkey)]
+    pts = [e for e in EDGE if e.get("acc") is not None and not e.get("collapsed") and not e["superseded"] and e.get(xkey)]
     if not pts:
         return '<p class="pend">No benchmarked edge runs yet.</p>'
     xs = [e[xkey] for e in pts]
@@ -735,9 +744,11 @@ def pareto_chart(xkey, xlabel, title):
     for e in pts:  # markers
         x, y = ch.X(e[xkey]), ch.Y(e["acc"])
         boxes.append((x - 6, x + 6, y - 6, y + 6))
-    for e in sorted(front, key=lambda e: -e["acc"]):
+    ours = [e for e in pts if e["fam"] == "ours"]
+    extra = [max(ours, key=lambda e: e["acc"])] if ours else []
+    for e in sorted(front + [x for x in extra if x not in front], key=lambda e: -e["acc"]):
         x, y = ch.X(e[xkey]), ch.Y(e["acc"])
-        lab = f"{e['disp']}{' KD' if e['kd'] else ''} @{e['px']}"
+        lab = ("\u2605 best \u22646M: " if BEST_SMALL and e["name"] == BEST_SMALL["name"] else "") + f"{e['disp']}{' KD' if e['kd'] else ''} @{e['px']}"
         wlab = 6.8 * len(lab)
         best = None
         for dy in (4, -8, 16, -20, 28, -32, 40, -44, 52):
@@ -808,8 +819,10 @@ def edge_table():
             rows.append([f"<code>{e['name']}</code>", e["disp"], fam_name(e["fam"]), str(e["px"]), e["kd"] or "—", "—", "—", "—", "—", f'<span class="pill pend-pill">{esc(st)}</span>', "—", "—", "—"])
             continue
         a = e["acc"]
-        accs = f"{a:.2f}" + (' <span class="pill below">collapsed</span>' if e.get("collapsed") else "")
-        rows.append([f"<code>{e['name']}</code>", e["disp"] + (" (teacher)" if e["teacher"] else ""), fam_name(e["fam"]), str(e["px"]), e["kd"] or "—",
+        accs = f"{a:.2f}" + (' <span class="pill below">collapsed</span>' if e.get("collapsed") else "") + (' <span class="pill below">superseded: lr 5e-4 diverged</span>' if e["superseded"] else "")
+        mark = (' <span class="pill match">best &le;6M</span>' if BEST_SMALL and e["name"] == BEST_SMALL["name"] else "") + \
+               (' <span class="pill pend-pill">IN-64 pretrained, from scratch on 64 px</span>' if e["fam"] == "ours" else "")
+        rows.append([f"<code>{e['name']}</code>", e["disp"] + (" (teacher)" if e["teacher"] else "") + mark, fam_name(e["fam"]), str(e["px"]), e["kd"] or "—",
                      num(e.get("params"), 2), num(e.get("gmacs"), 3), num(e.get("int8_t1"), 1), num(e.get("fp32_t1"), 1), accs,
                      num(e.get("ema")), f"{100 * a / TEACH_ACC:.1f}%" if TEACH_ACC else "—", f"{100 * a / SOTA_PRE:.1f}%"])
     return table(["run", "model", "family", "px", "KD", "params (M)", "GMACs", "int8 ms (1 thr)", "fp32 ms (1 thr)", "val acc", "EMA acc", "% teacher", "% SOTA"],
@@ -1191,8 +1204,8 @@ def ch8():
 def ch9():
     pairs = []
     for e in sorted(STUDENTS, key=lambda e: e["disp"]):
-        if e["px"] == 224 and not e["kd"]:
-            twin = next((f for f in STUDENTS if f["stem"] == e["stem"] and f["px"] == 128 and not f["kd"]), None)
+        if e["px"] == 224 and not e["kd"] and not e["variant"]:
+            twin = next((f for f in STUDENTS if f["stem"] == e["stem"] and f["px"] == 128 and not f["kd"] and not f["variant"]), None)
             if twin:
                 pairs.append((e, twin))
     items = []
@@ -1203,9 +1216,9 @@ def ch9():
     kd_rows, kd_rows_raw = [], []
     for e in STUDENTS:
         if e["kd"]:
-            base = next((f for f in STUDENTS if f["stem"] == e["stem"] and f["px"] == e["px"] and not f["kd"]), None)
+            base = next((f for f in STUDENTS if f["stem"] == e["stem"] and f["px"] == e["px"] and not f["kd"] and not f["variant"]), None)
             if base is None:
-                base_c = next((f for f in EDGE if f["stem"] == e["stem"] and f["px"] == e["px"] and not f["kd"] and f.get("acc") is not None), None)
+                base_c = next((f for f in EDGE if f["stem"] == e["stem"] and f["px"] == e["px"] and not f["kd"] and not f["variant"] and f.get("acc") is not None), None)
                 b = f"{base_c['acc']:.2f} (collapsed)" if base_c else "—"
                 kd_rows.append([f"<code>{e['name']}</code>", e["disp"], str(e["px"]), e["kd"], b, f"{e['acc']:.2f}", "—"])
             else:
@@ -1216,6 +1229,21 @@ def ch9():
     names = [e["name"] for e in EDGE]
     pre = ["in64pre_slvit_p8", "in64pre_tiny_p8", "ec100_in64pre_slvit_64", "ec100_in64pre_slvit_64_kd", "ec100_in64pre_tiny_64", "ec100_in64pre_tiny_64_kd"]
     pre_status = ", ".join(f"<code>{n}</code> {A(n) if R(n) else RUNS_D.get(n, {}).get('status', 'queued')}" for n in pre)
+    scratch = {"slvit": "c100_bf3b_slvit_300ep_lr5e-4", "tiny": "c100_tinyshape_bf3b"}
+    pre_rows = []
+    for k, lab in (("slvit", "SL-ViT shape (2.7M)"), ("tiny", "ViT-Tiny shape (5.4M)")):
+        for suf, kdl in (("", "no KD"), ("_kd", "soft KD from ViT-B")):
+            n = f"ec100_in64pre_{k}_64{suf}"
+            if R(n) and R(scratch[k]) and R(f"in64pre_{k}_p8"):
+                pre_rows.append([lab, f"<code>in64pre_{k}_p8</code> {A(f'in64pre_{k}_p8')}%", f"<code>{n}</code>", kdl, f"{A(n)}",
+                                 f"{A(scratch[k])} (<code>{scratch[k]}</code>)", f"{D(n, scratch[k])}"])
+    pre_tab = table(["model", "ImageNet-64 pretrain, top-1", "CIFAR-100 fine-tune at 64 px", "KD", "fine-tuned acc", "same shape from scratch (300 ep)", "gain"], pre_rows, num_cols=(4, 6)) if pre_rows else ""
+    mh = [(n, R(n)) for n in ("ec100_mnv4_hm_128", "ec100_mnv4_hm_224", "ec100_mnv4_hm_128_lr1e-4", "ec100_mnv4_hm_224_lr1e-4")]
+    mnv4_txt = ("<p><b>MobileNetV4-Hybrid-M, three attempts.</b> The first 128 px run (lr 5e-4) blew up on its first optimizer step and ended at "
+                + (f"{R('_failed_ec100_mnv4_hm_128')['final_val_acc']:.2f}%" if R("_failed_ec100_mnv4_hm_128") else "chance")
+                + f". Zero-initializing the classifier head fixed that, but lr 5e-4 still diverged after warmup: {A('ec100_mnv4_hm_224')}% at 224 px and {A('ec100_mnv4_hm_128')}% at 128 px. "
+                f"At lr 1e-4 both train cleanly from step 1: <b>{A('ec100_mnv4_hm_128_lr1e-4')}%</b> at 128 px and <b>{A('ec100_mnv4_hm_224_lr1e-4')}%</b> at 224 px "
+                "(9.9M params, so outside the 6M budget). The lr 5e-4 runs are marked superseded and left out of the charts.</p>") if all(R(n) for n in ("ec100_mnv4_hm_128", "ec100_mnv4_hm_224", "ec100_mnv4_hm_128_lr1e-4", "ec100_mnv4_hm_224_lr1e-4")) else ""
     return chap(9, "ch9", "Edge track: pretrained students under 6M parameters", chapter_date(names),
         f"<p>If pretraining on external data is allowed, how close to the CIFAR-100 state of the art ({SOTA_PRE}%) can a model of at most ~6M parameters get, and what does it cost in compute and CPU latency?</p>",
         "<p>Fine-tune ImageNet-pretrained timm models for 30 epochs (ViT-B/16 teacher: 20). Images are upsampled on the GPU to 224 or 128 px. Distill from our fine-tuned ViT-B/16 teacher (soft KD, τ = 2, α = 0.5; or hard labels). "
@@ -1227,7 +1255,7 @@ def ch9():
         + (fig(res_chart, "Each pair is one pretrained model fine-tuned at two input sizes.") if res_chart else "") + kd_tab +
         (f"<p>Teacher: {t['disp']} at 224 px, {t['acc']:.2f}% ({t['params']:.0f}M params). Best ≤6M student: {BEST_SMALL['disp']}{' + KD' if BEST_SMALL['kd'] else ''} at {BEST_SMALL['px']} px, <b>{BEST_SMALL['acc']:.2f}%</b>, "
          f"which is {100 * BEST_SMALL['acc'] / t['acc']:.1f}% of our teacher and {100 * BEST_SMALL['acc'] / SOTA_PRE:.1f}% of published SOTA.</p>" if t and BEST_SMALL else "")
-        + smallest_within() + f"<p>ImageNet-64 pretraining of our own ViTs: {pre_status}.</p>",
+        + smallest_within() + f"<p>ImageNet-64 pretraining of our own ViTs (pretrain on 64 px ImageNet, then fine-tune at 64 px on CIFAR-100): {pre_status}.</p>" + pre_tab + mnv4_txt,
         f"<p>The 99%-of-SOTA bar is {0.99 * SOTA_PRE:.2f}%. In the verified notes the smallest model that clears it is EfficientNet-L2 with {P('effl2_params')}M params at 475 px. No published model under that size reaches it, so that bar is the wrong target for a 5M edge model. "
         "A useful edge target is a fraction of a teacher we measured ourselves under the same pipeline, plus the 90% and 95% of SOTA lines. "
         + kd_res_lesson(pairs, kd_rows_raw) + "</p>",
@@ -1253,26 +1281,31 @@ def ch10():
     for f in failed:
         r = jload(RUNS / f / "results.json")
         if r:
-            fl.append(f"<code>{f[len('_failed_'):]}</code> ended at {r['final_val_acc']:.2f}% (best EMA {r.get('best_ema_val_acc') or 0:.2f}%)")
+            if "mnv4" not in f:
+                fl.append(f"<code>{f[len('_failed_'):]}</code> ended at {r['final_val_acc']:.2f}% (best EMA {r.get('best_ema_val_acc') or 0:.2f}%)")
     reruns = []
     for f in failed:
         n = f[len("_failed_"):]
+        if "mnv4" in n:
+            continue
         reruns.append(f"<code>{n}</code> {A(n) + '%' if R(n) else RUNS_D.get(n, {}).get('status', 'queued')}")
     kdok = f" The KD run at 128 px (<code>ec100_kd_effformv2_s0_128</code>) trained normally to {A('ec100_kd_effformv2_s0_128')}%." if R("ec100_kd_effformv2_s0_128") else ""
     ef_sym = ("; ".join(fl) or "loss stayed near ln 100 = 4.61") + ". The 128 px log shows training loss at 4.5 to 4.6 throughout, close to ln 100 = 4.61 (chance)." + kdok
     ef_fix = ("Bisected in commit 41588c0: eager bf16, compiled fp32, and compiled bf16 with only the attention modules in fp32 all train, so <code>finetune.py</code> now runs EfficientFormerV2 attention in fp32. "
               "The collapsed runs were moved to <code>runs/_failed_*</code> and requeued (<code>run_rerun_effformv2.sh</code>): " + (", ".join(reruns) or "pending") + ".")
-    hm = R("ec100_mnv4_hm_128")
+    hm_done = all(R(n) for n in ("ec100_mnv4_hm_128", "ec100_mnv4_hm_224", "ec100_mnv4_hm_128_lr1e-4", "ec100_mnv4_hm_224_lr1e-4"))
     hm_row = None
-    if hm and hm["final_val_acc"] < 20:
-        hm_row = ["MobileNetV4-Hybrid-M also collapsed", "Ch. 9", f"<code>ec100_mnv4_hm_128</code> finished at {hm['final_val_acc']:.2f}% (chance is 1%)",
-                  "Open: the fp32-attention fix covers EfficientFormerV2 only; this run is excluded from the charts", "Not diagnosed yet"]
+    if hm_done:
+        hm_row = ["MobileNetV4-Hybrid-M: head init, then lr", "Ch. 9",
+                  f"Step-1 blow-up (<code>_failed_ec100_mnv4_hm_128</code> {R('_failed_ec100_mnv4_hm_128')['final_val_acc']:.2f}%); after zero-init head, lr 5e-4 still diverged after warmup: 224 px {A('ec100_mnv4_hm_224')}%, 128 px {A('ec100_mnv4_hm_128')}%",
+                  f"zero-init head + lr 1e-4: 128 px {A('ec100_mnv4_hm_128_lr1e-4')}%, 224 px {A('ec100_mnv4_hm_224_lr1e-4')}%",
+                  "A first-step blow-up and a post-warmup divergence are different bugs; fix one, then re-check the curve"]
     rows = [
         ["Paper lr 3e-3 too high for our sampler", "Ch. 5", f"<code>bf1_slvit</code> {A('bf1_slvit')}%; <code>bf1b</code>, <code>bf2</code> stalled at ~49% train", "lr sweep: 5e-4 → " + A("bf1_slvit_lr5e-4") + "; bf3b " + A("bf3b_slvit_300ep_lr5e-4"), "Re-sweep lr when porting a recipe; the paper's sampler gave ~3× the steps"],
         ["lr not scaled down for ViT-Small", "Ch. 3", f"<code>s_small_200ep</code> loss plateau ~2.1, {A('s_small_200ep')}%", f"lr 1e-3 → {A('s_small_200ep_lr1e-3')}%", "Scale lr with width"],
         ["<code>--rd-inject</code> left at its default (concat)", "Ch. 8", f"<code>rd_deep_r8</code> {A('rd_deep_r8')}% used concat by accident", f"rerun with add: {A('rd_deep_r8_add')}%; the gap replicated", "Pass every flag explicitly; log the effective config"],
         ["CUDA graphs overwrote the loop output", "Ch. 1, 8", "A CUDA-graphed core reuses its output buffer on every replay, so looping it fed each step the overwritten tensor", "clone the core output each loop; grads match eager to 1.3e-6, ~1.9× faster (10.5 → 5.6 s/epoch)", "Graph replays share memory; copy outputs you keep"],
-        ["EfficientFormerV2-S0 collapsed to chance under compile + bf16", "Ch. 9", ef_sym, ef_fix, "Check for loss ≈ ln(classes) early and stop the run"],
+        ["EfficientFormerV2-S0 collapsed to chance under compile + bf16", "Ch. 9", ef_sym, ef_fix + (f" Reruns reached {A('ec100_effformv2_s0_224')}% at 224 px." if R("ec100_effformv2_s0_224") else ""), "Check for loss ≈ ln(classes) early and stop the run"],
         ["wandb run id helper removed in wandb 0.30", "Ch. 1", "<code>wandb.util.generate_id</code> no longer exists", "fixed in train_vit.py (commit of Oct 10 16:49)", "Pin or wrap fast-moving library APIs"],
     ]
     if hm_row:
@@ -1292,7 +1325,7 @@ def ch11():
         "<ul>"
         f"<li><b>Shifted patch tokenization</b> on the ViT-Tiny-shape bf3b model. It is the one SL-ViT part we never built; the notes rank it first ({cite('spt_gain_c100', 'SPT alone')}: 73.81 → {P('spt_gain_c100')} on CIFAR-100).</li>"
         "<li><b>Seeds on the edge track.</b> Every edge number is one seed; the CIFAR-10 seeds showed ~0.1 to 0.2 points of noise, but fine-tunes at a new resolution may vary more.</li>"
-        "<li><b>Finish the EfficientFormerV2-S0 reruns</b> with the fp32-attention fix, and find out why MobileNetV4-Hybrid-M also collapsed.</li>"
+        "<li><b>Seeds and lr sweeps for the edge track.</b> TinyViT-5M got an lr sweep at 128 px; the other students use one lr, and MobileNetV4-Hybrid-M needed 1e-4. A per-model lr check could move several rows.</li>"
         "<li><b>Latency on an idle machine.</b> The CPU timings were taken while training jobs shared the host; rerun <code>edge_bench.py</code> alone and add GPU latency.</li>"
         "<li><b>Recurrent depth with the bf3b recipe at 300 epochs</b>, so the recurrent model is compared to a strong flat baseline, and an exit rule calibrated per dataset.</li>"
         f"<li><b>KD from a strong CNN into the from-scratch ViT at 32 px</b>, the same-data setting where {cite('deith_c100', 'DeiT-Ti hard distillation')} moved {P('deitb_c100')} → {P('deith_c100')} on CIFAR-100.</li>"
