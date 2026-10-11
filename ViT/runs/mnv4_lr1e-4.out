@@ -8,3 +8,22 @@ wandb: Run `wandb offline` to turn off syncing.
 wandb: Syncing run ec100_mnv4_hm_128_lr1e-4
 wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
 wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/f2bc2530
+GPU: NVIDIA H100 PCIe
+note: zero-initialised the new 100-class head of mobilenetv4_hybrid_medium.e200_r256_in12k_ft_in1k (see ZERO_HEAD)
+Model: mobilenetv4_hybrid_medium.e200_r256_in12k_ft_in1k  params: 9.92M  input 32->128px  mean/std [0.485, 0.456, 0.406]/[0.229, 0.224, 0.225]  train images: 50000  batch: 256  steps/epoch: 195
+ep    1/30 | loss 4.4768 | lr 3.35e-05 |  43.62s |    1144 img/s
+ep    2/30 | loss 3.8488 | lr 6.68e-05 |  16.14s |    3093 img/s
+ep    3/30 | loss 3.4596 | lr 1.00e-04 |  16.24s |    3075 img/s
+ep    4/30 | loss 3.2127 | lr 9.97e-05 |  16.51s |    3024 img/s
+ep    5/30 | loss 3.1147 | lr 9.87e-05 |  16.04s |    3112 img/s | train acc  76.14 | val acc  72.65 | ema val  72.12
+ep    6/30 | loss 3.0030 | lr 9.70e-05 |  16.19s |    3084 img/s
+ep    7/30 | loss 2.9469 | lr 9.47e-05 |  16.54s |    3019 img/s
+ep    8/30 | loss 2.9203 | lr 9.19e-05 |  16.43s |    3038 img/s
+ep    9/30 | loss 2.8800 | lr 8.84e-05 |  16.14s |    3093 img/s
+ep   10/30 | loss 2.7469 | lr 8.45e-05 |  16.07s |    3106 img/s | train acc  83.99 | val acc  78.09 | ema val  79.80
+ep   11/30 | loss 2.8147 | lr 8.01e-05 |  16.13s |    3094 img/s
+ep   12/30 | loss 2.7364 | lr 7.52e-05 |  18.95s |    2634 img/s
+ep   13/30 | loss 2.6908 | lr 7.01e-05 |  19.32s |    2584 img/s
+ep   14/30 | loss 2.6290 | lr 6.47e-05 |  19.00s |    2628 img/s
+ep   15/30 | loss 2.5405 | lr 5.91e-05 |  20.28s |    2462 img/s | train acc  88.70 | val acc  81.41 | ema val  82.85
+ep   16/30 | loss 2.6178 | lr 5.34e-05 |  21.06s |    2370 img/s
