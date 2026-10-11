@@ -216,7 +216,7 @@ def spec_from_run(d, res):
     if a.get("fake_data"):
         img = 32
     else:
-        img = {"imagenet64": 64, "tiny_imagenet": 64}.get(a["dataset"], 32)
+        img = {"imagenet64": 64, "tiny_imagenet": 64, "in21k64": 64}.get(a["dataset"], 32)
     return {"kind": "ours", "train_args": a, "img_size": img, "num_classes": ds.NUM_CLASSES,
             "mean": list(ds.MEAN), "std": list(ds.STD)}
 

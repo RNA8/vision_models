@@ -121,9 +121,12 @@ def parse_args():
 
 
 # --------------------------------------------------------------------------- data
-def load_data(args, device):
+def load_data(args, device, with_stream=False):
     """Return train/test images as uint8 (N, C, H, W) tensors on `device`, labels, and the
-    dataset module (NUM_CLASSES, MEAN, STD). Datasets are plug-in modules in vit_data/."""
+    dataset module (NUM_CLASSES, MEAN, STD). Datasets are plug-in modules in vit_data/.
+    Streaming datasets (module flag STREAMING, e.g. in21k64: too big for the GPU) have a Stream object
+    (vit_data/in21k64.py) that yields train batches; here xtr/ytr are then only a fixed 10k-image train subset
+    (for the clean-train-accuracy metric); with_stream=True appends the Stream (or None) as a 6th return value."""
     import importlib
 
     ds = importlib.import_module(f"vit_data.{args.dataset}")
@@ -133,13 +136,18 @@ def load_data(args, device):
         ytr = torch.randint(0, ds.NUM_CLASSES, (4096,), generator=g)
         xte = torch.randint(0, 256, (1024, 32, 32, 3), dtype=torch.uint8, generator=g)
         yte = torch.randint(0, ds.NUM_CLASSES, (1024,), generator=g)
+    elif getattr(ds, "STREAMING", False):
+        st = ds.Stream(args.data_dir, device, args.seed)
+        out = (st.xclean, st.yclean, st.xte, st.yte, ds)
+        return out + (st,) if with_stream else out
     else:
         xtr, ytr, xte, yte = ds.load(args.data_dir)
 
     def to_dev(x):  # NHWC uint8 -> NCHW uint8 on device
         return x.permute(0, 3, 1, 2).contiguous().to(device)
 
-    return to_dev(xtr), ytr.to(device), to_dev(xte), yte.to(device), ds
+    out = (to_dev(xtr), ytr.to(device), to_dev(xte), yte.to(device), ds)
+    return out + (None,) if with_stream else out
 
 
 def normalize(x_uint8, mean, std):
@@ -565,14 +573,14 @@ def main():
     out_dir = os.path.join(args.out_dir, run_name)
     os.makedirs(out_dir, exist_ok=True)
 
-    xtr, ytr, xte, yte, ds = load_data(args, device)
+    xtr, ytr, xte, yte, ds, stream = load_data(args, device, with_stream=True)
     num_classes, mean_, std_ = ds.NUM_CLASSES, ds.MEAN, ds.STD
     img_size = xtr.size(-1)
     mean = torch.tensor(mean_, device=device).view(1, 3, 1, 1)
     std = torch.tensor(std_, device=device).view(1, 3, 1, 1)
-    n_train = xtr.size(0)
+    n_train = stream.n if stream else xtr.size(0)
     bs = min(args.batch_size, n_train)
-    clean_idx = torch.randperm(n_train, generator=torch.Generator().manual_seed(0))[:10000].to(device)
+    clean_idx = torch.randperm(xtr.size(0), generator=torch.Generator().manual_seed(0))[:10000].to(device)
     # Repeated augmentation (DeiT): a batch is ubs = bs/K unique images, each repeated K times and
     # augmented independently. An epoch is one pass over the unique images, so it has K x the steps
     # (and K x the samples) of a K=1 epoch; the batch shape stays (bs, ...). Note: SL-ViT's "--ra 3"
@@ -640,17 +648,24 @@ def main():
     t_start = time.time()
     for epoch in range(start_epoch, args.epochs + 1):
         train_model.train()
-        perm = torch.randperm(n_train, device=device)
+        if stream:  # host->GPU streamed uint8 batches (background threads); restarts cleanly on resume
+            batches = stream.epoch(epoch, ubs)
+        else:
+            perm = torch.randperm(n_train, device=device)
         loss_sum = torch.zeros((), device=device)
         if device == "cuda":
             torch.cuda.synchronize()
         t0 = time.time()
 
         for k in range(steps_per_epoch):
-            idx = perm[k * ubs : (k + 1) * ubs]
-            if K > 1:
-                idx = idx.repeat_interleave(K)  # K consecutive copies of each image
-            x = xtr[idx].float().div_(255.0)
+            if stream:
+                xb, y = next(batches)
+            else:
+                idx = perm[k * ubs : (k + 1) * ubs]
+                xb, y = xtr[idx], ytr[idx]
+            if K > 1:  # K consecutive copies of each image
+                xb, y = xb.repeat_interleave(K, dim=0), y.repeat_interleave(K)
+            x = xb.float().div_(255.0)
             if not args.no_aug:
                 x = random_crop_flip(x, pad=img_size // 8)
             if args.randaug:
@@ -658,7 +673,6 @@ def main():
             x = (x - mean) / std
             if args.reprob > 0:
                 x = random_erasing(x, args.reprob)
-            y = ytr[idx]
             t = smooth_one_hot(y, num_classes, args.label_smoothing)
             if not (0 < args.mix_off_epoch <= epoch):
                 x, t = mix_batch(x, t, args, rng)
@@ -690,6 +704,9 @@ def main():
 
         line = (f"ep {epoch:4d}/{args.epochs} | loss {train_loss:.4f} | lr {lr_now:.2e} | "
                 f"{dt:6.2f}s | {ips:9.0f} img/s")
+        if stream:
+            line += f" | loader wait {stream.wait_s:.1f}s"
+            stream.wait_s = 0.0
         if epoch == 1 and not args.no_compile:
             line += "  (includes torch.compile warm-up)"
 
