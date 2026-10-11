@@ -226,3 +226,9 @@ ViT/data/
 wandb/
 .cache/
 .worktrees/
+
+# int8 audit artifacts
+ViT/runs/int8_audit/
+*.onnx
+*.onnx.data
+ViT/*-*-*-*-*.data
