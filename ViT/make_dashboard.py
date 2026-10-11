@@ -1330,8 +1330,38 @@ def ch10():
         "<p>Not applicable.</p>")
 
 
+def ch_wave1():
+    def row(label, name, note=""):
+        return [label, f"<code>{name}</code>", A(name), note]
+    rows = [
+        row("FlexiViT: IN-64 ViT-Tiny, patch 8 → 4 at 64 px", "ec100_in64pre_tiny_p4_64", "256 tokens, ~4x MACs"),
+        row("  same + KD from ViT-B", "ec100_in64pre_tiny_p4_64_kd"),
+        row("  patch 4 at 32 px (64 tokens, same cost as p8@64)", "ec100_in64pre_tiny_p4_32"),
+        row("Dense IN-64 ViT-Tiny fine-tune, 30 ep, seed 1", "ec100_dense_in64pre_tiny_64_s1", f"seed 0: {A('ec100_in64pre_tiny_64')}"),
+        row("Dense, 60 ep (equal-compute control)", "ec100_dense_in64pre_tiny_64_60ep"),
+        row("MoE upcycled E4, 30 ep, seed 0", "ec100_upcyc_in64pre_tiny_e4_64", f"seed 1: {A('ec100_upcyc_in64pre_tiny_e4_64_s1')}"),
+        row("MoE upcycled E4, 60 ep", "ec100_upcyc_in64pre_tiny_e4_64_60ep"),
+        row("From scratch dense ViT, 150 ep", "c100_dense_vit_150ep"),
+        row("  routed MLP-MoE E4 / E8, 150 ep", "c100_moe_vit_e4_150ep", f"E8: {A('c100_moe_vit_e8_150ep')}"),
+        row("  routed MLP-MoE E4, 300 ep (dense 300 ep 75.16)", "c100_moe_vit_e4"),
+        row("RepViT-M0.9 dense 128 px / CondConv K4 / K8", "ec100_moe_repvit_k4_128", f"dense 87.42, K8 {A('ec100_moe_repvit_k8_128')}"),
+        row("RepViT-M0.9 CondConv K4 at 224 px (dense 88.33)", "ec100_moe_repvit_k4_224", "inside ~0.6 seed noise; seed-1 pair queued"),
+        row("RepViT-M0.9 dense at 256 px", "ec100_repvit_m0_9_256", "new best ≤6M params"),
+    ]
+    return chap(11, "ch11", "Wave 1: patch size, recurrence ablations, mixture-of-experts", chapter_date(["ec100_in64pre_tiny_p4_64", "c100_moe_vit_e4_150ep"]),
+        "<p>After the core recipe, which architectural ideas buy accuracy at a fixed edge budget: smaller patches on a pretrained ViT, a better recurrent block, or more total parameters via mixture-of-experts?</p>",
+        "<ul><li><b>FlexiViT patch switch:</b> PI-resize the ImageNet-64 patch-8 embedding to patch 4 and fine-tune (<code>--patch-size 4</code> with a pretrained checkpoint).</li>"
+        "<li><b>Recurrent C2 ablations:</b> LoRA per loop step (r8, r32), sandwich norm, add vs concat injection, and an equal-MAC flat 20-layer control.</li>"
+        "<li><b>MoE (<code>moe.py</code>, <code>--moe</code>):</b> CondConv in RepViT stage 3, routed top-1 MLP-MoE with a shared expert in the last 4 ViT blocks, and sparse upcycling of the pretrained ViT-Tiny. Active params and MACs matched to dense; stop rule set in advance: at least +1 point.</li></ul>",
+        "<p>Smaller patches give more tokens and finer detail for the same weights. MoE adds parameters without adding active compute. LoRA gives each loop step its own small adapter.</p>",
+        table(["experiment", "run", "val top-1 %", "note"], rows) +
+        "" f"<p>Recurrent C2 (CIFAR-100, 100 ep, 1 seed): add injection {A('c100_rd_r8_add')} (rerun {A('c100_rd_c2_base_rerun')}), LoRA r8 {A('c100_rd_c2_lora8')}, r32 {A('c100_rd_c2_lora32')}, sandwich {A('c100_rd_c2_sandwich_add')}, concat {A('c100_rd_c2_concat')}; equal-MAC flat-20 control {A('c100_rd_c2_flat20')}. Looping wins about 1.8 to 2 points at equal compute; LoRA does not pay for its parameters.</p>",
+        "<p><b>Patch size paid; MoE did not.</b> Patch 4 at 64 px added +2.6 points over patch 8 (83.78 vs 81.17) at ~4x MACs. No MoE form beat dense outside seed noise (~0.6 points), and the equal-compute control (dense, 60 epochs, +1.9) beat every MoE variant: many apparent MoE gains are really longer training.</p>",
+        "<p>FlexiViT reports patch-size flexibility via PI-resize at ImageNet scale; here it transfers to a 5.4M ViT at 64 px. MoE results in the literature are at far larger data and model scale; at 50k images and ~5M active parameters experts did not specialise (load entropy 0.99 when upcycled).</p>")
+
+
 def ch11():
-    return chap(11, "ch11", "What I would do next", "—",
+    return chap(12, "ch12", "What I would do next", "—",
         "<p>Where is the next point of accuracy, or the next unit of cost, most cheaply found?</p>",
         "<ul>"
         f"<li><b>Shifted patch tokenization</b> on the ViT-Tiny-shape bf3b model. It is the one SL-ViT part we never built; the notes rank it first ({cite('spt_gain_c100', 'SPT alone')}: 73.81 → {P('spt_gain_c100')} on CIFAR-100).</li>"
@@ -1349,7 +1379,7 @@ SRC_TXT_NOTES = (ROOT / "REPORT_NOTES.md").read_text() if (ROOT / "REPORT_NOTES.
 
 CHAPTERS = [("ch1", "Fast pipeline"), ("ch2", "Regularization ladder"), ("ch3", "Width, lr, tokens"), ("ch4", "ResNet-18 control"),
             ("ch5", "Matching published ViTs"), ("ch6", "One-change ablation"), ("ch7", "Harder datasets"), ("ch8", "Recurrent depth"),
-            ("ch9", "Edge track"), ("ch10", "Mistakes and fixes"), ("ch11", "Next steps")]
+            ("ch9", "Edge track"), ("ch10", "Mistakes and fixes"), ("ch11", "Wave 1: patches, recurrence, MoE"), ("ch12", "Next steps")]
 
 
 # =================================================================================================== page
@@ -1505,7 +1535,7 @@ def build_body():
     ts = acc("abl_tiny_shape")
     c100 = max([v for v in (acc("c100_bf3b_slvit_300ep_lr5e-4"), acc("c100_tinyshape_bf3b")) if v is not None], default=None)
     n_done = COST["n_done"]
-    stories = [ch1(), ch2(), ch3(), ch4(), ch5(), ch6(), ch7(), ch8(), ch9(), ch10(), ch11()]
+    stories = [ch1(), ch2(), ch3(), ch4(), ch5(), ch6(), ch7(), ch8(), ch9(), ch10(), ch_wave1(), ch11()]
     dash = f"""
 <section id="dashboard" aria-labelledby="dash-h">
   <h2 id="dash-h">Dashboard</h2>
@@ -1553,7 +1583,7 @@ def build_body():
   <p class="lede">Training small vision transformers on CIFAR-10, CIFAR-100, Tiny-ImageNet and ImageNet-64 on one H100. A from-scratch ViT reached {num(b3)}% on CIFAR-10 with the SL-ViT shape and {num(ts)}% with the ViT-Tiny shape, against 93.6 to 94.5% published. On CIFAR-100 it reached {num(c100)}% from scratch, and a pretrained 5M-parameter student reached {num(BEST_SMALL['acc'] if BEST_SMALL else None)}%.</p>
   <div class="meta"><span>{n_done} finished runs</span><span>{COST['n_live']} running</span><span>{(COST['run_min'] + COST['live_min']) / 60:.1f} GPU-h of run time</span><span>git {GIT_FIRST} → {GIT_LAST} ({GIT_N} commits)</span><span>generated {time.strftime('%Y-%m-%d %H:%M')}</span></div>
 </header>"""
-    story = '<section id="story" aria-labelledby="story-h"><h2 id="story-h">The story, step by step</h2><p class="prose">Eleven chapters in the order the work happened. Each one states the question, the exact command-line change, the mechanism, the result, the lesson, and how it compares with published work.</p>' + "".join(stories) + "</section>"
+    story = '<section id="story" aria-labelledby="story-h"><h2 id="story-h">The story, step by step</h2><p class="prose">Twelve chapters in the order the work happened. Each one states the question, the exact command-line change, the mechanism, the result, the lesson, and how it compares with published work.</p>' + "".join(stories) + "</section>"
     nav = '<div class="bar-top"><nav aria-label="Sections"><a class="brand" href="#top">Small ViT Field Notes</a><a href="#dashboard">Dashboard</a><a href="#story">Story</a><a href="#data">Data</a><a href="#sources">Sources</a></nav></div>'
     foot = f'<footer>Generated by <code>ViT/make_dashboard.py</code> from <code>ViT/runs/*</code>. Rerun it to refresh. Repository: <a href="https://github.com/RNA8/vision_models" target="_blank" rel="noopener">github.com/RNA8/vision_models</a>.</footer>'
     return nav + f'<div class="wrap" id="top">{toc}<main>{hero}{dash}{story}{data}{src}{foot}</main></div>'
