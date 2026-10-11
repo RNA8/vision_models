@@ -1,0 +1,34 @@
+{
+ "flat6 (rd_flat6)": {
+  "params_M": 2.711332,
+  "mmacs": 182.866944
+ },
+ "flat20 (equal-MACs)": {
+  "params_M": 8.939428,
+  "mmacs": 608.135424
+ },
+ "r8 add (baseline)": {
+  "params_M": 2.711716,
+  "mmacs": 608.135424
+ },
+ "r8 add + LoRA8": {
+  "params_M": 3.104932,
+  "mmacs": 633.694464
+ },
+ "r8 add + LoRA32": {
+  "params_M": 4.28458,
+  "mmacs": 710.371584
+ },
+ "r8 add + sandwich": {
+  "params_M": 2.712484,
+  "mmacs": 608.135424
+ },
+ "r8 concat": {
+  "params_M": 2.785636,
+  "mmacs": 646.473984
+ },
+ "r8 concat + sandwich": {
+  "params_M": 2.786404,
+  "mmacs": 646.473984
+ }
+}
