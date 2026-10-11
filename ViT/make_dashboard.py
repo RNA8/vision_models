@@ -1330,6 +1330,25 @@ def ch10():
         "<p>Not applicable.</p>")
 
 
+def int8_rows():
+    f = ROOT / "research" / "int8_audit_results.jsonl"
+    out = {}
+    if not f.exists():
+        return []
+    for l in f.read_text().splitlines():
+        d = json.loads(l)
+        v = d.get("variants") or {}
+        if "fp32_acc" not in d or not v:
+            continue
+        st = {k: x for k, x in v.items() if k.startswith("static") and isinstance(x, dict) and x.get("acc") is not None}
+        if "dynamic" not in v or not st:
+            continue
+        bk = max(st, key=lambda k: st[k]["acc"])
+        out[d["model"]] = ([d["model"], f"{d['fp32_acc']:.2f}", f"{v['dynamic']['acc']:.2f}",
+                    f"{st[bk]['acc']:.2f} ({bk.split('_', 1)[1]})", f"{d['fp32_MB']:.1f} / {v['dynamic']['MB']:.1f} / {st[bk]['MB']:.1f}"])  # last record per model wins
+    return list(out.values())
+
+
 def ch_wave1():
     def row(label, name, note=""):
         return [label, f"<code>{name}</code>", A(name), note]
@@ -1355,6 +1374,9 @@ def ch_wave1():
         "<li><b>MoE (<code>moe.py</code>, <code>--moe</code>):</b> CondConv in RepViT stage 3, routed top-1 MLP-MoE with a shared expert in the last 4 ViT blocks, and sparse upcycling of the pretrained ViT-Tiny. Active params and MACs matched to dense; stop rule set in advance: at least +1 point.</li></ul>",
         "<p>Smaller patches give more tokens and finer detail for the same weights. MoE adds parameters without adding active compute. LoRA gives each loop step its own small adapter.</p>",
         table(["experiment", "run", "val top-1 %", "note"], rows) +
+        "<h4>INT8 export audit (ONNX Runtime CPU, 10k test images)</h4>" +
+        table(["model", "FP32 %", "dynamic INT8 %", "static INT8 % (best calibration)", "MB FP32 / dyn / static"], int8_rows()) +
+        "<p>Dynamic INT8 (MatMul/Gemm only) is lossless (within 0.31 points) for every model and shrinks the transformers about 3x. Static QDQ PTQ with ORT defaults collapses RepViT, FastViT and our ViT; only DeiT-T and MNv4 survive. For our ViT, quantizing only Conv/Gemm/MatMul gives 81.55 (FP32 81.46), so residual Add and Softmax are the culprits. These static numbers describe ORT's default x86 pipeline and still need a cross-check with other settings and the real target runtime.</p>" +
         "" f"<p>Recurrent C2 (CIFAR-100, 100 ep, 1 seed): add injection {A('c100_rd_r8_add')} (rerun {A('c100_rd_c2_base_rerun')}), LoRA r8 {A('c100_rd_c2_lora8')}, r32 {A('c100_rd_c2_lora32')}, sandwich {A('c100_rd_c2_sandwich_add')}, concat {A('c100_rd_c2_concat')}; equal-MAC flat-20 control {A('c100_rd_c2_flat20')}. Looping wins about 1.8 to 2 points at equal compute; LoRA does not pay for its parameters.</p>",
         "<p><b>Patch size paid; MoE did not.</b> Patch 4 at 64 px added +2.6 points over patch 8 (83.78 vs 81.17) at ~4x MACs. No MoE form beat dense outside seed noise (~0.6 points), and the equal-compute control (dense, 60 epochs, +1.9) beat every MoE variant: many apparent MoE gains are really longer training.</p>",
         "<p>FlexiViT reports patch-size flexibility via PI-resize at ImageNet scale; here it transfers to a 5.4M ViT at 64 px. MoE results in the literature are at far larger data and model scale; at 50k images and ~5M active parameters experts did not specialise (load entropy 0.99 when upcycled).</p>")
@@ -1379,7 +1401,7 @@ SRC_TXT_NOTES = (ROOT / "REPORT_NOTES.md").read_text() if (ROOT / "REPORT_NOTES.
 
 CHAPTERS = [("ch1", "Fast pipeline"), ("ch2", "Regularization ladder"), ("ch3", "Width, lr, tokens"), ("ch4", "ResNet-18 control"),
             ("ch5", "Matching published ViTs"), ("ch6", "One-change ablation"), ("ch7", "Harder datasets"), ("ch8", "Recurrent depth"),
-            ("ch9", "Edge track"), ("ch10", "Mistakes and fixes"), ("ch11", "Wave 1: patches, recurrence, MoE"), ("ch12", "Next steps")]
+            ("ch9", "Edge track"), ("ch10", "Mistakes and fixes"), ("ch11", "Wave 1: patches, recurrence, MoE, INT8"), ("ch12", "Next steps")]
 
 
 # =================================================================================================== page
