@@ -292,6 +292,33 @@ def num_params(m):
     return sum(p.numel() for p in m.parameters())
 
 
+# Modules run in fp32 (autocast off) during bf16 training. EfficientFormerV2's attention (q@k + bias ->
+# talking-head conv -> softmax -> talking-head conv) is unstable in bf16 under torch.compile: fine-tuning
+# efficientformerv2_s0 on CIFAR-100 collapsed to chance (loss ~ln 100, val ~5%) at 128 AND 224 px, while eager
+# bf16, compiled fp32, and compiled bf16 with only these modules in fp32 all train normally (verified on a
+# 20k-image subset at lr 1e-3; BN-in-fp32 alone did not help). Cost: 5 low-resolution attention layers.
+FP32_MODULES = {"Attention2d", "Attention2dDownsample"}  # timm.models.efficientformer_v2
+_FP32_CLS = {}
+
+
+def fp32_modules(model, names=FP32_MODULES):
+    """Swap the class of modules named in `names` to a subclass whose forward runs in fp32 with autocast
+    disabled (a class swap, not a patched bound method, so deepcopy for EMA keeps it). Returns the count."""
+    n = 0
+    for mod in model.modules():
+        cls = type(mod)
+        if cls.__name__ in names and not getattr(cls, "_fp32", False):
+            if cls not in _FP32_CLS:
+                def forward(self, *a, _base=cls, **k):
+                    with torch.autocast("cuda", enabled=False), torch.autocast("cpu", enabled=False):
+                        return _base.forward(self, *[t.float() if torch.is_tensor(t) else t for t in a], **k)
+                _FP32_CLS[cls] = type(cls.__name__, (cls,), {"forward": forward, "_fp32": True,
+                                                             "__module__": cls.__module__})
+            mod.__class__ = _FP32_CLS[cls]
+            n += 1
+    return n
+
+
 # --------------------------------------------------------------------------- optim
 def make_optimizer(model, args, fused):
     """AdamW, no weight decay on 1-d params / no_weight_decay(); optional layer-wise lr decay. Each group's
@@ -411,6 +438,9 @@ def main(argv=None):
 
     opt = make_optimizer(model, args, fused=(device == "cuda"))
     sched = make_schedule(opt, args, steps_per_epoch)
+    n_fp32 = fp32_modules(model)  # before compile and the EMA copy; see FP32_MODULES
+    if n_fp32:
+        print(f"running {n_fp32} modules in fp32 under bf16 autocast: {sorted(FP32_MODULES)}")
     train_model = model if args.no_compile else torch.compile(
         model, mode="reduce-overhead" if args.cudagraphs else None)
     ema = None
