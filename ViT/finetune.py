@@ -17,7 +17,7 @@ checkpoint/resume, wandb, results.json. New here:
   * --lr-decay: layer-wise lr decay (timm param_groups_layer_decay / group_matcher).
   * --init-ckpt runs/<name>: start from one of our train_vit.py / finetune.py runs (architecture from its
     results.json, weights from model.pt; head re-initialised, abs pos-embed resampled to the new grid).
-  * --teacher <run dir | timm name> --kd {soft,hard} --kd-alpha --kd-tau [--teacher-img-size]: teacher
+  * --teacher <run dir | timm name> --kd {soft,hard,dist,lsd} --kd-alpha --kd-tau [--teacher-img-size]: teacher
     logits on the same augmented (mixed) batch, no_grad, bf16. soft = Hinton KL * tau^2; hard = DeiT-style
     CE on the teacher argmax. loss = (1 - alpha) * CE(targets) + alpha * KD.
   * --ema D: EMA of weights (timm ModelEmaV3), evaluated alongside the raw weights, saved as model_ema.pt.
@@ -93,7 +93,9 @@ def parse_args(argv=None):
     g = p.add_argument_group("knowledge distillation")
     g.add_argument("--teacher", default=None, help="run dir (finetune.py/train_vit.py) or timm name with N classes")
     g.add_argument("--teacher-img-size", type=int, default=0, help="0 = the teacher's own fine-tune size")
-    g.add_argument("--kd", default="soft", choices=["soft", "hard"])
+    g.add_argument("--kd", default="soft", choices=["soft", "hard", "dist", "lsd"])
+    g.add_argument("--dist-beta", type=float, default=2.0, help="DIST inter-class weight (paper CIFAR-100/ImageNet: 2)")
+    g.add_argument("--dist-gamma", type=float, default=2.0, help="DIST intra-class weight (paper: 2)")
     g.add_argument("--kd-alpha", type=float, default=0.5, help="weight of the KD term")
     g.add_argument("--kd-tau", type=float, default=1.0, help="softmax temperature (soft KD)")
     p.add_argument("--eval-every", type=int, default=5)
@@ -382,11 +384,35 @@ def evaluate(model, x, y, size, mean, std, amp, bs=500, interp="bilinear"):
     return 100.0 * correct.item() / x.size(0)
 
 
-def kd_loss(s_logits, t_logits, mode, tau):
+def _pearson_dist(a, b, eps=1e-8):
+    """Row-wise 1 - Pearson correlation between a and b (B, C)."""
+    a = a - a.mean(1, keepdim=True)
+    b = b - b.mean(1, keepdim=True)
+    return 1.0 - (a * b).sum(1) / (a.norm(dim=1) * b.norm(dim=1) + eps)
+
+
+def kd_loss(s_logits, t_logits, mode, tau, beta=2.0, gamma=2.0):
     s = s_logits.float()
     t = t_logits.float()
     if mode == "hard":
         return F.cross_entropy(s, t.argmax(1))
+    if mode == "dist":
+        # DIST, Yang et al. 2022 (arXiv 2205.10536, Sec. 3): Y = softmax(Z / tau);
+        # L_inter = 1/B sum_i d_p(Ys[i,:], Yt[i,:])   (Pearson over classes, per sample)
+        # L_intra = 1/C sum_j d_p(Ys[:,j], Yt[:,j])   (Pearson over the batch, per class), d_p = 1 - rho
+        # KD term = beta * L_inter + gamma * L_intra (paper: beta = gamma = 2 on CIFAR-100/ImageNet).
+        ys, yt = F.softmax(s / tau, -1), F.softmax(t / tau, -1)
+        inter = _pearson_dist(ys, yt).mean()
+        intra = _pearson_dist(ys.t(), yt.t()).mean()
+        return (beta * inter + gamma * intra) * tau * tau
+    if mode == "lsd":
+        # Logit standardization, Sun et al. CVPR 2024 (arXiv 2403.01427, Alg. 1): per-sample Z-score over the
+        # K class logits, Z(x; tau) = (x - mean) / std / tau (std = population 1/K form), same base tau for
+        # student and teacher, KL(q_t || q_s) * tau^2. No eps in the paper; 1e-7 added for safety.
+        def z(x):
+            return (x - x.mean(1, keepdim=True)) / (x.std(1, unbiased=False, keepdim=True) + 1e-7) / tau
+        return F.kl_div(F.log_softmax(z(s), -1), F.log_softmax(z(t), -1), reduction="batchmean",
+                        log_target=True) * tau * tau
     return F.kl_div(F.log_softmax(s / tau, -1), F.log_softmax(t / tau, -1), reduction="batchmean",
                     log_target=True) * tau * tau
 
@@ -530,7 +556,7 @@ def main(argv=None):
             if teacher is not None:
                 with torch.no_grad(), amp():
                     t_logits = t_fwd(to_input(x, tR, tmean, tstd, args.interp))
-                kd = kd_loss(logits, t_logits, args.kd, args.kd_tau)
+                kd = kd_loss(logits, t_logits, args.kd, args.kd_tau, args.dist_beta, args.dist_gamma)
                 loss = (1 - args.kd_alpha) * loss + args.kd_alpha * kd
                 kd_sum += kd.detach()
             opt.zero_grad(set_to_none=True)
