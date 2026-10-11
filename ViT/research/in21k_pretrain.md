@@ -1,5 +1,7 @@
 # B4: ImageNet-21K-P pretraining of our ViT-Tiny (64 px) -> CIFAR-100
 
+> **Verification status:** the quotes below came back through a page-summarising fetch tool, not from text read verbatim. Re-check each against the paper before citing it in reports.
+
 Goal: same 5.6M-param ViT-Tiny (patch 8 @ 64 px = 64 tokens, LSA + SeqPool + impulse init) pretrained on ImageNet-21K-P
 (winter21, 10,450 classes, 11,060,239 train images, 64x64) vs. ImageNet-1k at 64 px (`in64pre_tiny_p8`, 56.83% IN-64 top-1),
 then the same four CIFAR-100 fine-tunes. IN-64 references: 81.17 / 81.47 (KD) / 83.78 (p4) / 84.08 (p4+KD).
