@@ -1,0 +1,20 @@
+[
+  {
+    "model": "runs/ec100_in64pre_tiny_64_kd",
+    "img_size": 64,
+    "num_classes": 100,
+    "time": "2026-10-11 09:46:34",
+    "torch": "2.11.0+cu128",
+    "params_M": 5.408009,
+    "params_M_deploy": 5.408009,
+    "GMACs": 0.347437824,
+    "act_MB_est_bs1_fp32": 0.5712890625,
+    "weights_MB_fp32": 20.62991714477539,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 20.731289863586426,
+    "ort_error": "NotImplemented: [ONNXRuntimeError] : 9 : NOT_IMPLEMENTED : Could not find an implementation for EyeLike(9) node with name '/blocks/blocks.0/attn/EyeLike'",
+    "onnx_int8_MB": 5.585888862609863,
+    "int8_error": "NotImplemented: [ONNXRuntimeError] : 9 : NOT_IMPLEMENTED : Could not find an implementation for EyeLike(9) node with name '/blocks/blocks.0/attn/EyeLike'",
+    "bench_sec": 4.814284563064575
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_kd_iformer_t_128",
+    "img_size": 128,
+    "num_classes": 100,
+    "time": "2026-10-11 06:45:27",
+    "torch": "2.11.0+cu128",
+    "params_M": 2.655156,
+    "params_M_deploy": 2.641732,
+    "GMACs": 0.167953408,
+    "act_MB_est_bs1_fp32": 1.0,
+    "weights_MB_fp32": 10.077407836914062,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 10.219368934631348,
+    "ort_lat_ms_fp32_t1": 3.340570499858586,
+    "ort_lat_ms_fp32_t4": 2.6571885027806275,
+    "onnx_max_abs_diff": 2.1457672119140625e-06,
+    "onnx_ref_abs_max": 2.8726694583892822,
+    "onnx_int8_MB": 10.197068214416504,
+    "ort_lat_ms_int8_t1": 5.532729501283029,
+    "ort_lat_ms_int8_t4": 2.801520997309126,
+    "bench_sec": 11.21100640296936
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_mnv4_cs_224",
+    "img_size": 224,
+    "num_classes": 100,
+    "time": "2026-10-11 07:09:46",
+    "torch": "2.11.0+cu128",
+    "params_M": 2.621124,
+    "params_M_deploy": 2.621124,
+    "GMACs": 0.184853568,
+    "act_MB_est_bs1_fp32": 3.0625,
+    "weights_MB_fp32": 9.998794555664062,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 9.972968101501465,
+    "ort_lat_ms_fp32_t1": 2.356215500185499,
+    "ort_lat_ms_fp32_t4": 1.2438500016287435,
+    "onnx_max_abs_diff": 1.1436641216278076e-06,
+    "onnx_ref_abs_max": 1.5213286876678467,
+    "onnx_int8_MB": 9.614361763000488,
+    "ort_lat_ms_int8_t1": 5.781278501672205,
+    "ort_lat_ms_int8_t4": 1.0062209985335357,
+    "bench_sec": 12.268297672271729
+  }
+]

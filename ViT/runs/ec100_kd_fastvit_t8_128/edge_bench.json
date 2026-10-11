@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_kd_fastvit_t8_128",
+    "img_size": 128,
+    "num_classes": 100,
+    "time": "2026-10-11 07:46:30",
+    "torch": "2.11.0+cu128",
+    "params_M": 3.334132,
+    "params_M_deploy": 3.30394,
+    "GMACs": 0.171230208,
+    "act_MB_est_bs1_fp32": 1.6875,
+    "weights_MB_fp32": 12.603530883789062,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 12.642780303955078,
+    "ort_lat_ms_fp32_t1": 4.902073498669779,
+    "ort_lat_ms_fp32_t4": 2.7118569996673614,
+    "onnx_max_abs_diff": 1.1920928955078125e-06,
+    "onnx_ref_abs_max": 3.1829991340637207,
+    "onnx_int8_MB": 12.438669204711914,
+    "ort_lat_ms_int8_t1": 8.341113003552891,
+    "ort_lat_ms_int8_t4": 3.1134865021158475,
+    "bench_sec": 11.36376142501831
+  }
+]

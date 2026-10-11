@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_effvit_m1_224",
+    "img_size": 224,
+    "num_classes": 100,
+    "time": "2026-10-11 07:04:30",
+    "torch": "2.11.0+cu128",
+    "params_M": 2.80686,
+    "params_M_deploy": 2.790556,
+    "GMACs": 0.16687904,
+    "act_MB_est_bs1_fp32": 1.53125,
+    "weights_MB_fp32": 10.645126342773438,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 10.906233787536621,
+    "ort_lat_ms_fp32_t1": 5.196559002797585,
+    "ort_lat_ms_fp32_t4": 4.082191000634339,
+    "onnx_max_abs_diff": 5.638599395751953e-05,
+    "onnx_ref_abs_max": 1.9564580917358398,
+    "onnx_int8_MB": 10.938206672668457,
+    "ort_lat_ms_int8_t1": 8.418400499067502,
+    "ort_lat_ms_int8_t4": 5.438049498479813,
+    "bench_sec": 13.396617889404297
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_starnet_s1_224",
+    "img_size": 224,
+    "num_classes": 100,
+    "time": "2026-10-11 06:59:35",
+    "torch": "2.11.0+cu128",
+    "params_M": 2.695468,
+    "params_M_deploy": 2.695468,
+    "GMACs": 0.421704576,
+    "act_MB_est_bs1_fp32": 6.69921875,
+    "weights_MB_fp32": 10.282394409179688,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 10.299663543701172,
+    "ort_lat_ms_fp32_t1": 6.1344220011960715,
+    "ort_lat_ms_fp32_t4": 3.1497940035478678,
+    "onnx_max_abs_diff": 2.5033950805664062e-06,
+    "onnx_ref_abs_max": 1.8450669050216675,
+    "onnx_int8_MB": 10.25686264038086,
+    "ort_lat_ms_int8_t1": 6.9933799968566746,
+    "ort_lat_ms_int8_t4": 2.8435489984985907,
+    "bench_sec": 18.57353186607361
+  }
+]

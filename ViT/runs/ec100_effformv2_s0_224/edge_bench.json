@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_effformv2_s0_224",
+    "img_size": 224,
+    "num_classes": 100,
+    "time": "2026-10-11 08:26:58",
+    "torch": "2.11.0+cu128",
+    "params_M": 3.281656,
+    "params_M_deploy": 3.281656,
+    "GMACs": 0.395575744,
+    "act_MB_est_bs1_fp32": 6.890625,
+    "weights_MB_fp32": 12.518524169921875,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 12.540310859680176,
+    "ort_lat_ms_fp32_t1": 11.603141501836944,
+    "ort_lat_ms_fp32_t4": 7.152167003368959,
+    "onnx_max_abs_diff": 4.410743713378906e-06,
+    "onnx_ref_abs_max": 2.1105289459228516,
+    "onnx_int8_MB": 12.482043266296387,
+    "ort_lat_ms_int8_t1": 12.47120199695928,
+    "ort_lat_ms_int8_t4": 8.09308850148227,
+    "bench_sec": 13.011297941207886
+  }
+]
