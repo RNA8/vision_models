@@ -65,6 +65,9 @@ def parse_args(argv=None):
     p.add_argument("--train-subset", type=int, default=0, help="use only the first N train images (tests)")
     p.add_argument("--test-subset", type=int, default=0, help="use only the first N test images (tests)")
     p.add_argument("--img-size", type=int, default=224, help="model input resolution (GPU upsampling)")
+    p.add_argument("--patch-size", type=int, default=0,
+                   help="--init-ckpt only (our ViTs): switch the patch size (FlexiViT): PI-resize the patch "
+                        "embedding, bilinear-resample the pos-embed to the new grid; 0 = keep the ckpt's")
     p.add_argument("--interp", default="bilinear", choices=["bilinear", "bicubic"])
     p.add_argument("--epochs", type=int, default=30)
     p.add_argument("--batch-size", type=int, default=256)
@@ -250,7 +253,11 @@ def adapt_state_dict(sd, model):
             dropped.append(k)
             continue
         if v.shape != own[k].shape:
-            if k.endswith("pos_embed") and v.ndim == 3:
+            if k.endswith("patch_embed.proj.weight") and v.ndim == 4:  # FlexiViT PI-resize
+                from timm.layers import resample_patch_embed
+
+                v = resample_patch_embed(v, list(model.patch_embed.patch_size), interpolation="bilinear")
+            elif k.endswith("pos_embed") and v.ndim == 3:
                 npt = 0 if getattr(model, "no_embed_class", False) else getattr(model, "num_prefix_tokens", 1)
                 gs = model.patch_embed.grid_size
                 v = resample_abs_pos_embed(v, new_size=list(gs), num_prefix_tokens=npt)
@@ -274,7 +281,7 @@ def adapt_state_dict(sd, model):
 ZERO_HEAD = ("mobilenetv4_hybrid_",)
 
 
-def load_model(ref, num_classes=None, img_size=None, pretrained=True, drop_path=0.0, transfer=False):
+def load_model(ref, num_classes=None, img_size=None, pretrained=True, drop_path=0.0, transfer=False, patch_size=0):
     """Model reference -> (model, spec). `ref` is a run dir (or its model.pt) or a timm name.
     transfer=True: new head/img_size (fine-tuning start); else the run's exact network (teacher/bench)."""
     if os.path.exists(ref):
@@ -282,6 +289,8 @@ def load_model(ref, num_classes=None, img_size=None, pretrained=True, drop_path=
         spec = dict(spec_from_run(d, res))
         sd, pt = _run_weights(d, res, prefer_ema=not transfer)
         if transfer:
+            if patch_size:
+                spec["train_args"] = dict(spec["train_args"], patch_size=patch_size)
             m = build_from_spec(spec, num_classes, img_size, drop_path)
             adapt_state_dict(sd, m)
             spec.update(num_classes=num_classes or spec["num_classes"], img_size=img_size or spec["img_size"])
@@ -421,7 +430,8 @@ def main(argv=None):
     R = args.img_size
 
     if args.init_ckpt:
-        model, spec = load_model(args.init_ckpt, num_classes, R, drop_path=args.drop_path, transfer=True)
+        model, spec = load_model(args.init_ckpt, num_classes, R, drop_path=args.drop_path, transfer=True,
+                                 patch_size=args.patch_size)
     else:
         model, spec = load_model(args.model, num_classes, R, pretrained=not args.no_pretrained,
                                  drop_path=args.drop_path)
