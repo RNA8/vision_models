@@ -58,7 +58,7 @@ def wandb_start(d):
 def load_runs():
     runs = {}
     for d in sorted(RUNS.iterdir()):
-        if not d.is_dir() or d.name.startswith(".") or d.name == "smoke_real":
+        if not d.is_dir() or d.name.startswith(".") or d.name in ("smoke_real", "int8_audit"):
             continue
         r = {"name": d.name, "dir": d, "res": jload(d / "results.json"), "rec": jload(d / "recurrent_eval.json")}
         eb = jload(d / "edge_bench.json")
@@ -118,6 +118,9 @@ def parse_scripts():
                 s = re.sub(r"\$\{(\w+)\}|\$(\w+)", lambda m: env.get(m.group(1) or m.group(2), m.group(0)), s)
             return " ".join(s.split())
 
+        # run() helpers that build the name from a prefix ("local name=c100_rd_c2_$1") or take the script first ("run <x.py> <name>")
+        mp = re.search(r"local name=([\w.-]*)\$1", txt)
+        name_prefix = mp.group(1) if mp else ""
         loops = []
         body = txt.split("\n")
         for line in body:
@@ -135,13 +138,14 @@ def parse_scripts():
                     if loops:
                         loops.pop()
                     continue
+                stmt = re.sub(r"^(run|train|ft)\s+\S+\.py\s+", r"\1 ", stmt)
                 m = re.match(r"(run|train|ft)\s+(\S+)\s*(.*)$", stmt)
                 if not m or m.group(2).startswith("<") or m.group(2).startswith('"$'):
                     continue
                 names = [v for v, _ in loops]
                 for combo in itertools.product(*[vals for _, vals in loops]) if loops else [()]:
                     extra = dict(zip(names, combo))
-                    name = expand(m.group(2), extra).strip('"')
+                    name = name_prefix + expand(m.group(2), extra).strip('"')
                     if "$" in name:
                         continue
                     flags = expand(m.group(3), extra)
@@ -569,6 +573,13 @@ EDGE_FAMILY = {  # short name stem -> (family class, display)
     "edgenext_xs": ("hyb", "EdgeNeXt-XS"), "mnv4_hm": ("hyb", "MNv4-HybridM"), "starnet_s1": ("cnn", "StarNet-S1"),
     "mnv4_cs": ("cnn", "MNv4-ConvS"), "repvit_m0_9": ("cnn", "RepViT-M0.9"), "convnext_at": ("cnn", "ConvNeXt-Atto"),
     "in64pre_slvit": ("ours", "our SL-ViT, IN-64 pre"), "in64pre_tiny": ("ours", "our ViT-Tiny, IN-64 pre"),
+    "in64pre_tiny_p4": ("ours", "our ViT-Tiny p4 (FlexiViT switch), IN-64 pre"),
+    "upcyc_in64pre_tiny_e4": ("ours", "our ViT-Tiny MoE-upcycled E4, IN-64 pre"),
+    "dense_in64pre_tiny": ("ours", "our ViT-Tiny, IN-64 pre (dense control)"),
+    "moe_repvit_k4": ("cnn", "RepViT-M0.9 CondConv K4"), "moe_repvit_k8": ("cnn", "RepViT-M0.9 CondConv K8"),
+    "fm_repvit": ("cnn", "RepViT-M0.9 function-matching KD"), "fm_tinyvit5m": ("hyb", "TinyViT-5M function-matching KD"),
+    "kd60_soft_repvit": ("cnn", "RepViT-M0.9 KD soft 60ep"), "kd60_dist_repvit": ("cnn", "RepViT-M0.9 KD DIST 60ep"),
+    "kd60_lsd_repvit": ("cnn", "RepViT-M0.9 KD logit-std 60ep"),
 }
 
 
@@ -579,7 +590,7 @@ def edge_info(name):
         kd, s = "hard", s[7:]
     elif s.startswith("kd_"):
         kd, s = "soft", s[3:]
-    m = re.match(r"(.+?)_(\d+)(_kd)?(_lr.*)?$", s)
+    m = re.match(r"(.+?)_(\d+)(_kd)?(_lr[^_]*)?(?:_e\d+|_\d+ep)?$", s)
     stem, px = (m.group(1), int(m.group(2))) if m else (s, None)
     if m and m.group(3):
         kd = "soft"
@@ -821,7 +832,7 @@ def edge_table():
         a = e["acc"]
         accs = f"{a:.2f}" + (' <span class="pill below">collapsed</span>' if e.get("collapsed") else "") + (' <span class="pill below">superseded: lr 5e-4 diverged</span>' if e["superseded"] else "")
         mark = (' <span class="pill match">best &le;6M</span>' if BEST_SMALL and e["name"] == BEST_SMALL["name"] else "") + \
-               (' <span class="pill pend-pill">IN-64 pretrained, from scratch on 64 px</span>' if e["fam"] == "ours" else "")
+               (' <span class="pill pend-pill">pretrained by us on ImageNet-64</span>' if e["fam"] == "ours" else "")
         rows.append([f"<code>{e['name']}</code>", e["disp"] + (" (teacher)" if e["teacher"] else "") + mark, fam_name(e["fam"]), str(e["px"]), e["kd"] or "—",
                      num(e.get("params"), 2), num(e.get("gmacs"), 3), num(e.get("int8_t1"), 1), num(e.get("fp32_t1"), 1), accs,
                      num(e.get("ema")), f"{100 * a / TEACH_ACC:.1f}%" if TEACH_ACC else "—", f"{100 * a / SOTA_PRE:.1f}%"])
