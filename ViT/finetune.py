@@ -263,6 +263,17 @@ def adapt_state_dict(sd, model):
     return dropped
 
 
+# timm archs whose freshly initialised classifier must be zeroed when fine-tuning from pretrained weights.
+# MobileNetV4-Hybrid-Medium's pre-logit features are large (rms ~2.5, max ~65 on CIFAR at 128/224 px vs ~0.5 for
+# MNv4-Conv-Small), so timm's default head init (uniform, std ~0.058) gives logits with std ~5 and an initial loss
+# ~13; the backward pass then explodes into the backbone (grad norm ~7e4, mostly conv_stem) and the pretrained
+# features are wrecked in the first steps. ec100_mnv4_hm_128 collapsed to chance (4.4%) in compiled bf16, and on
+# a 20k subset at lr 5e-4 compiled bf16, compiled fp32, eager bf16 and compiled bf16 with MultiQueryAttention2d
+# in fp32 ALL collapsed (val 1.5-2.5%), so it is not a precision problem. Zero head -> initial loss ln(100),
+# grad norm 8. Prefix-matched, so other archs keep the head init the rest of the sweep used.
+ZERO_HEAD = ("mobilenetv4_hybrid_",)
+
+
 def load_model(ref, num_classes=None, img_size=None, pretrained=True, drop_path=0.0, transfer=False):
     """Model reference -> (model, spec). `ref` is a run dir (or its model.pt) or a timm name.
     transfer=True: new head/img_size (fine-tuning start); else the run's exact network (teacher/bench)."""
@@ -281,6 +292,12 @@ def load_model(ref, num_classes=None, img_size=None, pretrained=True, drop_path=
         print(f"loaded {pt}")
         return m, spec
     m, kw = create_timm(ref, num_classes or 1000, img_size or 224, drop_path, pretrained=pretrained)
+    if pretrained and (num_classes or 1000) != 1000 and ref.startswith(ZERO_HEAD):
+        head = m.get_classifier()
+        torch.nn.init.zeros_(head.weight)
+        if head.bias is not None:
+            torch.nn.init.zeros_(head.bias)
+        print(f"note: zero-initialised the new {num_classes}-class head of {ref} (see ZERO_HEAD)")
     cfg = m.pretrained_cfg
     spec = {"kind": "timm", "name": ref, "create_kwargs": {k: v for k, v in kw.items() if k != "drop_path_rate"},
             "img_size": img_size or 224, "num_classes": num_classes or 1000,
