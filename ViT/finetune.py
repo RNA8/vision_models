@@ -101,6 +101,8 @@ def parse_args(argv=None):
     g.add_argument("--dist-gamma", type=float, default=2.0, help="DIST intra-class weight (paper: 2)")
     g.add_argument("--kd-alpha", type=float, default=0.5, help="weight of the KD term")
     g.add_argument("--kd-tau", type=float, default=1.0, help="softmax temperature (soft KD)")
+    p.add_argument("--moe", default=None, help="moe.py conversion spec after loading the model, e.g. cc:k=4,stages=3 / upcycle:e=4,last=4")
+    p.add_argument("--moe-tau-epochs", type=int, default=10, help="CondConv softmax temperature 30 -> 1 over N epochs")
     p.add_argument("--eval-every", type=int, default=5)
     p.add_argument("--eval-bs", type=int, default=500)
     p.add_argument("--no-compile", action="store_true")
@@ -461,6 +463,11 @@ def main(argv=None):
     else:
         model, spec = load_model(args.model, num_classes, R, pretrained=not args.no_pretrained,
                                  drop_path=args.drop_path)
+    if args.moe:
+        import moe
+
+        spec["moe"] = moe.apply(model, args.moe, args.seed)
+        print("MoE conversion:", args.moe, spec["moe"])
     model = model.to(device)
     mean = torch.tensor(spec["mean"], device=device).view(1, 3, 1, 1)
     std = torch.tensor(spec["std"], device=device).view(1, 3, 1, 1)
@@ -541,6 +548,8 @@ def main(argv=None):
     t_start = time.time()
     for epoch in range(start_epoch, args.epochs + 1):
         train_model.train()
+        if args.moe:
+            moe.set_tau(model, moe.tau_at(epoch, 30.0, args.moe_tau_epochs))
         perm = torch.randperm(n_train, device=device)
         loss_sum = torch.zeros((), device=device)
         kd_sum = torch.zeros((), device=device)
@@ -589,6 +598,8 @@ def main(argv=None):
         ips = steps_per_epoch * bs / dt
         lr_now = sched.get_last_lr()[0]
         rec = {"epoch": epoch, "train_loss": train_loss, "lr": lr_now, "epoch_sec": dt, "img_per_sec": ips}
+        if args.moe:
+            rec.update(moe.epoch_stats(model))
         if teacher is not None:
             rec["kd_loss"] = kd_sum.item() / steps_per_epoch
         line = f"ep {epoch:4d}/{args.epochs} | loss {train_loss:.4f} | lr {lr_now:.2e} | {dt:6.2f}s | {ips:7.0f} img/s"
@@ -643,6 +654,9 @@ def main(argv=None):
     print(msg)
     print(f"Steady state: {summary['epoch_sec_steady']:.2f} s/epoch, {summary['img_per_sec_steady']:,.0f} img/s")
     print(f"Saved results.json and model.pt to {out_dir}")
+    if args.moe:
+        moe.finalize(model, lambda xb: model(to_input(xb.float().div(255.0), R, mean, std, args.interp)), xte, out_dir, R,
+                     extra={"moe_spec": args.moe, "best_val": best_val, "final_val": final.get("val_acc")})
     if wb:
         wb.summary.update({"best_val_acc": best_val, "best_ema_val_acc": best_ema, "total_minutes": total_min})
         wb.finish()

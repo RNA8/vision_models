@@ -82,6 +82,7 @@ def parse_args():
     p.add_argument("--randaug-n", type=int, default=2, help="RandAugment ops per image")
     p.add_argument("--randaug-m", type=float, default=9, help="RandAugment magnitude (0-10)")
     p.add_argument("--grad-clip", type=float, default=1.0, help="0 disables")
+    p.add_argument("--moe", default=None, help="moe.py spec applied after build_model, e.g. mlp:e=4,last=4")
     p.add_argument("--eval-every", type=int, default=5)
     p.add_argument("--no-compile", action="store_true")
     p.add_argument("--cudagraphs", action="store_true",
@@ -582,7 +583,12 @@ def main():
     ubs = bs // K
     steps_per_epoch = n_train // ubs  # drop the last partial batch: keeps shapes static for compile
 
-    model = build_model(args, num_classes, img_size).to(device)
+    model = build_model(args, num_classes, img_size)
+    if args.moe:
+        import moe
+
+        print("MoE conversion:", args.moe, moe.apply(model, args.moe, args.seed))
+    model = model.to(device)
     n_params = sum(p.numel() for p in model.parameters())
     print(f"Model: {args.model}  params: {n_params / 1e6:.2f}M  train images: {n_train}  "
           f"batch: {bs}" + (f" ({ubs} unique x {K})" if K > 1 else "") + f"  steps/epoch: {steps_per_epoch}")
@@ -679,6 +685,8 @@ def main():
         ips = steps_per_epoch * bs / dt
         lr_now = sched.get_last_lr()[0]
         rec = {"epoch": epoch, "train_loss": train_loss, "lr": lr_now, "epoch_sec": dt, "img_per_sec": ips}
+        if args.moe:
+            rec.update(moe.epoch_stats(model))
 
         line = (f"ep {epoch:4d}/{args.epochs} | loss {train_loss:.4f} | lr {lr_now:.2e} | "
                 f"{dt:6.2f}s | {ips:9.0f} img/s")
@@ -722,6 +730,9 @@ def main():
     torch.save(model.state_dict(), os.path.join(out_dir, "model.pt"))
     if not args.keep_ckpt and os.path.exists(ckpt_path):
         os.remove(ckpt_path)
+    if args.moe:
+        moe.finalize(model, lambda xb: model((xb.float().div(255.0) - mean) / std), xte, out_dir, img_size,
+                     extra={"moe_spec": args.moe, "best_val": best_val, "final_val": final.get("val_acc")})
     if args.plot:
         save_pos_embed_plot(model, os.path.join(out_dir, "pos_embed_similarity.png"))
 
