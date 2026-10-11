@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_iformer_t_224",
+    "img_size": 224,
+    "num_classes": 100,
+    "time": "2026-10-11 04:27:47",
+    "torch": "2.11.0+cu128",
+    "params_M": 2.655156,
+    "params_M_deploy": 2.641732,
+    "GMACs": 0.530241664,
+    "act_MB_est_bs1_fp32": 3.0625,
+    "weights_MB_fp32": 10.077407836914062,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 10.219368934631348,
+    "ort_lat_ms_fp32_t1": 8.992412000225158,
+    "ort_lat_ms_fp32_t4": 4.191847998299636,
+    "onnx_max_abs_diff": 1.9073486328125e-06,
+    "onnx_ref_abs_max": 2.842769145965576,
+    "onnx_int8_MB": 10.197068214416504,
+    "ort_lat_ms_int8_t1": 15.884642998571508,
+    "ort_lat_ms_int8_t4": 5.405219002568629,
+    "bench_sec": 16.11083459854126
+  }
+]

@@ -1,0 +1,316 @@
+{
+  "run_name": "ec100_mnv4_hm_128",
+  "args": {
+    "model": "mobilenetv4_hybrid_medium.e200_r256_in12k_ft_in1k",
+    "init_ckpt": null,
+    "no_pretrained": false,
+    "dataset": "cifar100",
+    "data_dir": "/home/ubuntu/workspace/vision_models/ViT/data",
+    "train_subset": 0,
+    "test_subset": 0,
+    "img_size": 128,
+    "interp": "bilinear",
+    "epochs": 30,
+    "batch_size": 256,
+    "lr": 0.0005,
+    "min_lr": 1e-06,
+    "warmup_epochs": 3,
+    "weight_decay": 0.05,
+    "lr_decay": 0.0,
+    "lr_decay_min": 0.0,
+    "label_smoothing": 0.1,
+    "mixup": 0.8,
+    "cutmix": 1.0,
+    "mix_prob": 1.0,
+    "mix_off_epoch": 0,
+    "reprob": 0.0,
+    "drop_path": 0.1,
+    "no_aug": false,
+    "randaug": true,
+    "randaug_n": 2,
+    "randaug_m": 9,
+    "grad_clip": 1.0,
+    "ema": 0.999,
+    "ema_warmup": false,
+    "teacher": null,
+    "teacher_img_size": 0,
+    "kd": "soft",
+    "kd_alpha": 0.5,
+    "kd_tau": 1.0,
+    "eval_every": 5,
+    "eval_bs": 500,
+    "no_compile": false,
+    "cudagraphs": false,
+    "fake_data": false,
+    "wandb": true,
+    "wandb_entity": "softeye",
+    "wandb_project": "vision_transformers",
+    "run_name": "ec100_mnv4_hm_128",
+    "out_dir": "/home/ubuntu/workspace/vision_models/ViT/runs",
+    "seed": 0,
+    "log_every_steps": 0,
+    "ckpt_every": 5,
+    "no_resume": false,
+    "keep_ckpt": false,
+    "max_steps": 0
+  },
+  "model_spec": {
+    "kind": "timm",
+    "name": "mobilenetv4_hybrid_medium.e200_r256_in12k_ft_in1k",
+    "create_kwargs": {
+      "num_classes": 100
+    },
+    "img_size": 128,
+    "num_classes": 100,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "params_M": 9.921748,
+  "total_minutes": 16.673097769419353,
+  "epoch_sec_steady": 27.99541139602661,
+  "img_per_sec_steady": 1783.1493630804491,
+  "final_val_acc": 4.4,
+  "final_train_acc_clean": 4.05,
+  "best_val_acc": 4.4,
+  "final_ema_val_acc": 3.69,
+  "best_ema_val_acc": 3.69,
+  "teacher": null,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 6.018605393629808,
+      "lr": 0.00016752136752136752,
+      "epoch_sec": 130.16495966911316,
+      "img_per_sec": 383.5133520334468
+    },
+    {
+      "epoch": 2,
+      "train_loss": 4.553444573818109,
+      "lr": 0.00033418803418803415,
+      "epoch_sec": 24.27856993675232,
+      "img_per_sec": 2056.1342834460893
+    },
+    {
+      "epoch": 3,
+      "train_loss": 4.696912560096154,
+      "lr": 0.0005,
+      "epoch_sec": 24.842625856399536,
+      "img_per_sec": 2009.4494152332313
+    },
+    {
+      "epoch": 4,
+      "train_loss": 5.650883288261218,
+      "lr": 0.0004983129702566148,
+      "epoch_sec": 24.279414653778076,
+      "img_per_sec": 2056.0627474695743
+    },
+    {
+      "epoch": 5,
+      "train_loss": 5.3447622445913465,
+      "lr": 0.000493274695209666,
+      "epoch_sec": 24.247897624969482,
+      "img_per_sec": 2058.7351848844187,
+      "val_acc": 0.99,
+      "train_acc_clean": 0.75,
+      "ema_val_acc": 1.0
+    },
+    {
+      "epoch": 6,
+      "train_loss": 5.063913824619391,
+      "lr": 0.0004849533088860842,
+      "epoch_sec": 23.74118208885193,
+      "img_per_sec": 2102.6754191587106
+    },
+    {
+      "epoch": 7,
+      "train_loss": 5.009857021233974,
+      "lr": 0.0004734613437606914,
+      "epoch_sec": 19.501901388168335,
+      "img_per_sec": 2559.7504061981417
+    },
+    {
+      "epoch": 8,
+      "train_loss": 5.002561598557692,
+      "lr": 0.00045895420894752765,
+      "epoch_sec": 24.649696588516235,
+      "img_per_sec": 2025.177057280967
+    },
+    {
+      "epoch": 9,
+      "train_loss": 4.950908641326122,
+      "lr": 0.000441628088558185,
+      "epoch_sec": 20.939854860305786,
+      "img_per_sec": 2383.9706785470535
+    },
+    {
+      "epoch": 10,
+      "train_loss": 4.8986403245192305,
+      "lr": 0.000421717288648249,
+      "epoch_sec": 28.769379138946533,
+      "img_per_sec": 1735.1782170516437,
+      "val_acc": 1.29,
+      "train_acc_clean": 1.17,
+      "ema_val_acc": 1.0
+    },
+    {
+      "epoch": 11,
+      "train_loss": 4.855936686197917,
+      "lr": 0.0003994910686298451,
+      "epoch_sec": 25.36795949935913,
+      "img_per_sec": 1967.8366327122656
+    },
+    {
+      "epoch": 12,
+      "train_loss": 4.850946827423878,
+      "lr": 0.00037525,
+      "epoch_sec": 32.946075677871704,
+      "img_per_sec": 1515.2032214121593
+    },
+    {
+      "epoch": 13,
+      "train_loss": 4.85458733974359,
+      "lr": 0.00034932190162676965,
+      "epoch_sec": 38.642963886260986,
+      "img_per_sec": 1291.8263761271278
+    },
+    {
+      "epoch": 14,
+      "train_loss": 4.807182742387821,
+      "lr": 0.000322057406561417,
+      "epoch_sec": 37.934529542922974,
+      "img_per_sec": 1315.9514722204594
+    },
+    {
+      "epoch": 15,
+      "train_loss": 4.762341934595352,
+      "lr": 0.00029382522032789915,
+      "epoch_sec": 33.95892953872681,
+      "img_per_sec": 1470.011000878905,
+      "val_acc": 2.17,
+      "train_acc_clean": 2.11,
+      "ema_val_acc": 1.0
+    },
+    {
+      "epoch": 16,
+      "train_loss": 4.759999749599359,
+      "lr": 0.0002650071348131637,
+      "epoch_sec": 33.974793910980225,
+      "img_per_sec": 1469.3245860680993
+    },
+    {
+      "epoch": 17,
+      "train_loss": 4.721925393129006,
+      "lr": 0.0002359928651868363,
+      "epoch_sec": 34.282103300094604,
+      "img_per_sec": 1456.1533626748694
+    },
+    {
+      "epoch": 18,
+      "train_loss": 4.681356733273237,
+      "lr": 0.00020717477967210088,
+      "epoch_sec": 33.88575267791748,
+      "img_per_sec": 1473.1855147054664
+    },
+    {
+      "epoch": 19,
+      "train_loss": 4.656236227964744,
+      "lr": 0.00017894259343858305,
+      "epoch_sec": 33.96050834655762,
+      "img_per_sec": 1469.9426607688017
+    },
+    {
+      "epoch": 20,
+      "train_loss": 4.62410168770032,
+      "lr": 0.00015167809837323039,
+      "epoch_sec": 34.355095863342285,
+      "img_per_sec": 1453.0595460589543,
+      "val_acc": 3.14,
+      "train_acc_clean": 3.15,
+      "ema_val_acc": 1.33
+    },
+    {
+      "epoch": 21,
+      "train_loss": 4.600714580829327,
+      "lr": 0.00012575000000000005,
+      "epoch_sec": 33.93327832221985,
+      "img_per_sec": 1471.1222277427844
+    },
+    {
+      "epoch": 22,
+      "train_loss": 4.5957726111778845,
+      "lr": 0.0001015089313701549,
+      "epoch_sec": 30.698091983795166,
+      "img_per_sec": 1626.1596983405889
+    },
+    {
+      "epoch": 23,
+      "train_loss": 4.575992525540865,
+      "lr": 7.9282711351751e-05,
+      "epoch_sec": 29.010028839111328,
+      "img_per_sec": 1720.7842252365444
+    },
+    {
+      "epoch": 24,
+      "train_loss": 4.555935747195512,
+      "lr": 5.937191144181502e-05,
+      "epoch_sec": 29.534644842147827,
+      "img_per_sec": 1690.2183949326172
+    },
+    {
+      "epoch": 25,
+      "train_loss": 4.546256510416667,
+      "lr": 4.20457910524724e-05,
+      "epoch_sec": 27.99541139602661,
+      "img_per_sec": 1783.1493630804491,
+      "val_acc": 4.13,
+      "train_acc_clean": 3.6,
+      "ema_val_acc": 2.05
+    },
+    {
+      "epoch": 26,
+      "train_loss": 4.535822941706731,
+      "lr": 2.7538656239308665e-05,
+      "epoch_sec": 18.28739333152771,
+      "img_per_sec": 2729.749346722764
+    },
+    {
+      "epoch": 27,
+      "train_loss": 4.5234052609174675,
+      "lr": 1.6046691113915874e-05,
+      "epoch_sec": 20.737293004989624,
+      "img_per_sec": 2407.2573015189923
+    },
+    {
+      "epoch": 28,
+      "train_loss": 4.524227827023237,
+      "lr": 7.72530479033396e-06,
+      "epoch_sec": 22.35393714904785,
+      "img_per_sec": 2233.163655563302
+    },
+    {
+      "epoch": 29,
+      "train_loss": 4.518184407552083,
+      "lr": 2.687029743385216e-06,
+      "epoch_sec": 22.342453956604004,
+      "img_per_sec": 2234.311418833409
+    },
+    {
+      "epoch": 30,
+      "train_loss": 4.520401705228365,
+      "lr": 1e-06,
+      "epoch_sec": 22.836634397506714,
+      "img_per_sec": 2185.9613431237585,
+      "val_acc": 4.4,
+      "train_acc_clean": 4.05,
+      "ema_val_acc": 3.69
+    }
+  ]
+}

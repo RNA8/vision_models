@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_kd_deit_t_224",
+    "img_size": 224,
+    "num_classes": 100,
+    "time": "2026-10-11 04:13:07",
+    "torch": "2.11.0+cu128",
+    "params_M": 5.543716,
+    "params_M_deploy": 5.543716,
+    "GMACs": 1.074678528,
+    "act_MB_est_bs1_fp32": 1.7314453125,
+    "weights_MB_fp32": 21.147598266601562,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 21.241902351379395,
+    "ort_lat_ms_fp32_t1": 29.592593498819042,
+    "ort_lat_ms_fp32_t4": 12.193506499897921,
+    "onnx_max_abs_diff": 1.2516975402832031e-06,
+    "onnx_ref_abs_max": 0.6243260502815247,
+    "onnx_int8_MB": 6.093268394470215,
+    "ort_lat_ms_int8_t1": 18.818478001776384,
+    "ort_lat_ms_int8_t4": 8.636380996904336,
+    "bench_sec": 16.86948251724243
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_kd_repvit_m0_9_128",
+    "img_size": 128,
+    "num_classes": 100,
+    "time": "2026-10-11 05:19:18",
+    "torch": "2.11.0+cu128",
+    "params_M": 4.796328,
+    "params_M_deploy": 4.720556,
+    "GMACs": 0.266377728,
+    "act_MB_est_bs1_fp32": 1.3125,
+    "weights_MB_fp32": 18.007492065429688,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 18.11043643951416,
+    "ort_lat_ms_fp32_t1": 5.2108119962213095,
+    "ort_lat_ms_fp32_t4": 3.826566000498133,
+    "onnx_max_abs_diff": 3.4570693969726562e-06,
+    "onnx_ref_abs_max": 1.5028047561645508,
+    "onnx_int8_MB": 18.0330228805542,
+    "ort_lat_ms_int8_t1": 5.193275501369499,
+    "ort_lat_ms_int8_t4": 3.3546869999554474,
+    "bench_sec": 15.522334814071655
+  }
+]

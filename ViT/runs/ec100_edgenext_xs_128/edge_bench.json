@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_edgenext_xs_128",
+    "img_size": 128,
+    "num_classes": 100,
+    "time": "2026-10-11 05:13:21",
+    "torch": "2.11.0+cu128",
+    "params_M": 2.163104,
+    "params_M_deploy": 2.163104,
+    "GMACs": 0.133269248,
+    "act_MB_est_bs1_fp32": 1.375,
+    "weights_MB_fp32": 8.2515869140625,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 8.383735656738281,
+    "ort_lat_ms_fp32_t1": 6.01037199885468,
+    "ort_lat_ms_fp32_t4": 4.6493010013364255,
+    "onnx_max_abs_diff": 2.7418136596679688e-06,
+    "onnx_ref_abs_max": 2.1800339221954346,
+    "onnx_int8_MB": 2.908071517944336,
+    "ort_lat_ms_int8_t1": 5.171651500859298,
+    "ort_lat_ms_int8_t4": 4.300096999941161,
+    "bench_sec": 12.038095712661743
+  }
+]

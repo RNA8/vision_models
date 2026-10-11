@@ -1,0 +1,24 @@
+[
+  {
+    "model": "runs/ec100_convnext_at_128",
+    "img_size": 128,
+    "num_classes": 100,
+    "time": "2026-10-11 05:52:37",
+    "torch": "2.11.0+cu128",
+    "params_M": 3.40662,
+    "params_M_deploy": 3.40662,
+    "GMACs": 0.17864832,
+    "act_MB_est_bs1_fp32": 1.71875,
+    "weights_MB_fp32": 12.995223999023438,
+    "onnx_exporter": "torchscript",
+    "onnx_MB": 13.045781135559082,
+    "ort_lat_ms_fp32_t1": 6.85641650488833,
+    "ort_lat_ms_fp32_t4": 3.2799325017549563,
+    "onnx_max_abs_diff": 5.7220458984375e-06,
+    "onnx_ref_abs_max": 4.659509658813477,
+    "onnx_int8_MB": 12.97152328491211,
+    "ort_lat_ms_int8_t1": 6.877084499137709,
+    "ort_lat_ms_int8_t4": 3.098563498497242,
+    "bench_sec": 9.261936664581299
+  }
+]
