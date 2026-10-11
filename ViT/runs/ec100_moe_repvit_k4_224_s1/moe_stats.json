@@ -1,0 +1,92 @@
+{
+  "moe_spec": "cc:k=4,stages=3",
+  "best_val": 88.32,
+  "final_val": 88.12,
+  "moe_entropy": 0.44843332118426377,
+  "moe_min_share": 0.04545384602477917,
+  "load_per_layer": {
+    "stages.3.downsample.pre_block.token_mixer.conv.c": [
+      0.8897,
+      0.0582,
+      0.0367,
+      0.0154
+    ],
+    "stages.3.downsample.pre_block.channel_mixer.conv1.c": [
+      0.346,
+      0.2031,
+      0.221,
+      0.2299
+    ],
+    "stages.3.downsample.pre_block.channel_mixer.conv2.c": [
+      0.9987,
+      0.0,
+      0.0012,
+      0.0001
+    ],
+    "stages.3.downsample.spatial_downsample.c": [
+      0.5688,
+      0.062,
+      0.2074,
+      0.1618
+    ],
+    "stages.3.downsample.channel_downsample.c": [
+      0.0551,
+      0.0207,
+      0.0,
+      0.9242
+    ],
+    "stages.3.downsample.ffn.conv1.c": [
+      0.2647,
+      0.1515,
+      0.2344,
+      0.3494
+    ],
+    "stages.3.downsample.ffn.conv2.c": [
+      0.0,
+      0.0,
+      0.3523,
+      0.6477
+    ],
+    "stages.3.blocks.0.token_mixer.conv.c": [
+      0.0118,
+      0.0668,
+      0.7018,
+      0.2196
+    ],
+    "stages.3.blocks.0.channel_mixer.conv1.c": [
+      0.2664,
+      0.2377,
+      0.384,
+      0.1119
+    ],
+    "stages.3.blocks.0.channel_mixer.conv2.c": [
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    "stages.3.blocks.1.token_mixer.conv.c": [
+      0.0408,
+      0.0352,
+      0.1383,
+      0.7857
+    ],
+    "stages.3.blocks.1.channel_mixer.conv1.c": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "stages.3.blocks.1.channel_mixer.conv2.c": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "params_total": 10820956,
+  "params_active": 4817884,
+  "macs_active": 824615232.0,
+  "cpu_ms_bs1_t4_pytorch_eager": 35.3249265026534,
+  "cpu_ms_bs1_t1_pytorch_eager": 80.72838299995055
+}

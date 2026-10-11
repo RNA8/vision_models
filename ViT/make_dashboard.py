@@ -1365,7 +1365,11 @@ def ch_wave1():
         row("  routed MLP-MoE E4, 300 ep (dense 300 ep 75.16)", "c100_moe_vit_e4"),
         row("RepViT-M0.9 dense 128 px / CondConv K4 / K8", "ec100_moe_repvit_k4_128", f"dense 87.42, K8 {A('ec100_moe_repvit_k8_128')}"),
         row("RepViT-M0.9 CondConv K4 at 224 px (dense 88.33)", "ec100_moe_repvit_k4_224", "inside ~0.6 seed noise; seed-1 pair queued"),
-        row("RepViT-M0.9 dense at 256 px", "ec100_repvit_m0_9_256", "new best ≤6M params"),
+        row("RepViT-M0.9 dense at 256 px / 288 px", "ec100_repvit_m0_9_256", f"288 px: {A('ec100_repvit_m0_9_288')}"),
+        row("RepViT-M0.9 KD from ViT-B, 60 ep: soft / DIST / logit-std", "ec100_kd60_soft_repvit_224", f"DIST {A('ec100_kd60_dist_repvit_224')}, logit-std {A('ec100_kd60_lsd_repvit_224')}"),
+        row("RepViT-M0.9 function-matching KD, 30 ep (control)", "ec100_fm_repvit_224_e30"),
+        row("RepViT-M0.9 function-matching KD, 200 ep", "ec100_fm_repvit_224_e200", "4.80M params, 0.82 GMACs"),
+        row("TinyViT-5M function-matching KD, 200 ep", "ec100_fm_tinyvit5m_224_e200", "5.10M params, 1.26 GMACs: best ≤6M"),
     ]
     return chap(11, "ch11", "Wave 1: patch size, recurrence ablations, mixture-of-experts", chapter_date(["ec100_in64pre_tiny_p4_64", "c100_moe_vit_e4_150ep"]),
         "<p>After the core recipe, which architectural ideas buy accuracy at a fixed edge budget: smaller patches on a pretrained ViT, a better recurrent block, or more total parameters via mixture-of-experts?</p>",
@@ -1378,7 +1382,7 @@ def ch_wave1():
         table(["model", "FP32 %", "dynamic INT8 %", "static INT8 % (best calibration)", "MB FP32 / dyn / static"], int8_rows()) +
         "<p>Dynamic INT8 (MatMul/Gemm only) is lossless (within 0.31 points) for every model and shrinks the transformers about 3x. Static QDQ PTQ with ORT defaults collapses RepViT, FastViT and our ViT; only DeiT-T and MNv4 survive. For our ViT, quantizing only Conv/Gemm/MatMul gives 81.55 (FP32 81.46), so residual Add and Softmax are the culprits. These static numbers describe ORT's default x86 pipeline and still need a cross-check with other settings and the real target runtime.</p>" +
         "" f"<p>Recurrent C2 (CIFAR-100, 100 ep, 1 seed): add injection {A('c100_rd_r8_add')} (rerun {A('c100_rd_c2_base_rerun')}), LoRA r8 {A('c100_rd_c2_lora8')}, r32 {A('c100_rd_c2_lora32')}, sandwich {A('c100_rd_c2_sandwich_add')}, concat {A('c100_rd_c2_concat')}; equal-MAC flat-20 control {A('c100_rd_c2_flat20')}. Looping wins about 1.8 to 2 points at equal compute; LoRA does not pay for its parameters.</p>",
-        "<p><b>Patch size paid; MoE did not.</b> Patch 4 at 64 px added +2.6 points over patch 8 (83.78 vs 81.17) at ~4x MACs. No MoE form beat dense outside seed noise (~0.6 points), and the equal-compute control (dense, 60 epochs, +1.9) beat every MoE variant: many apparent MoE gains are really longer training.</p>",
+        "<p><b>Patient distillation paid most.</b> 200 epochs of function-matching KD from the ViT-B teacher lifted RepViT-M0.9 to " + A("ec100_fm_repvit_224_e200") + " and TinyViT-5M to " + A("ec100_fm_tinyvit5m_224_e200") + " (from 88.33 / 88.31 at 30 epochs), while the same recipe at 30 epochs gave only " + A("ec100_fm_repvit_224_e30") + ". No 200-epoch no-KD control was run, so the teacher's share of the gain is unmeasured. <b>Patch size paid; MoE did not.</b> Patch 4 at 64 px added +2.6 points over patch 8 (83.78 vs 81.17) at ~4x MACs. No MoE form beat dense outside seed noise (~0.6 points), and the equal-compute control (dense, 60 epochs, +1.9) beat every MoE variant: many apparent MoE gains are really longer training.</p>",
         "<p>FlexiViT reports patch-size flexibility via PI-resize at ImageNet scale; here it transfers to a 5.4M ViT at 64 px. MoE results in the literature are at far larger data and model scale; at 50k images and ~5M active parameters experts did not specialise (load entropy 0.99 when upcycled).</p>")
 
 
@@ -1401,7 +1405,7 @@ SRC_TXT_NOTES = (ROOT / "REPORT_NOTES.md").read_text() if (ROOT / "REPORT_NOTES.
 
 CHAPTERS = [("ch1", "Fast pipeline"), ("ch2", "Regularization ladder"), ("ch3", "Width, lr, tokens"), ("ch4", "ResNet-18 control"),
             ("ch5", "Matching published ViTs"), ("ch6", "One-change ablation"), ("ch7", "Harder datasets"), ("ch8", "Recurrent depth"),
-            ("ch9", "Edge track"), ("ch10", "Mistakes and fixes"), ("ch11", "Wave 1: patches, recurrence, MoE, INT8"), ("ch12", "Next steps")]
+            ("ch9", "Edge track"), ("ch10", "Mistakes and fixes"), ("ch11", "Wave 1: patches, recurrence, MoE, INT8, long KD"), ("ch12", "Next steps")]
 
 
 # =================================================================================================== page
