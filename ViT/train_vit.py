@@ -99,6 +99,9 @@ def parse_args():
     p.add_argument("--run-name", default=None)
     p.add_argument("--out-dir", default=os.path.join(HERE, "runs"))
     p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--holdout", type=int, default=0,
+                   help="hold out N train images (fixed split, independent of --seed) as the validation set used during "
+                        "training; the test set is scored once at the end as final_test_acc")
     p.add_argument("--r18-stem", default="cifar", choices=["cifar", "stride2"],
                    help="ResNet-18 stem: cifar = 3x3 s1; stride2 = 3x3 s2 (for 64x64 inputs), both no max-pool")
     p.add_argument("--eval-bs", type=int, default=2048)
@@ -603,6 +606,14 @@ def main():
     os.makedirs(out_dir, exist_ok=True)
 
     xtr, ytr, xte, yte, ds, stream = load_data(args, device, with_stream=True)
+    xtest = ytest = None
+    if args.holdout:  # train on N_train - holdout images, validate on the held-out ones, test once at the end
+        assert stream is None, "--holdout needs an in-memory dataset"
+        perm = torch.randperm(xtr.size(0), generator=torch.Generator().manual_seed(1234)).to(device)
+        xtest, ytest = xte, yte
+        xte, yte = xtr[perm[:args.holdout]], ytr[perm[:args.holdout]]
+        xtr, ytr = xtr[perm[args.holdout:]], ytr[perm[args.holdout:]]
+        print(f"holdout: train {xtr.size(0)}, val (held-out train) {xte.size(0)}, test {xtest.size(0)} scored at the end")
     num_classes, mean_, std_ = ds.NUM_CLASSES, ds.MEAN, ds.STD
     img_size = xtr.size(-1)
     mean = torch.tensor(mean_, device=device).view(1, 3, 1, 1)
@@ -771,6 +782,9 @@ def main():
         "best_val_acc": best_val,
         "history": history,
     }
+    if xtest is not None:
+        summary["final_test_acc"] = evaluate(model, xtest, ytest, mean, std, amp, args.eval_bs)
+        print(f"final test acc (scored once): {summary['final_test_acc']:.2f}%")
     with open(os.path.join(out_dir, "results.json"), "w") as f:
         json.dump(summary, f, indent=2)
     torch.save(model.state_dict(), os.path.join(out_dir, "model.pt"))
