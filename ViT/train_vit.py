@@ -502,7 +502,7 @@ def build_model(args, num_classes, img_size=32):
     # everything below only runs for non-default flags, so default runs consume the same RNG stream
     if args.init != "default":
         structured_init(m, args.init)
-    if args.spt:
+    if getattr(args, "spt", False):  # callers like finetune.py build their own Namespace
         m.patch_embed.proj = SPTProj(3, m.embed_dim, args.patch_size)
     if args.lsa:
         apply_lsa(m)
