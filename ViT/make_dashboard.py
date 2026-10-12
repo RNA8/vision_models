@@ -1369,6 +1369,7 @@ def ch_wave1():
         row("RepViT-M0.9 KD from ViT-B, 60 ep: soft / DIST / logit-std", "ec100_kd60_soft_repvit_224", f"DIST {A('ec100_kd60_dist_repvit_224')}, logit-std {A('ec100_kd60_lsd_repvit_224')}"),
         row("RepViT-M0.9 function-matching KD, 30 ep (control)", "ec100_fm_repvit_224_e30"),
         row("RepViT-M0.9 function-matching KD, 200 ep", "ec100_fm_repvit_224_e200", "4.80M params, 0.82 GMACs"),
+        row("RepViT-M0.9 function-matching KD, 1000 ep at 128 px", "ec100_fm_repvit_128_e1000", "0.27 GMACs; 30-ep 128 px: 87.42"),
         row("TinyViT-5M function-matching KD, 200 ep", "ec100_fm_tinyvit5m_224_e200", "5.10M params, 1.26 GMACs: best ≤6M"),
     ]
     return chap(11, "ch11", "Wave 1: patch size, recurrence ablations, mixture-of-experts", chapter_date(["ec100_in64pre_tiny_p4_64", "c100_moe_vit_e4_150ep"]),
