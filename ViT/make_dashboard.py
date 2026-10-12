@@ -1386,8 +1386,28 @@ def ch_wave1():
         "<p>FlexiViT reports patch-size flexibility via PI-resize at ImageNet scale; here it transfers to a 5.4M ViT at 64 px. MoE results in the literature are at far larger data and model scale; at 50k images and ~5M active parameters experts did not specialise (load entropy 0.99 when upcycled).</p>")
 
 
+def ch_long():
+    def row(label, name, ref, pub):
+        r = R(name) or {}
+        return [label, f"<code>{name}</code>", A(ref), A(name), f"{r.get('final_train_acc_clean', 0):.2f}" if r else "—", f"{r.get('total_minutes', 0):.0f}" if r else "—", pub]
+    rows = [
+        row("CIFAR-100, SL-ViT shape, 2.7M, pure ViT", "c100_bf3b_slvit_1000ep", "c100_bf3b_slvit_300ep_lr5e-4", f"SL-ViT {P('slvit_c100')}; CCT hybrid {P('cct_c100')} (300 ep), {P('cct5k_c100')} (5000 ep)"),
+        row("CIFAR-100, ViT-Tiny shape, 5.4M", "c100_tinyshape_bf3b_1000ep", "c100_tinyshape_bf3b", ""),
+        row("CIFAR-10, ViT-Tiny shape, 5.4M", "c10_tinyshape_bf3b_1000ep", "abl_tiny_shape", f"SL-ViT {P('slvit_c10')}; impulse-init ViT-Tiny {P('structinit_c10')}; CCT hybrid {P('cct_c10')} (300 ep), {P('cct5k_c10')} (5000 ep)"),
+        row("CIFAR-100, recurrent r8 add, 2.7M (500 ep vs 100 ep)", "c100_rd_r8_add_500ep", "c100_rd_r8_add", ""),
+        row("CIFAR-100, flat 6-layer control (500 ep vs 100 ep)", "c100_rd_flat6_500ep", "c100_rd_flat6", ""),
+    ]
+    return chap(12, "ch12", "Long schedules: 500 to 1000 epochs", chapter_date(["c100_tinyshape_bf3b_1000ep"]),
+        "<p>Our 300-epoch pure ViTs still improved at the end of training, and CCT reports large gains from 300 to 1500+ epochs. How far does the same recipe go with 3.3x more epochs, no extra data and no architecture change?</p>",
+        "<p>Only <code>--epochs 1000 --warmup-epochs 30 --mix-off-epoch 583</code> on the bf3b recipe (mix-off kept at the same 58% of training). Recurrent and flat models: 500 epochs, warmup 25.</p>",
+        "<p>Small ViTs on 50k images are optimisation-limited, not capacity-limited, at 300 epochs: strong augmentation means each epoch shows new views, so more epochs keep paying until train accuracy saturates.</p>",
+        table(["model", "run", "300/100 ep %", "long run %", "clean train %", "GPU min (shared)", "published"], rows),
+        "<p><b>Schedule length was the biggest single lever left.</b> The 2.7M SL-ViT-shape pure ViT reached " + A("c100_bf3b_slvit_1000ep") + " on CIFAR-100 (+4.1 over 300 epochs) and the 5.4M ViT-Tiny shape reached " + A("c10_tinyshape_bf3b_1000ep") + " on CIFAR-10 (+1.9), above every single-stage, CIFAR-only pure ViT we found, and level with the two-stage self-supervised ViT of Gani et al. (" + str(P('gani_c100')) + " / " + str(P('gani_c10')) + "). Both are just below the CCT conv-tokenizer hybrid at 300 epochs. On CIFAR-100 the smaller 2.7M shape beat the 5.4M one by 2.3 points. The recurrent model's 2-point lead over the flat model at 100 epochs disappeared at 500 epochs (" + A("c100_rd_r8_add_500ep") + " vs " + A("c100_rd_flat6_500ep") + "): looping mostly bought faster convergence, not a better optimum, and the looped model costs more MACs. All single seed; clean train accuracy is 99.9%+ for the 1000-epoch runs.</p>",
+        "<p>CCT trains 1500 to 5000 epochs for its best numbers, so comparing at matched epochs matters: at 1000 epochs our pure ViT is " + A("c100_bf3b_slvit_1000ep") + " vs CCT's 82.72 at 1500 (hybrid, from the paper's long-schedule table, see research/long_runs.md).</p>")
+
+
 def ch11():
-    return chap(12, "ch12", "What I would do next", "—",
+    return chap(13, "ch13", "What I would do next", "—",
         "<p>Where is the next point of accuracy, or the next unit of cost, most cheaply found?</p>",
         "<ul>"
         f"<li><b>Shifted patch tokenization</b> on the ViT-Tiny-shape bf3b model. It is the one SL-ViT part we never built; the notes rank it first ({cite('spt_gain_c100', 'SPT alone')}: 73.81 → {P('spt_gain_c100')} on CIFAR-100).</li>"
@@ -1405,7 +1425,7 @@ SRC_TXT_NOTES = (ROOT / "REPORT_NOTES.md").read_text() if (ROOT / "REPORT_NOTES.
 
 CHAPTERS = [("ch1", "Fast pipeline"), ("ch2", "Regularization ladder"), ("ch3", "Width, lr, tokens"), ("ch4", "ResNet-18 control"),
             ("ch5", "Matching published ViTs"), ("ch6", "One-change ablation"), ("ch7", "Harder datasets"), ("ch8", "Recurrent depth"),
-            ("ch9", "Edge track"), ("ch10", "Mistakes and fixes"), ("ch11", "Wave 1: patches, recurrence, MoE, INT8, long KD"), ("ch12", "Next steps")]
+            ("ch9", "Edge track"), ("ch10", "Mistakes and fixes"), ("ch11", "Wave 1: patches, recurrence, MoE, INT8, long KD"), ("ch12", "Long schedules"), ("ch13", "Next steps")]
 
 
 # =================================================================================================== page
@@ -1561,7 +1581,7 @@ def build_body():
     ts = acc("abl_tiny_shape")
     c100 = max([v for v in (acc("c100_bf3b_slvit_300ep_lr5e-4"), acc("c100_tinyshape_bf3b")) if v is not None], default=None)
     n_done = COST["n_done"]
-    stories = [ch1(), ch2(), ch3(), ch4(), ch5(), ch6(), ch7(), ch8(), ch9(), ch10(), ch_wave1(), ch11()]
+    stories = [ch1(), ch2(), ch3(), ch4(), ch5(), ch6(), ch7(), ch8(), ch9(), ch10(), ch_wave1(), ch_long(), ch11()]
     dash = f"""
 <section id="dashboard" aria-labelledby="dash-h">
   <h2 id="dash-h">Dashboard</h2>
@@ -1609,7 +1629,7 @@ def build_body():
   <p class="lede">Training small vision transformers on CIFAR-10, CIFAR-100, Tiny-ImageNet and ImageNet-64 on one H100. A from-scratch ViT reached {num(b3)}% on CIFAR-10 with the SL-ViT shape and {num(ts)}% with the ViT-Tiny shape, against 93.6 to 94.5% published. On CIFAR-100 it reached {num(c100)}% from scratch, and a pretrained 5M-parameter student reached {num(BEST_SMALL['acc'] if BEST_SMALL else None)}%.</p>
   <div class="meta"><span>{n_done} finished runs</span><span>{COST['n_live']} running</span><span>{(COST['run_min'] + COST['live_min']) / 60:.1f} GPU-h of run time</span><span>git {GIT_FIRST} → {GIT_LAST} ({GIT_N} commits)</span><span>generated {time.strftime('%Y-%m-%d %H:%M')}</span></div>
 </header>"""
-    story = '<section id="story" aria-labelledby="story-h"><h2 id="story-h">The story, step by step</h2><p class="prose">Twelve chapters in the order the work happened. Each one states the question, the exact command-line change, the mechanism, the result, the lesson, and how it compares with published work.</p>' + "".join(stories) + "</section>"
+    story = '<section id="story" aria-labelledby="story-h"><h2 id="story-h">The story, step by step</h2><p class="prose">Thirteen chapters in the order the work happened. Each one states the question, the exact command-line change, the mechanism, the result, the lesson, and how it compares with published work.</p>' + "".join(stories) + "</section>"
     nav = '<div class="bar-top"><nav aria-label="Sections"><a class="brand" href="#top">Small ViT Field Notes</a><a href="#dashboard">Dashboard</a><a href="#story">Story</a><a href="#data">Data</a><a href="#sources">Sources</a></nav></div>'
     foot = f'<footer>Generated by <code>ViT/make_dashboard.py</code> from <code>ViT/runs/*</code>. Rerun it to refresh. Repository: <a href="https://github.com/RNA8/vision_models" target="_blank" rel="noopener">github.com/RNA8/vision_models</a>.</footer>'
     return nav + f'<div class="wrap" id="top">{toc}<main>{hero}{dash}{story}{data}{src}{foot}</main></div>'
