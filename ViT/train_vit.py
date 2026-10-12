@@ -56,6 +56,9 @@ def parse_args():
                    help="cls = class token; seqpool = CCT attention pooling over the patch tokens")
     p.add_argument("--lsa", action="store_true",
                    help="Locality Self-Attention (SL-ViT): learnable per-head temperature + diagonal mask")
+    p.add_argument("--spt", action="store_true",
+                   help="Shifted Patch Tokenization (SL-ViT, arXiv 2112.13492 Eq. 6): concat 4 diagonal half-patch shifts, "
+                        "then patchify, flatten, LayerNorm, Linear")
     p.add_argument("--init", default="default", choices=["default", "mimetic", "impulse"],
                    help="attention init: mimetic (Trockman & Kolter 2023) or impulse (Zheng et al. 2025)")
     p.add_argument("--epochs", type=int, default=100)
@@ -417,6 +420,30 @@ def structured_init(model, mode):
         a.proj.weight.copy_(R.T.float())  # biases stay at timm's zero init
 
 
+class SPTProj(nn.Module):
+    """Shifted Patch Tokenization (Lee et al., arXiv 2112.13492, Eq. 6): S(x) = LN(P([x s1 s2 s3 s4])) E_S.
+    Each image is shifted by half the patch size in the four diagonal directions (zero fill, cropped back to
+    the input size), concatenated with the input on channels, split into non-overlapping patches, flattened,
+    layer-normalized and linearly projected. Drop-in for timm PatchEmbed.proj: (B, C, H, W) -> (B, D, H/p, W/p)."""
+
+    def __init__(self, in_chans, embed_dim, patch_size):
+        super().__init__()
+        self.p, self.s = patch_size, patch_size // 2
+        d_in = 5 * in_chans * patch_size * patch_size
+        self.norm = nn.LayerNorm(d_in)
+        self.proj = nn.Linear(d_in, embed_dim)
+
+    def forward(self, x):
+        B, C, H, W = x.shape
+        s, p = self.s, self.p
+        xp = F.pad(x, (s, s, s, s))
+        shifts = [xp[:, :, s + dy:s + dy + H, s + dx:s + dx + W] for dx, dy in ((-s, -s), (s, -s), (-s, s), (s, s))]
+        x = torch.cat([x] + shifts, dim=1)                       # (B, 5C, H, W)
+        x = F.unfold(x, kernel_size=p, stride=p).transpose(1, 2)  # (B, N, 5C*p*p)
+        x = self.proj(self.norm(x))                              # (B, N, D)
+        return x.transpose(1, 2).reshape(B, -1, H // p, W // p)
+
+
 def apply_lsa(m):
     """Switch every timm Attention in `m` to LSA (same weights): learnable per-head temperature
     initialized to head_dim^-0.5 plus diagonal masking. Works for the timm ViT and RecurrentViT."""
@@ -475,6 +502,8 @@ def build_model(args, num_classes, img_size=32):
     # everything below only runs for non-default flags, so default runs consume the same RNG stream
     if args.init != "default":
         structured_init(m, args.init)
+    if args.spt:
+        m.patch_embed.proj = SPTProj(3, m.embed_dim, args.patch_size)
     if args.lsa:
         apply_lsa(m)
     if args.pool == "seqpool":
