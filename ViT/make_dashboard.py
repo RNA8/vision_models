@@ -1356,6 +1356,8 @@ def ch_wave1():
         row("FlexiViT: IN-64 ViT-Tiny, patch 8 → 4 at 64 px", "ec100_in64pre_tiny_p4_64", "256 tokens, ~4x MACs"),
         row("  same + KD from ViT-B", "ec100_in64pre_tiny_p4_64_kd"),
         row("  patch 4 at 32 px (64 tokens, same cost as p8@64)", "ec100_in64pre_tiny_p4_32"),
+        row("IN-21k-P pretrained ViT-Tiny (ours, 30 ep at 64 px), fine-tune 30 ep, patch 8", "ec100_in21kpre_tiny_64", f"IN-64 pretrain: {A('ec100_in64pre_tiny_64')}; with KD {A('ec100_in21kpre_tiny_64_kd')}"),
+        row("  IN-21k-P, patch 4 at 64 px", "ec100_in21kpre_tiny_p4_64", f"IN-64 pretrain: {A('ec100_in64pre_tiny_p4_64')}; with KD {A('ec100_in21kpre_tiny_p4_64_kd')}"),
         row("Dense IN-64 ViT-Tiny fine-tune, 30 ep, seed 1", "ec100_dense_in64pre_tiny_64_s1", f"seed 0: {A('ec100_in64pre_tiny_64')}"),
         row("Dense, 60 ep (equal-compute control)", "ec100_dense_in64pre_tiny_64_60ep"),
         row("MoE upcycled E4, 30 ep, seed 0", "ec100_upcyc_in64pre_tiny_e4_64", f"seed 1: {A('ec100_upcyc_in64pre_tiny_e4_64_s1')}"),
@@ -1397,7 +1399,8 @@ def seeds_line():
     parts = []
     for label, names in [("CIFAR-100 SL-ViT shape, 1000 ep", ["c100_bf3b_slvit_1000ep", "c100_bf3b_slvit_1000ep_s1", "c100_bf3b_slvit_1000ep_s2"]),
                          ("CIFAR-100 SL-ViT + SPT, 1000 ep", ["c100_spt_slvit_1000ep", "c100_spt_slvit_1000ep_s1", "c100_spt_slvit_1000ep_s2"]),
-                         ("CIFAR-10 ViT-Tiny shape, 1000 ep", ["c10_tinyshape_bf3b_1000ep", "c10_tinyshape_bf3b_1000ep_s1", "c10_tinyshape_bf3b_1000ep_s2"])]:
+                         ("CIFAR-10 ViT-Tiny shape, 1000 ep", ["c10_tinyshape_bf3b_1000ep", "c10_tinyshape_bf3b_1000ep_s1", "c10_tinyshape_bf3b_1000ep_s2"]),
+                         ("CIFAR-10 ViT-Tiny + SPT, 1000 ep", ["c10_spt_tinyshape_1000ep", "c10_spt_tinyshape_1000ep_s1", "c10_spt_tinyshape_1000ep_s2"])]:
         m = ms(names)
         if m:
             parts.append(f"{label}: <b>{m}</b>")
@@ -1412,6 +1415,7 @@ def ch_long():
         row("CIFAR-100, SL-ViT shape, 2.7M, pure ViT", "c100_bf3b_slvit_1000ep", "c100_bf3b_slvit_300ep_lr5e-4", f"SL-ViT {P('slvit_c100')}; CCT hybrid {P('cct_c100')} (300 ep), {P('cct5k_c100')} (5000 ep)"),
         row("CIFAR-100, SL-ViT shape + SPT (full SL-ViT: SPT+LSA), 2.75M", "c100_spt_slvit_1000ep", "c100_spt_slvit_300ep", f"CCT hybrid {P('cct_c100')} (300 ep); SL-ViT {P('slvit_c100')}"),
         row("CIFAR-100, ViT-Tiny shape, 5.4M", "c100_tinyshape_bf3b_1000ep", "c100_tinyshape_bf3b", ""),
+        row("CIFAR-10, ViT-Tiny shape + SPT, 5.4M", "c10_spt_tinyshape_1000ep", "abl_tiny_shape", f"CCT hybrid {P('cct_c10')} (300 ep), 97.48 (1500 ep)"),
         row("CIFAR-10, ViT-Tiny shape, 5.4M", "c10_tinyshape_bf3b_1000ep", "abl_tiny_shape", f"SL-ViT {P('slvit_c10')}; impulse-init ViT-Tiny {P('structinit_c10')}; CCT hybrid {P('cct_c10')} (300 ep), {P('cct5k_c10')} (5000 ep)"),
         row("CIFAR-100, recurrent r8 add, 2.7M (500 ep vs 100 ep)", "c100_rd_r8_add_500ep", "c100_rd_r8_add", ""),
         row("CIFAR-100, flat 6-layer control (500 ep vs 100 ep)", "c100_rd_flat6_500ep", "c100_rd_flat6", ""),
@@ -1421,7 +1425,7 @@ def ch_long():
         "<p>Only <code>--epochs 1000 --warmup-epochs 30 --mix-off-epoch 583</code> on the bf3b recipe (mix-off kept at the same 58% of training). Recurrent and flat models: 500 epochs, warmup 25.</p>",
         "<p>Small ViTs on 50k images are optimisation-limited, not capacity-limited, at 300 epochs: strong augmentation means each epoch shows new views, so more epochs keep paying until train accuracy saturates.</p>",
         table(["model", "run", "300/100 ep %", "long run %", "clean train %", "GPU min (shared)", "published"], rows),
-        seeds_line() + "<p><b>Schedule length was the biggest single lever left.</b> The 2.7M SL-ViT-shape pure ViT reached " + A("c100_bf3b_slvit_1000ep") + " on CIFAR-100 (+4.1 over 300 epochs) and the 5.4M ViT-Tiny shape reached " + A("c10_tinyshape_bf3b_1000ep") + " on CIFAR-10 (+1.9; seed means in the line above), above every single-stage, CIFAR-only pure ViT we found, and level with the two-stage self-supervised ViT of Gani et al. (" + str(P('gani_c100')) + " / " + str(P('gani_c10')) + "). On CIFAR-100 that is below the CCT conv-tokenizer hybrid at 300 epochs; on CIFAR-10 the 3-seed mean (96.54) matches it (96.53). On CIFAR-100 the smaller 2.7M shape beat the 5.4M one by 2.3 points. The recurrent model's 2-point lead over the flat model at 100 epochs disappeared at 500 epochs (" + A("c100_rd_r8_add_500ep") + " vs " + A("c100_rd_flat6_500ep") + "): looping mostly bought faster convergence, not a better optimum, and the looped model costs more MACs. Adding SL-ViT's shifted patch tokenization (SPT) gave " + A("c100_spt_slvit_300ep") + " at 300 epochs (+1.0) and " + A("c100_spt_slvit_1000ep") + " at 1000 epochs (+0.9 over seed 0, +1.6 over the 3-seed mean), level with the CCT hybrid at 300 epochs (" + str(P('cct_c100')) + ") while staying a pure ViT. Seeds for the SPT run are queued. Clean train accuracy is 99.9%+ for the 1000-epoch runs.</p>",
+        seeds_line() + "<p><b>Schedule length was the biggest single lever left.</b> The 2.7M SL-ViT-shape pure ViT reached " + A("c100_bf3b_slvit_1000ep") + " on CIFAR-100 (+4.1 over 300 epochs) and the 5.4M ViT-Tiny shape reached " + A("c10_tinyshape_bf3b_1000ep") + " on CIFAR-10 (+1.9; seed means in the line above), above every single-stage, CIFAR-only pure ViT we found, and level with the two-stage self-supervised ViT of Gani et al. (" + str(P('gani_c100')) + " / " + str(P('gani_c10')) + "). On CIFAR-100 that is below the CCT conv-tokenizer hybrid at 300 epochs; on CIFAR-10 the 3-seed mean (96.54) matches it (96.53). On CIFAR-100 the smaller 2.7M shape beat the 5.4M one by 2.3 points. The recurrent model's 2-point lead over the flat model at 100 epochs disappeared at 500 epochs (" + A("c100_rd_r8_add_500ep") + " vs " + A("c100_rd_flat6_500ep") + "): looping mostly bought faster convergence, not a better optimum, and the looped model costs more MACs. Adding SL-ViT's shifted patch tokenization (SPT) gave " + A("c100_spt_slvit_300ep") + " at 300 epochs (+1.0) and " + A("c100_spt_slvit_1000ep") + " at 1000 epochs (3-seed mean in the line above, about +1.9 over the no-SPT mean), level with the CCT hybrid at 300 epochs (" + str(P('cct_c100')) + ") while staying a pure ViT. On CIFAR-10, SPT on the ViT-Tiny shape gave " + A("c10_spt_tinyshape_1000ep") + ", above CCT at 300 epochs (" + str(P('cct_c10')) + "); its seeds are queued. Clean train accuracy is 99.9%+ for the 1000-epoch runs.</p>",
         "<p>CCT trains 1500 to 5000 epochs for its best numbers, so comparing at matched epochs matters: at 1000 epochs our best pure ViT (with SPT) is " + A("c100_spt_slvit_1000ep") + " vs CCT's 82.72 at 1500 (hybrid, from the paper's long-schedule table, see research/long_runs.md).</p>")
 
 
