@@ -1358,6 +1358,7 @@ def ch_wave1():
         row("  patch 4 at 32 px (64 tokens, same cost as p8@64)", "ec100_in64pre_tiny_p4_32"),
         row("IN-21k-P pretrained ViT-Tiny (ours, 30 ep at 64 px), fine-tune 30 ep, patch 8", "ec100_in21kpre_tiny_64", f"IN-64 pretrain: {A('ec100_in64pre_tiny_64')}; with KD {A('ec100_in21kpre_tiny_64_kd')}"),
         row("  IN-21k-P, patch 4 at 64 px", "ec100_in21kpre_tiny_p4_64", f"IN-64 pretrain: {A('ec100_in64pre_tiny_p4_64')}; with KD {A('ec100_in21kpre_tiny_p4_64_kd')}"),
+        row("  IN-21k-P, patch 4 at 64 px, KD, 60 ep fine-tune", "ec100_in21kpre_tiny_p4_64_kd_60ep", "best pure ViT at 64 px input"),
         row("Dense IN-64 ViT-Tiny fine-tune, 30 ep, seed 1", "ec100_dense_in64pre_tiny_64_s1", f"seed 0: {A('ec100_in64pre_tiny_64')}"),
         row("Dense, 60 ep (equal-compute control)", "ec100_dense_in64pre_tiny_64_60ep"),
         row("MoE upcycled E4, 30 ep, seed 0", "ec100_upcyc_in64pre_tiny_e4_64", f"seed 1: {A('ec100_upcyc_in64pre_tiny_e4_64_s1')}"),
