@@ -685,3 +685,18 @@ wandb: Find logs at: ./runs/tin_spt_tinyshape_p8_300ep/wandb/run-20261013_162219
 Done in 158.3 min. final val 64.96% | best val 65.20% | clean train 99.79%
 Steady state (excl. epoch 1): 32.22 s/epoch, 3,103 img/s
 Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_tinyshape_p8_300ep
+== start tin_spt_slvit_p8_1000ep (Tue Oct 13 22:32:24 UTC 2026)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 1c120808
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_slvit_p8_1000ep/wandb/run-20261013_223252-1c120808
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tin_spt_slvit_p8_1000ep
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/1c120808
+GPU: NVIDIA H100 PCIe
+Model: slvit  params: 2.91M  train images: 100000  batch: 128  steps/epoch: 781
+ep    1/1000 | loss 5.2986 | lr 1.67e-05 |  30.25s |      3305 img/s  (includes torch.compile warm-up)
+ep    2/1000 | loss 5.2972 | lr 3.34e-05 |  26.07s |      3835 img/s
+ep    3/1000 | loss 5.2583 | lr 5.00e-05 |  26.08s |      3833 img/s
