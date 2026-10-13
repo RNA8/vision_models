@@ -2521,3 +2521,4 @@ Done in 171.4 min. final val 96.71% | best val 96.87% | clean train 100.00%
 Steady state (excl. epoch 1): 10.23 s/epoch, 4,881 img/s
 Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/c10_spt_slvit_1000ep_s2
 ep    5/60 | loss 5.9005 | lr 9.89e-04 | 2139.68s |      5169 img/s | loader wait 4.0s | train acc  17.64 | val acc  16.14
+ep    6/60 | loss 5.8547 | lr 9.83e-04 | 2580.23s |      4287 img/s | loader wait 2.3s
