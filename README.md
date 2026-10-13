@@ -1,7 +1,7 @@
 # vision_models: small Vision Transformers, trained fast and measured honestly
 
 How far can a **tiny Vision Transformer** go on small datasets, and what is the best image classifier you can fit in an
-**edge budget (≤ 6M parameters)**? This repo holds the training code, all launch scripts, about 180 run logs and results files, and the
+**edge budget (≤ 6M parameters)**? This repo holds the training code, all launch scripts, about 190 per-run results files and the queue logs, and the
 write-ups for a two-day research program on one H100.
 
 The step-by-step educational report is [`ViT/DASHBOARD.html`](ViT/DASHBOARD.html). It covers every experiment, what changed, why, the
@@ -93,7 +93,7 @@ Every experiment's exact command is in a `ViT/run_*.sh` script, and every run's 
 | `ViT/vit_data/` | Dataset plug-ins: CIFAR-10/100, Tiny-ImageNet, ImageNet-64, streaming ImageNet-21k-P at 64 px |
 | `ViT/edge_bench.py`, `ViT/int8_audit.py` | CPU latency / MACs benchmark; ONNX INT8 accuracy audit |
 | `ViT/research/` | Literature notes and per-wave result write-ups |
-| `ViT/runs/<run>/` | `results.json` + `train.log` for every run (weights not included) |
+| `ViT/runs/<run>/` | `results.json` (full config + per-epoch history) for every run; console logs and weights are not committed |
 | `ViT/make_dashboard.py`, `ViT/make_report.py` | Generate `DASHBOARD.html` and `REPORT.md` / `REPORT.html` from the run directories |
 
 Compute: about 175 runs, roughly 49 h of wall-clock time on one H100 PCIe (about $160 at $3.29/h).
