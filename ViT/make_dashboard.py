@@ -205,6 +205,7 @@ PUB = {
     "slvit_c100": ("SL-ViT", 76.92, "CIFAR-100, scratch, 2.9M", "https://arxiv.org/html/2112.13492v1", "REF", "76.92"),
     "vitrm_c100": ("ViTRM (recursion model)", 72.1, "CIFAR-100, scratch, ~3.6M", "https://arxiv.org/abs/2603.19503", "REF", "72.1"),
     "gani_c100": ("ViT + SSL pretraining on CIFAR (Gani et al.)", 79.15, "CIFAR-100, 2.8M, 2-stage", "https://arxiv.org/html/2210.07240", "REF", "79.15"),
+    "gani_tin": ("ViT + SSL pretraining (Gani et al.)", 63.36, "Tiny-ImageNet, 2.8M, 2-stage", "https://arxiv.org/html/2210.07240", "REF", "63.36"),
     "cct_c100": ("CCT-7/3x1 (hybrid)", 80.92, "CIFAR-100, scratch, 3.76M, 300 ep", "https://arxiv.org/html/2104.05704v4", "REF", "80.92"),
     "cct5k_c100": ("CCT-7/3x1, 5000 epochs (hybrid)", 82.87, "CIFAR-100, scratch, 3.76M", "https://arxiv.org/html/2104.05704v4", "REF", "82.87"),
     "asam_c100": ("PyramidNet-272 + ShakeDrop + AA + CutMix + ASAM", 89.90, "CIFAR-100 from-scratch SOTA, 26.0M, 900 ep", "https://arxiv.org/html/2102.11600", "C100", "89.90"),
@@ -1427,6 +1428,8 @@ def ch_long():
         row("CIFAR-10, SL-ViT shape + SPT, 2.75M", "c10_spt_slvit_1000ep", "bf3b_slvit_300ep_lr5e-4", f"half the params of ViT-Tiny, level on seed mean (line above); CCT hybrid {P('cct_c10')} (300 ep), 97.48 (1500 ep)"),
         row("CIFAR-10, ViT-Tiny shape + SPT, 5.4M", "c10_spt_tinyshape_1000ep", "abl_tiny_shape", f"CCT hybrid {P('cct_c10')} (300 ep), 97.48 (1500 ep)"),
         row("CIFAR-10, ViT-Tiny shape, 5.4M", "c10_tinyshape_bf3b_1000ep", "abl_tiny_shape", f"SL-ViT {P('slvit_c10')}; impulse-init ViT-Tiny {P('structinit_c10')}; CCT hybrid {P('cct_c10')} (300 ep), {P('cct5k_c10')} (5000 ep)"),
+        row("Tiny-ImageNet 64 px, SL-ViT shape + SPT (patch 8), 2.9M, 300 ep", "tin_spt_slvit_p8_300ep", "tin_p4_tiny", f"SL-ViT {P('slvit_tin')}; Gani et al. {P('gani_tin')} (two-stage); our ResNet-18 {A('tin_r18_full')}"),
+        row("Tiny-ImageNet 64 px, ViT-Tiny shape + SPT (patch 8), 5.4M, 300 ep", "tin_spt_tinyshape_p8_300ep", "tin_p4_tiny", ""),
         row("CIFAR-100, recurrent r8 add, 2.7M (500 ep vs 100 ep)", "c100_rd_r8_add_500ep", "c100_rd_r8_add", ""),
         row("CIFAR-100, flat 6-layer control (500 ep vs 100 ep)", "c100_rd_flat6_500ep", "c100_rd_flat6", ""),
     ]

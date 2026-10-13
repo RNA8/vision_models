@@ -10,15 +10,15 @@ tr.pend td{color:var(--mut);font-style:italic}code,pre{background:var(--hd);bord
 img{max-width:100%;height:auto;border:1px solid var(--bd);border-radius:4px;background:#fff}
 figure{margin:1rem 0}figcaption{color:var(--mut);font-size:13px}.mut{color:var(--mut)}
 </style></head><body>
-<h1>ViT training report</h1><p class='mut'>Generated 2026-10-13 16:34; 201 runs included. Gap = clean train acc minus val acc (points). Val acc shows final epoch, best in parentheses when different.</p>
+<h1>ViT training report</h1><p class='mut'>Generated 2026-10-13 17:49; 209 runs included. Gap = clean train acc minus val acc (points). Val acc shows final epoch, best in parentheses when different.</p>
 <h2>Compute summary</h2><div class='tw'><table><tr><th>section</th><th>runs done</th><th>pending</th><th>GPU minutes</th><th>cost</th></tr>
-<tr><td>CIFAR-10</td><td class='n'>59</td><td class='n'>0</td><td class='n'>2931.6</td><td class='n'>$160.75</td></tr>
+<tr><td>CIFAR-10</td><td class='n'>66</td><td class='n'>0</td><td class='n'>2931.6</td><td class='n'>$160.75</td></tr>
 <tr><td>CIFAR-100</td><td class='n'>124</td><td class='n'>0</td><td class='n'>8089.5</td><td class='n'>$443.57</td></tr>
-<tr><td>Tiny-ImageNet</td><td class='n'>8</td><td class='n'>0</td><td class='n'>256.9</td><td class='n'>$14.09</td></tr>
+<tr><td>Tiny-ImageNet</td><td class='n'>9</td><td class='n'>0</td><td class='n'>401.5</td><td class='n'>$22.01</td></tr>
 <tr><td>ImageNet-64</td><td class='n'>7</td><td class='n'>0</td><td class='n'>1216.1</td><td class='n'>$66.68</td></tr>
-<tr><td><b>Total (sum of run-minutes)</b></td><td class='n'>201</td><td class='n'>0</td><td class='n'><b>12494.1</b> (208.23 h)</td><td class='n'>$685.09 at $3.29/h (upper bound)</td></tr></table></div>
-<p><strong>Wall-clock (estimated, counting in-progress runs up to now):</strong> 4415 min (73.58 h) from the earliest run start (2026-10-10 15:00) to the latest run end (2026-10-13 16:34); <strong>GPU cost on wall-clock: $242.07</strong> at $3.29/h.</p>
-<p>Sum of completed run-minutes is 12494 min. Completed runs rarely overlapped (peak 8), so the span exceeds the sum of run-minutes by idle gaps and startup/eval time (the sum will overstate wall-clock once the concurrent queues complete); 2 runs currently in progress (86 min elapsed so far; peak concurrency now 8) are counted in the span but not in the sum; time with at least one run active is 4212 min ($230.94). Start = run-directory creation time (falls back to results.json mtime minus total_minutes), end = results.json mtime (in-progress runs end at report time). Per-run minutes and img/s of overlapping runs are inflated by GPU sharing.</p>
+<tr><td><b>Total (sum of run-minutes)</b></td><td class='n'>209</td><td class='n'>0</td><td class='n'><b>12638.6</b> (210.64 h)</td><td class='n'>$693.02 at $3.29/h (upper bound)</td></tr></table></div>
+<p><strong>Wall-clock (estimated, counting in-progress runs up to now):</strong> 4490 min (74.83 h) from the earliest run start (2026-10-10 15:00) to the latest run end (2026-10-13 17:49); <strong>GPU cost on wall-clock: $246.18</strong> at $3.29/h.</p>
+<p>Sum of completed run-minutes is 12639 min. Completed runs rarely overlapped (peak 8), so the span exceeds the sum of run-minutes by idle gaps and startup/eval time (the sum will overstate wall-clock once the concurrent queues complete); 2 runs currently in progress (91 min elapsed so far; peak concurrency now 8) are counted in the span but not in the sum; time with at least one run active is 4287 min ($235.05). Start = run-directory creation time (falls back to results.json mtime minus total_minutes), end = results.json mtime (in-progress runs end at report time). Per-run minutes and img/s of overlapping runs are inflated by GPU sharing.</p>
 <h2>CIFAR-10</h2>
 <div class='tw'><table><tr><th>run</th><th>epochs</th><th>params (M)</th><th>clean train acc</th><th>val acc</th><th>train-val gap</th><th>minutes</th><th>img/s</th><th>what this step taught</th></tr>
 <tr><td>t1_plain</td><td class=n>100</td><td class=n>5.36</td><td class=n>100.00</td><td class=n>82.90</td><td class=n>17.1</td><td class=n>4.3</td><td class=n>21,861</td><td>baseline (crop+flip only)</td></tr>
@@ -66,12 +66,19 @@ figure{margin:1rem 0}figcaption{color:var(--mut);font-size:13px}.mut{color:var(-
 <tr><td>c10_tinyshape_bf3b_1000ep</td><td class=n>1000</td><td class=n>5.36</td><td class=n>100.00</td><td class=n>96.39 (96.62)</td><td class=n>3.6</td><td class=n>151.9</td><td class=n>4,873</td><td>no comparison available</td></tr>
 <tr><td>c10_tinyshape_bf3b_1000ep_s1</td><td class=n>1000</td><td class=n>5.36</td><td class=n>100.00</td><td class=n>96.61 (96.73)</td><td class=n>3.4</td><td class=n>173.2</td><td class=n>4,822</td><td>no comparison available</td></tr>
 <tr><td>c10_tinyshape_bf3b_1000ep_s2</td><td class=n>1000</td><td class=n>5.36</td><td class=n>100.00</td><td class=n>96.61 (96.78)</td><td class=n>3.4</td><td class=n>125.9</td><td class=n>6,701</td><td>no comparison available</td></tr>
+<tr><td>ptq_acts_only</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
+<tr><td>ptq_full_a16res</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
+<tr><td>ptq_full_a16res_linout</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>ptq_full_minmax</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>ptq_full_mse</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>ptq_full_pct</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>ptq_mm_w</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>ptq_mm_w_input</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
+<tr><td>ptq_no_linout</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>ptq_no_residual</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
+<tr><td>ptq_no_softmax</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
+<tr><td>ptq_w_only</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
+<tr><td>qat_full_e10</td><td class=n>10</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>rd_deep_r8</td><td class=n>100</td><td class=n>2.77</td><td class=n>83.89</td><td class=n>81.99</td><td class=n>1.9</td><td class=n>22.0</td><td class=n>3,678</td><td>no comparison available</td></tr>
 <tr><td>rd_deep_r8_add</td><td class=n>100</td><td class=n>2.69</td><td class=n>87.33</td><td class=n>84.42</td><td class=n>2.9</td><td class=n>22.3</td><td class=n>3,795</td><td>no comparison available</td></tr>
 <tr><td>rd_deep_r8_add_ds</td><td class=n>100</td><td class=n>2.69</td><td class=n>88.14</td><td class=n>85.23</td><td class=n>2.9</td><td class=n>31.9</td><td class=n>2,473</td><td>no comparison available</td></tr>
@@ -265,8 +272,9 @@ figure{margin:1rem 0}figcaption{color:var(--mut);font-size:13px}.mut{color:var(-
 <tr><td>tin_r18_full</td><td class=n>100</td><td class=n>11.27</td><td class=n>75.49</td><td class=n>61.56</td><td class=n>13.9</td><td class=n>28.0</td><td class=n>5,963</td><td>vs matching ViT (tin_t5_droppath): val +15.0 pts (better), gap 14 vs 12, 1.0x the time; conv inductive bias helps at this budget</td></tr>
 <tr><td>tin_s_small_200ep</td><td class=n>200</td><td class=n>21.47</td><td class=n>97.00</td><td class=n>53.30 (53.58)</td><td class=n>43.7</td><td class=n>69.8</td><td class=n>6,032</td><td>ViT-Small vs Tiny (tin_t5_droppath): val +6.7 pts, 21.5M vs 5.4M params, 200 vs 100 epochs</td></tr>
 <tr><td>tin_p4_tiny</td><td class=n>100</td><td class=n>5.44</td><td class=n>63.74</td><td class=n>49.55</td><td class=n>14.2</td><td class=n>42.2</td><td class=n>4,056</td><td>patch 4: tokens = (64/4)^2 = 256 vs 64 for patch 8; val +3.0 pts, 0.71x img/s (slower); more tokens cost throughput for accuracy</td></tr>
+<tr><td>tin_spt_slvit_p8_300ep</td><td class=n>300</td><td class=n>2.91</td><td class=n>95.84</td><td class=n>64.10</td><td class=n>31.7</td><td class=n>144.5</td><td class=n>3,822</td><td>no comparison available</td></tr>
 </table></div>
-<p>Subtotal: <b>256.9 GPU min</b> (4.28 h), <b>$14.09</b></p>
+<p>Subtotal: <b>401.5 GPU min</b> (6.69 h), <b>$22.01</b></p>
 <h2>ImageNet-64</h2>
 <div class='tw'><table><tr><th>run</th><th>epochs</th><th>params (M)</th><th>clean train acc</th><th>val acc</th><th>train-val gap</th><th>minutes</th><th>img/s</th><th>what this step taught</th></tr>
 <tr><td>in64_t1_plain</td><td class=n>30</td><td class=n>5.58</td><td class=n>77.50</td><td class=n>46.93 (47.47)</td><td class=n>30.6</td><td class=n>84.7</td><td class=n>7,491</td><td>baseline (crop+flip only)</td></tr>
