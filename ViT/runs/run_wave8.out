@@ -633,3 +633,55 @@ ep  276/300 | loss 1.4267 | lr 1.95e-05 |  33.11s |      3020 img/s
 ep  277/300 | loss 1.4330 | lr 1.87e-05 |  33.09s |      3021 img/s
 ep  278/300 | loss 1.4234 | lr 1.80e-05 |  33.09s |      3021 img/s
 ep  279/300 | loss 1.4270 | lr 1.73e-05 |  33.10s |      3020 img/s
+ep  280/300 | loss 1.4262 | lr 1.66e-05 |  32.97s |      3032 img/s | train acc  99.81 | val acc  64.54
+ep  281/300 | loss 1.4225 | lr 1.60e-05 |  29.71s |      3365 img/s
+ep  282/300 | loss 1.4155 | lr 1.54e-05 |  26.04s |      3839 img/s
+ep  283/300 | loss 1.4193 | lr 1.48e-05 |  30.98s |      3227 img/s
+ep  284/300 | loss 1.4171 | lr 1.42e-05 |  32.98s |      3031 img/s
+ep  285/300 | loss 1.4100 | lr 1.37e-05 |  33.02s |      3027 img/s
+ep  286/300 | loss 1.4081 | lr 1.32e-05 |  33.05s |      3025 img/s
+ep  287/300 | loss 1.4128 | lr 1.28e-05 |  33.04s |      3026 img/s
+ep  288/300 | loss 1.4080 | lr 1.24e-05 |  33.05s |      3025 img/s
+ep  289/300 | loss 1.4106 | lr 1.20e-05 |  33.05s |      3025 img/s
+ep  290/300 | loss 1.4063 | lr 1.17e-05 |  33.05s |      3025 img/s | train acc  99.77 | val acc  65.03
+ep  291/300 | loss 1.4060 | lr 1.13e-05 |  33.04s |      3025 img/s
+ep  292/300 | loss 1.4115 | lr 1.11e-05 |  33.04s |      3025 img/s
+ep  293/300 | loss 1.4028 | lr 1.08e-05 |  33.06s |      3024 img/s
+ep  294/300 | loss 1.4050 | lr 1.06e-05 |  33.02s |      3027 img/s
+ep  295/300 | loss 1.4076 | lr 1.04e-05 |  33.04s |      3026 img/s
+ep  296/300 | loss 1.3996 | lr 1.03e-05 |  32.89s |      3040 img/s
+ep  297/300 | loss 1.4055 | lr 1.01e-05 |  32.89s |      3039 img/s
+ep  298/300 | loss 1.4067 | lr 1.01e-05 |  33.03s |      3027 img/s
+ep  299/300 | loss 1.3996 | lr 1.00e-05 |  33.03s |      3027 img/s
+ep  300/300 | loss 1.3995 | lr 1.00e-05 |  33.04s |      3026 img/s | train acc  99.79 | val acc  64.96
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▂▂▂▂▃▃▃▃▃▃▃▃▄▄▄▄▄▄▄▅▅▅▅▅▅▅▅▆▆▆▆▆▆▇▇▇██
+wandb:       epoch_sec ▁▃▁▁▄▂▅█▆▇█▅▅▅▅▅▄▅▅▅█▅▅▅▅▅▅▅▅▅▂▅▅▅▅▅▁▁▂▅
+wandb:     img_per_sec ▁█▇█▅▇▅█▇██▄▅▅██▆▅▅▅▅▅▅▅▃▅▅▅▅▅▅▅▅▅▇▇██▅▅
+wandb:              lr ▂▂▄▅▅█████▇▇▆▆▆▆▆▆▅▅▅▅▄▃▃▃▃▃▂▂▂▂▁▁▁▁▁▁▁▁
+wandb: train_acc_clean ▁▂▂▃▃▄▄▄▅▅▅▅▆▆▆▆▆▇▇███████████
+wandb:      train_loss ██▇▇▇▇▆▆▆▆▆▆▆▆▆▆▆▅▅▅▅▅▅▅▅▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁
+wandb:         val_acc ▁▂▂▄▄▅▅▆▆▇▇▇▇▇▇███████████████
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 65.2
+wandb:           epoch 300
+wandb:       epoch_sec 33.0398
+wandb:     img_per_sec 3025.68416
+wandb:              lr 1e-05
+wandb:   total_minutes 158.34632
+wandb: train_acc_clean 99.79
+wandb:      train_loss 1.39951
+wandb:         val_acc 64.96
+wandb: 
+wandb: 🚀 View run tin_spt_tinyshape_p8_300ep at: https://wandb.ai/softeye/vision_transformers/runs/e3ef96ae
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/tin_spt_tinyshape_p8_300ep/wandb/run-20261013_162219-e3ef96ae/logs
+
+Done in 158.3 min. final val 64.96% | best val 65.20% | clean train 99.79%
+Steady state (excl. epoch 1): 32.22 s/epoch, 3,103 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_tinyshape_p8_300ep

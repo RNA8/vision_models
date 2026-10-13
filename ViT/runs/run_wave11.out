@@ -1,0 +1,30 @@
+== start c100_spt_slvit_p2_1000ep (Tue Oct 13 18:50:11 UTC 2026)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 44a18ddd
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_p2_1000ep/wandb/run-20261013_185037-44a18ddd
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run c100_spt_slvit_p2_1000ep
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/44a18ddd
+GPU: NVIDIA H100 PCIe
+Model: slvit  params: 2.75M  train images: 50000  batch: 128  steps/epoch: 390
+ep    1/1000 | loss 4.6054 | lr 1.67e-05 |  52.01s |       960 img/s  (includes torch.compile warm-up)
+ep    2/1000 | loss 4.5938 | lr 3.34e-05 |  45.33s |      1101 img/s
+ep    3/1000 | loss 4.5333 | lr 5.00e-05 |  45.38s |      1100 img/s
+ep    4/1000 | loss 4.4963 | lr 6.67e-05 |  45.38s |      1100 img/s
+ep    5/1000 | loss 4.4560 | lr 8.34e-05 |  45.39s |      1100 img/s
+ep    6/1000 | loss 4.4247 | lr 1.00e-04 |  45.46s |      1098 img/s
+ep    7/1000 | loss 4.3880 | lr 1.17e-04 |  45.38s |      1100 img/s
+ep    8/1000 | loss 4.3572 | lr 1.33e-04 |  45.37s |      1100 img/s
+ep    9/1000 | loss 4.3360 | lr 1.50e-04 |  45.36s |      1101 img/s
+ep   10/1000 | loss 4.3165 | lr 1.67e-04 |  45.36s |      1100 img/s | train acc  16.02 | val acc  15.90
+ep   11/1000 | loss 4.2772 | lr 1.83e-04 |  45.35s |      1101 img/s
+ep   12/1000 | loss 4.2642 | lr 2.00e-04 |  45.35s |      1101 img/s
+ep   13/1000 | loss 4.2350 | lr 2.17e-04 |  43.98s |      1135 img/s
+ep   14/1000 | loss 4.2153 | lr 2.33e-04 |  37.19s |      1342 img/s
+ep   15/1000 | loss 4.1832 | lr 2.50e-04 |  37.56s |      1329 img/s
+ep   16/1000 | loss 4.1787 | lr 2.67e-04 |  38.07s |      1311 img/s
+ep   17/1000 | loss 4.1631 | lr 2.83e-04 |  45.27s |      1103 img/s
+ep   18/1000 | loss 4.1382 | lr 3.00e-04 |  46.19s |      1081 img/s
