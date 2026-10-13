@@ -1404,7 +1404,8 @@ def seeds_line():
     for label, names in [("CIFAR-100 SL-ViT shape, 1000 ep", ["c100_bf3b_slvit_1000ep", "c100_bf3b_slvit_1000ep_s1", "c100_bf3b_slvit_1000ep_s2"]),
                          ("CIFAR-100 SL-ViT + SPT, 1000 ep", ["c100_spt_slvit_1000ep", "c100_spt_slvit_1000ep_s1", "c100_spt_slvit_1000ep_s2"]),
                          ("CIFAR-10 ViT-Tiny shape, 1000 ep", ["c10_tinyshape_bf3b_1000ep", "c10_tinyshape_bf3b_1000ep_s1", "c10_tinyshape_bf3b_1000ep_s2"]),
-                         ("CIFAR-10 ViT-Tiny + SPT, 1000 ep", ["c10_spt_tinyshape_1000ep", "c10_spt_tinyshape_1000ep_s1", "c10_spt_tinyshape_1000ep_s2"])]:
+                         ("CIFAR-10 ViT-Tiny + SPT, 1000 ep", ["c10_spt_tinyshape_1000ep", "c10_spt_tinyshape_1000ep_s1", "c10_spt_tinyshape_1000ep_s2"]),
+                         ("CIFAR-10 SL-ViT + SPT (2.75M), 1000 ep", ["c10_spt_slvit_1000ep", "c10_spt_slvit_1000ep_s1", "c10_spt_slvit_1000ep_s2"])]:
         m = ms(names)
         if m:
             parts.append(f"{label}: <b>{m}</b>")
@@ -1421,6 +1422,7 @@ def ch_long():
         row("CIFAR-100, SL-ViT + SPT, 2000 ep (vs 1000 ep)", "c100_spt_slvit_2000ep", "c100_spt_slvit_1000ep", "saturated: +0.1 over the 1000-ep 3-seed mean"),
         row("CIFAR-100, ViT-Tiny shape, 5.4M", "c100_tinyshape_bf3b_1000ep", "c100_tinyshape_bf3b", ""),
         row("CIFAR-100, ViT-Tiny shape + SPT, 5.4M", "c100_spt_tinyshape_1000ep", "c100_tinyshape_bf3b", "SPT +1.9 here too; the 2.75M shape is still better"),
+        row("CIFAR-10, SL-ViT shape + SPT, 2.75M", "c10_spt_slvit_1000ep", "bf3b_slvit_300ep_lr5e-4", f"half the params of ViT-Tiny and better; CCT hybrid {P('cct_c10')} (300 ep), 97.48 (1500 ep)"),
         row("CIFAR-10, ViT-Tiny shape + SPT, 5.4M", "c10_spt_tinyshape_1000ep", "abl_tiny_shape", f"CCT hybrid {P('cct_c10')} (300 ep), 97.48 (1500 ep)"),
         row("CIFAR-10, ViT-Tiny shape, 5.4M", "c10_tinyshape_bf3b_1000ep", "abl_tiny_shape", f"SL-ViT {P('slvit_c10')}; impulse-init ViT-Tiny {P('structinit_c10')}; CCT hybrid {P('cct_c10')} (300 ep), {P('cct5k_c10')} (5000 ep)"),
         row("CIFAR-100, recurrent r8 add, 2.7M (500 ep vs 100 ep)", "c100_rd_r8_add_500ep", "c100_rd_r8_add", ""),
