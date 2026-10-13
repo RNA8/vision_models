@@ -700,3 +700,37 @@ Model: slvit  params: 2.91M  train images: 100000  batch: 128  steps/epoch: 781
 ep    1/1000 | loss 5.2986 | lr 1.67e-05 |  30.25s |      3305 img/s  (includes torch.compile warm-up)
 ep    2/1000 | loss 5.2972 | lr 3.34e-05 |  26.07s |      3835 img/s
 ep    3/1000 | loss 5.2583 | lr 5.00e-05 |  26.08s |      3833 img/s
+ep    4/1000 | loss 5.2050 | lr 6.67e-05 |  26.07s |      3835 img/s
+ep    5/1000 | loss 5.1675 | lr 8.34e-05 |  26.05s |      3837 img/s
+ep    6/1000 | loss 5.1330 | lr 1.00e-04 |  26.09s |      3832 img/s
+ep    7/1000 | loss 5.1111 | lr 1.17e-04 |  26.09s |      3832 img/s
+ep    8/1000 | loss 5.0856 | lr 1.33e-04 |  26.08s |      3833 img/s
+ep    9/1000 | loss 5.0584 | lr 1.50e-04 |  26.08s |      3833 img/s
+ep   10/1000 | loss 5.0320 | lr 1.67e-04 |  26.06s |      3836 img/s | train acc  10.04 | val acc  10.38
+ep   11/1000 | loss 5.0182 | lr 1.83e-04 |  26.06s |      3835 img/s
+ep   12/1000 | loss 4.9974 | lr 2.00e-04 |  26.08s |      3834 img/s
+ep   13/1000 | loss 4.9741 | lr 2.17e-04 |  26.09s |      3832 img/s
+ep   14/1000 | loss 4.9551 | lr 2.33e-04 |  26.08s |      3834 img/s
+ep   15/1000 | loss 4.9406 | lr 2.50e-04 |  26.09s |      3832 img/s
+ep   16/1000 | loss 4.9177 | lr 2.67e-04 |  26.09s |      3832 img/s
+ep   17/1000 | loss 4.9037 | lr 2.83e-04 |  26.09s |      3832 img/s
+ep   18/1000 | loss 4.8762 | lr 3.00e-04 |  26.07s |      3834 img/s
+ep   19/1000 | loss 4.8743 | lr 3.17e-04 |  26.07s |      3835 img/s
+ep   20/1000 | loss 4.8557 | lr 3.33e-04 |  26.09s |      3831 img/s | train acc  17.98 | val acc  17.50
+ep   21/1000 | loss 4.8455 | lr 3.50e-04 |  26.08s |      3833 img/s
+ep   22/1000 | loss 4.8484 | lr 3.67e-04 |  26.07s |      3835 img/s
+ep   23/1000 | loss 4.8444 | lr 3.83e-04 |  26.04s |      3839 img/s
+ep   24/1000 | loss 4.8176 | lr 4.00e-04 |  26.06s |      3836 img/s
+ep   25/1000 | loss 4.7977 | lr 4.17e-04 |  26.08s |      3834 img/s
+ep   26/1000 | loss 4.7937 | lr 4.33e-04 |  26.06s |      3836 img/s
+ep   27/1000 | loss 4.7841 | lr 4.50e-04 |  26.08s |      3833 img/s
+ep   28/1000 | loss 4.7901 | lr 4.67e-04 |  26.06s |      3836 img/s
+ep   29/1000 | loss 4.7509 | lr 4.83e-04 |  26.07s |      3835 img/s
+ep   30/1000 | loss 4.7540 | lr 5.00e-04 |  26.06s |      3837 img/s | train acc  23.37 | val acc  21.93
+ep   31/1000 | loss 4.7383 | lr 5.00e-04 |  26.07s |      3835 img/s
+ep   32/1000 | loss 4.7395 | lr 5.00e-04 |  26.06s |      3837 img/s
+ep   33/1000 | loss 4.7135 | lr 5.00e-04 |  26.10s |      3831 img/s
+ep   34/1000 | loss 4.7068 | lr 5.00e-04 |  26.07s |      3834 img/s
+ep   35/1000 | loss 4.6701 | lr 5.00e-04 |  25.98s |      3848 img/s
+ep   36/1000 | loss 4.6827 | lr 5.00e-04 |  26.08s |      3833 img/s
+ep   37/1000 | loss 4.6526 | lr 5.00e-04 |  26.10s |      3831 img/s
