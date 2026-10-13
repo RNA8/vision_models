@@ -1063,3 +1063,4 @@ ep    8/30 | loss 5.7907 | lr 8.64e-04 | 2343.14s |      4720 img/s | loader wai
 ep    9/30 | loss 5.7576 | lr 8.25e-04 | 2343.02s |      4721 img/s | loader wait 1.2s
 ep   10/30 | loss 5.7235 | lr 7.83e-04 | 2343.91s |      4719 img/s | loader wait 1.1s | train acc  19.30 | val acc  17.69
 ep   11/30 | loss 5.6901 | lr 7.37e-04 | 2342.66s |      4721 img/s | loader wait 1.1s
+ep   12/30 | loss 5.6532 | lr 6.88e-04 | 2319.64s |      4768 img/s | loader wait 1.1s
