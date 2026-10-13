@@ -210,3 +210,65 @@ ep  193/200 | loss 1.1811 | lr 2.55e-06 |  63.03s |     792 img/s
 ep  194/200 | loss 1.1311 | lr 2.14e-06 |  63.05s |     792 img/s
 ep  195/200 | loss 1.1496 | lr 1.79e-06 |  63.07s |     792 img/s | train acc  99.03 | val acc  88.08 | ema val  88.00
 ep  196/200 | loss 1.1592 | lr 1.51e-06 |  65.48s |     762 img/s
+ep  197/200 | loss 1.1305 | lr 1.29e-06 |  67.01s |     745 img/s
+ep  198/200 | loss 1.1423 | lr 1.13e-06 |  62.73s |     796 img/s
+ep  199/200 | loss 1.1476 | lr 1.03e-06 |  62.48s |     799 img/s
+ep  200/200 | loss 1.1405 | lr 1.00e-06 |  63.01s |     792 img/s | train acc  99.04 | val acc  88.14 | ema val  88.03
+wandb: updating run metadata
+wandb: uploading history steps 198-199, summary, console lines 199-203
+wandb: 
+wandb: Run history:
+wandb:     ema_val_acc ▁▅▆▇▇▇▇▇▇▇▇▇████████████████████████████
+wandb:           epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇█
+wandb:       epoch_sec █▇▃▇▇▇▆▇▇▇▇█▂▇▆▇██▂▆▃▇██▇▇▇▇▂█▇██▆█▇▇▂▆▁
+wandb:     img_per_sec ▇▇▇▇▇█▇▇▇▇▇▇█▇▇██▇▇▇▇▇▇▇▇▇▇▇█▇▇▇▇▇▇▇▇▇▇▁
+wandb:         kd_loss █▆▆▅▄▄▄▃▃▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:              lr █████▇▇▇▇▆▆▆▅▅▅▅▅▄▄▄▄▄▄▃▃▃▃▂▂▂▂▂▂▂▂▁▁▁▁▁
+wandb: train_acc_clean ▁▃▄▅▅▆▆▆▆▆▆▇▇▇▇▇▇▇▇▇████████████████████
+wandb:      train_loss █▅▄▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▁▁▂▂▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val_acc ▁▃▄▅▅▆▆▆▆▆▆▇▆▇▇▇▇▇▇▇▇▇▇▇▇███████████████
+wandb: 
+wandb: Run summary:
+wandb: best_ema_val_acc 88.08
+wandb:     best_val_acc 88.14
+wandb:      ema_val_acc 88.03
+wandb:            epoch 200
+wandb:        epoch_sec 63.0115
+wandb:      img_per_sec 792.23638
+wandb:          kd_loss 0.26961
+wandb:               lr 0.0
+wandb:    total_minutes 215.85277
+wandb:  train_acc_clean 99.04
+wandb:               +2 ...
+wandb: 
+wandb: 🚀 View run ec100_in21kpre_tiny_p4_64_kd_200ep at: https://wandb.ai/softeye/vision_transformers/runs/34fc012d
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/ec100_in21kpre_tiny_p4_64_kd_200ep/wandb/run-20261013_074944-34fc012d/logs
+
+Done in 215.9 min. final val 88.14% | best val 88.14% | final EMA val 88.03% (best 88.08%)
+Steady state: 63.02 s/epoch, 792 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/ec100_in21kpre_tiny_p4_64_kd_200ep
+== start ec100_in21kpre_tiny_p4_64_kd_120ep_s1 (Tue Oct 13 11:26:27 UTC 2026)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run ce67a6ce
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/ec100_in21kpre_tiny_p4_64_kd_120ep_s1/wandb/run-20261013_112700-ce67a6ce
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ec100_in21kpre_tiny_p4_64_kd_120ep_s1
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/ce67a6ce
+GPU: NVIDIA H100 PCIe
+init-ckpt: loaded 164 tensors; dropped ['head.weight', 'head.bias']; re-initialised ['head.weight', 'head.bias']
+loaded runs/in21kpre_tiny_p8/model.pt
+loaded runs/ec100_T_vitb_ar2_224/model_ema.pt
+teacher runs/ec100_T_vitb_ar2_224: 85.88M params, 224px, val acc 93.52
+Model: runs/in21kpre_tiny_p8  params: 5.42M  input 32->64px  mean/std [0.485, 0.456, 0.406]/[0.229, 0.224, 0.225]  train images: 50000  batch: 256  steps/epoch: 195
+ep    1/120 | loss 3.0564 | lr 1.68e-04 |  71.28s |     700 img/s
+ep    2/120 | loss 2.6251 | lr 3.34e-04 |  63.08s |     791 img/s
+ep    3/120 | loss 2.3083 | lr 5.00e-04 |  62.62s |     797 img/s
+ep    4/120 | loss 2.2189 | lr 5.00e-04 |  63.04s |     792 img/s
+ep    5/120 | loss 2.0693 | lr 5.00e-04 |  62.96s |     793 img/s | train acc  70.61 | val acc  68.17 | ema val  59.10
+ep    6/120 | loss 2.0408 | lr 4.99e-04 |  63.16s |     790 img/s
+ep    7/120 | loss 1.9483 | lr 4.99e-04 |  63.11s |     791 img/s

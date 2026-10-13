@@ -18,7 +18,7 @@ Top-1 accuracy on the official test set. "3 seeds" means mean ± standard deviat
 | CIFAR-10, pure ViT, from scratch | ViT-Tiny shape + SPT + LSA + SeqPool, 1000 epochs | 5.4M | **96.87 ± 0.04** with SPT (3 seeds); 96.54 ± 0.13 without SPT. The 2.75M SL-ViT shape + SPT reached **97.03** (1 seed so far, 2 more running) | Pure ViT: 96.41 (Gani et al.); [SL-ViT](https://arxiv.org/abs/2112.13492): 94.53; CCT: 96.53 at 300 ep |
 | CIFAR-100, edge model, pretrained | TinyViT-5M, 200-epoch distillation from a ViT-B teacher | 5.1M | **90.40** (2 seeds: 90.32, 90.47); the same schedule without a teacher (RepViT) gives 87.70, so the teacher matters | Similar-size pretrained models: MobileNetV3-L 88.5 ([Ridnik et al.](https://arxiv.org/abs/2104.10972)), EfficientNet-B0 88.1 ([Tan & Le](https://arxiv.org/abs/1905.11946)) |
 | CIFAR-100, edge model, pretrained | RepViT-M0.9, same distillation | 4.8M | 89.85 (2 seeds: 89.93, 89.76; 0.82 GMACs); 88.63 at 128 px (0.27 GMACs) | as above |
-| CIFAR-100, pure ViT, **64 px input**, our own ImageNet-21k pretraining | ViT-Tiny, patch 4, fine-tune with distillation | 5.4M | 87.82 at 120 epochs (60 epochs: 86.89, 2 seeds) | n/a |
+| CIFAR-100, pure ViT, **64 px input**, our own ImageNet-21k pretraining | ViT-Tiny, patch 4, fine-tune with distillation | 5.4M | 88.14 at 200 epochs (120 epochs: 87.82; 60 epochs: 86.89, 2 seeds) | n/a |
 
 This is **not** state of the art on CIFAR-100. The best published results we found are 96.1% with a 480M-parameter model and JFT-300M pretraining, and 89.9% from scratch with a
 26M-parameter CNN. The claim is narrower: these are the best results we found for models of this size and type.
