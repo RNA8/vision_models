@@ -8,3 +8,22 @@ wandb: Run `wandb offline` to turn off syncing.
 wandb: Syncing run ec100_in21kpre_tiny_p4_64_kd_200ep
 wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
 wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/34fc012d
+GPU: NVIDIA H100 PCIe
+init-ckpt: loaded 164 tensors; dropped ['head.weight', 'head.bias']; re-initialised ['head.weight', 'head.bias']
+loaded runs/in21kpre_tiny_p8/model.pt
+loaded runs/ec100_T_vitb_ar2_224/model_ema.pt
+teacher runs/ec100_T_vitb_ar2_224: 85.88M params, 224px, val acc 93.52
+Model: runs/in21kpre_tiny_p8  params: 5.42M  input 32->64px  mean/std [0.485, 0.456, 0.406]/[0.229, 0.224, 0.225]  train images: 50000  batch: 256  steps/epoch: 195
+ep    1/200 | loss 3.0758 | lr 1.68e-04 |  71.19s |     701 img/s
+ep    2/200 | loss 2.6509 | lr 3.34e-04 |  63.06s |     792 img/s
+ep    3/200 | loss 2.3492 | lr 5.00e-04 |  63.15s |     791 img/s
+ep    4/200 | loss 2.1924 | lr 5.00e-04 |  62.99s |     792 img/s
+ep    5/200 | loss 2.1320 | lr 5.00e-04 |  62.81s |     795 img/s | train acc  69.60 | val acc  67.49 | ema val  58.19
+ep    6/200 | loss 2.0511 | lr 5.00e-04 |  63.10s |     791 img/s
+ep    7/200 | loss 2.0137 | lr 4.99e-04 |  63.05s |     792 img/s
+ep    8/200 | loss 1.9932 | lr 4.99e-04 |  62.86s |     794 img/s
+ep    9/200 | loss 1.9607 | lr 4.99e-04 |  62.67s |     797 img/s
+ep   10/200 | loss 1.8815 | lr 4.98e-04 |  63.07s |     792 img/s | train acc  77.90 | val acc  73.80 | ema val  76.56
+ep   11/200 | loss 1.9077 | lr 4.98e-04 |  62.66s |     797 img/s
+ep   12/200 | loss 1.8622 | lr 4.97e-04 |  63.09s |     791 img/s
+ep   13/200 | loss 1.8350 | lr 4.97e-04 |  63.03s |     792 img/s

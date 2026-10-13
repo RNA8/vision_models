@@ -1057,3 +1057,4 @@ wandb: Find logs at: ./runs/c10_spt_slvit_1000ep/wandb/run-20261013_045026-01bf1
 Done in 178.1 min. final val 97.03% | best val 97.07% | clean train 100.00%
 Steady state (excl. epoch 1): 10.45 s/epoch, 4,775 img/s
 Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/c10_spt_slvit_1000ep
+ep    6/30 | loss 5.8622 | lr 9.29e-04 | 2280.65s |      4850 img/s | loader wait 1.1s
