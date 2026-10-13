@@ -674,3 +674,27 @@ ep  306/400 | loss 0.2787 | lr 6.75e-05 |  91.36s |     546 img/s
 ep  340/400 | loss 0.2650 | lr 2.89e-05 |  80.74s |     618 img/s | train acc  97.55 | val acc  89.62 | ema val  89.96
 ep  307/400 | loss 0.2894 | lr 6.62e-05 |  91.12s |     548 img/s
 ep  341/400 | loss 0.2614 | lr 2.80e-05 |  80.69s |     619 img/s
+ep  308/400 | loss 0.2902 | lr 6.49e-05 |  91.28s |     547 img/s
+ep  342/400 | loss 0.2662 | lr 2.71e-05 |  80.62s |     619 img/s
+ep  343/400 | loss 0.2582 | lr 2.62e-05 |  80.67s |     619 img/s
+ep  309/400 | loss 0.2828 | lr 6.35e-05 |  91.40s |     546 img/s
+ep  344/400 | loss 0.2538 | lr 2.53e-05 |  80.82s |     618 img/s
+ep  310/400 | loss 0.2768 | lr 6.22e-05 |  91.27s |     547 img/s | train acc  97.23 | val acc  90.27 | ema val  90.26
+ep  345/400 | loss 0.2698 | lr 2.45e-05 |  80.58s |     619 img/s | train acc  97.67 | val acc  89.55 | ema val  89.86
+ep  311/400 | loss 0.2879 | lr 6.09e-05 |  91.05s |     548 img/s
+ep  346/400 | loss 0.2585 | lr 2.37e-05 |  80.68s |     619 img/s
+ep  312/400 | loss 0.2803 | lr 5.97e-05 |  91.37s |     546 img/s
+ep  347/400 | loss 0.2693 | lr 2.28e-05 |  80.79s |     618 img/s
+ep  313/400 | loss 0.2886 | lr 5.84e-05 |  91.24s |     547 img/s
+ep  348/400 | loss 0.2753 | lr 2.20e-05 |  80.59s |     619 img/s
+ep  314/400 | loss 0.2724 | lr 5.71e-05 |  91.27s |     547 img/s
+ep  349/400 | loss 0.2612 | lr 2.12e-05 |  80.72s |     618 img/s
+ep  315/400 | loss 0.2919 | lr 5.59e-05 |  91.22s |     547 img/s | train acc  97.24 | val acc  90.19 | ema val  90.27
+ep  350/400 | loss 0.2628 | lr 2.05e-05 |  80.57s |     620 img/s | train acc  97.59 | val acc  89.70 | ema val  89.77
+ep  351/400 | loss 0.2654 | lr 1.97e-05 |  80.67s |     619 img/s
+ep  316/400 | loss 0.2821 | lr 5.46e-05 |  91.16s |     548 img/s
+ep  352/400 | loss 0.2559 | lr 1.90e-05 |  80.73s |     618 img/s
+ep  317/400 | loss 0.2855 | lr 5.34e-05 |  91.31s |     547 img/s
+ep  353/400 | loss 0.2506 | lr 1.82e-05 |  80.67s |     619 img/s
+ep  318/400 | loss 0.2693 | lr 5.22e-05 |  91.06s |     548 img/s
+ep  354/400 | loss 0.2603 | lr 1.75e-05 |  87.79s |     569 img/s
