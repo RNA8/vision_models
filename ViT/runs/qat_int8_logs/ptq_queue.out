@@ -1,0 +1,12 @@
+ptq_full_mse PTQ (fake-quant, our placement) 80.31
+ptq_full_minmax PTQ (fake-quant, our placement) 80.41
+ptq_full_pct PTQ (fake-quant, our placement) 79.93
+ptq_mm_w PTQ (fake-quant, our placement) 80.71
+ptq_mm_w_input PTQ (fake-quant, our placement) 80.66
+ptq_no_residual PTQ (fake-quant, our placement) 80.49
+ptq_no_softmax PTQ (fake-quant, our placement) 80.21
+ptq_no_linout PTQ (fake-quant, our placement) 80.46
+ptq_full_a16res PTQ (fake-quant, our placement) 80.66
+ptq_full_a16res_linout PTQ (fake-quant, our placement) 80.55
+ptq_w_only PTQ (fake-quant, our placement) 80.62
+ptq_acts_only PTQ (fake-quant, our placement) 80.31

@@ -1,0 +1,7 @@
+fp32 80.64 explicit forward 80.64
+PTQ (fake-quant, our placement) 80.55
+final fake-quant 80.55
+/home/ubuntu/workspace/vision_models/ViT/qat_int8.py:603: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  rec["scales"] = {n: {"scale": float(q.scale.abs()), "zp": int(q.zp.round()), "bits": q.bits}
+wrote /home/ubuntu/workspace/vision_models/ViT/runs/ptq_full_a16res_linout/results.json

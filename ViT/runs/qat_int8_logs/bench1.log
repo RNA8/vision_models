@@ -1,0 +1,6 @@
+0 {'fp32': 3.896, 'dyn': 3.182, 'ptq_full_ort': 7.135, 'ptq_mm_ort': 6.013, 'ptq_full_minus_mask_ort': 6.94, 'qat_full_e10': 3.691}
+1 {'fp32': 3.868, 'dyn': 3.238, 'ptq_full_ort': 7.203, 'ptq_mm_ort': 5.56, 'ptq_full_minus_mask_ort': 6.492, 'qat_full_e10': 3.28}
+2 {'fp32': 3.358, 'dyn': 2.828, 'ptq_full_ort': 6.73, 'ptq_mm_ort': 5.659, 'ptq_full_minus_mask_ort': 6.6, 'qat_full_e10': 3.367}
+3 {'fp32': 3.394, 'dyn': 2.861, 'ptq_full_ort': 6.717, 'ptq_mm_ort': 5.631, 'ptq_full_minus_mask_ort': 6.504, 'qat_full_e10': 3.301}
+4 {'fp32': 3.84, 'dyn': 3.219, 'ptq_full_ort': 7.118, 'ptq_mm_ort': 5.874, 'ptq_full_minus_mask_ort': 6.475, 'qat_full_e10': 3.335}
+{"fp32": [3.839932003756985, 10.624441146850586], "dyn": [3.181934996973723, 2.9423065185546875], "ptq_full_ort": [7.118445006199181, 3.0948715209960938], "ptq_mm_ort": [5.658994487021118, 3.022639274597168], "ptq_full_minus_mask_ort": [6.504357501398772, 3.076563835144043], "qat_full_e10": [3.3354420156683773, 2.9861936569213867]}

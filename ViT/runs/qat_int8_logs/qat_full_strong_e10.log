@@ -1,0 +1,32 @@
+fp32 80.64 explicit forward 80.64
+PTQ (fake-quant, our placement) 80.31
+/home/ubuntu/workspace/vision_models/ViT/qat_int8.py:660: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tl += float(loss)
+{'epoch': 1, 'loss': 0.06817846425737326, 'sec': 124.51190543174744}
+{'epoch': 2, 'loss': 0.0497234336936321, 'sec': 124.1121015548706}
+{'epoch': 3, 'loss': 0.04535214183374475, 'sec': 124.1255133152008}
+{'epoch': 4, 'loss': 0.04320127531312979, 'sec': 124.2189929485321}
+{'epoch': 5, 'loss': 0.04210720222729903, 'sec': 124.07784175872803, 'acc': 80.49}
+{'epoch': 6, 'loss': 0.0397717645439582, 'sec': 123.98491168022156}
+{'epoch': 7, 'loss': 0.04086481823275487, 'sec': 124.03280067443848}
+{'epoch': 8, 'loss': 0.039940489398745394, 'sec': 124.04843235015869}
+{'epoch': 9, 'loss': 0.041347513648752984, 'sec': 124.08719635009766}
+{'epoch': 10, 'loss': 0.03974519766007478, 'sec': 124.06358695030212, 'acc': 80.2}
+final fake-quant 80.2
+/home/ubuntu/workspace/vision_models/ViT/qat_int8.py:484: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+  torch.onnx.export(qm, (x,), path, opset_version=17, input_names=["input"], output_names=["logits"],
+/home/ubuntu/workspace/vision_models/ViT/qat_int8.py:175: TracerWarning: Converting a tensor to a Python float might cause the trace to be incorrect. We can't record the data flow of Python values, so this value will be treated as a constant in the future. This means that the trace might not generalize to other inputs!
+  return _QDQ.apply(x, float(self.scale.abs()), int(self.zp.round().clamp(self.qmin, self.qmax)), self.bits)
+/home/ubuntu/workspace/vision_models/ViT/qat_int8.py:175: TracerWarning: Converting a tensor to a Python integer might cause the trace to be incorrect. We can't record the data flow of Python values, so this value will be treated as a constant in the future. This means that the trace might not generalize to other inputs!
+  return _QDQ.apply(x, float(self.scale.abs()), int(self.zp.round().clamp(self.qmin, self.qmax)), self.bits)
+/home/ubuntu/workspace/vision_models/ViT/qat_int8.py:139: TracerWarning: Converting a tensor to a Python boolean might cause the trace to be incorrect. We can't record the data flow of Python values, so this value will be treated as a constant in the future. This means that the trace might not generalize to other inputs!
+  if scale.numel() > 1:
+/home/ubuntu/workspace/vision_models/.venv/lib/python3.10/site-packages/torch/onnx/_internal/torchscript_exporter/jit_utils.py:308: UserWarning: Constant folding - Only steps=1 can be constant folded for opset >= 10 onnx::Slice op. Constant folding not applied. (Triggered internally at /pytorch/torch/csrc/jit/passes/onnx/constant_fold.cpp:178.)
+  _C._jit_pass_onnx_node_shape_type_inference(node, params_dict, opset_version)
+/home/ubuntu/workspace/vision_models/.venv/lib/python3.10/site-packages/torch/onnx/_internal/torchscript_exporter/utils.py:714: UserWarning: Constant folding - Only steps=1 can be constant folded for opset >= 10 onnx::Slice op. Constant folding not applied. (Triggered internally at /pytorch/torch/csrc/jit/passes/onnx/constant_fold.cpp:178.)
+  _C._jit_pass_onnx_graph_shape_type_inference(
+/home/ubuntu/workspace/vision_models/.venv/lib/python3.10/site-packages/torch/onnx/_internal/torchscript_exporter/utils.py:1187: UserWarning: Constant folding - Only steps=1 can be constant folded for opset >= 10 onnx::Slice op. Constant folding not applied. (Triggered internally at /pytorch/torch/csrc/jit/passes/onnx/constant_fold.cpp:178.)
+  _C._jit_pass_onnx_graph_shape_type_inference(
+ORT int8 {'acc': 80.27, 'lat_ms': 3.742626984603703, 'MB': 2.9861936569213867, 'agree_fp32': 95.75} parity 0.9012174606323242
+wrote /home/ubuntu/workspace/vision_models/ViT/runs/qat_full_strong_e10/results.json

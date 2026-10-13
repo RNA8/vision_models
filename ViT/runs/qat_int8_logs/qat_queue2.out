@@ -1,0 +1,3 @@
+qat_full_strong_e10 PTQ (fake-quant, our placement) 80.31
+qat_full_strong_e10 final fake-quant 80.2
+qat_full_strong_e10 ORT int8 {'acc': 80.27, 'lat_ms': 3.742626984603703, 'MB': 2.9861936569213867, 'agree_fp32': 95.75} parity 0.9012174606323242

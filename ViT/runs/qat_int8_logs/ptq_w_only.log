@@ -1,0 +1,4 @@
+fp32 80.64 explicit forward 80.64
+PTQ (fake-quant, our placement) 80.62
+final fake-quant 80.62
+wrote /home/ubuntu/workspace/vision_models/ViT/runs/ptq_w_only/results.json

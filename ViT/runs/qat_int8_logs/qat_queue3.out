@@ -1,0 +1,15 @@
+qat_ptq_full_s0 PTQ (fake-quant, our placement) 80.31
+qat_ptq_full_s0 final fake-quant 80.31
+qat_ptq_full_s0 ORT int8 {'acc': 80.26, 'lat_ms': 3.7405400071293116, 'MB': 2.9861936569213867, 'agree_fp32': 94.77} parity 1.8136277198791504
+qat_ptq_full_s1 PTQ (fake-quant, our placement) 80.72
+qat_ptq_full_s1 final fake-quant 80.72
+qat_ptq_full_s1 ORT int8 {'acc': 80.71, 'lat_ms': 3.8628804904874414, 'MB': 2.9861936569213867, 'agree_fp32': 96.46000000000001} parity 1.051814079284668
+qat_full_strong_e10_s1 PTQ (fake-quant, our placement) 80.72
+qat_full_strong_e10_s1 final fake-quant 81.07
+qat_full_strong_e10_s1 ORT int8 {'acc': 80.98, 'lat_ms': 3.64352751057595, 'MB': 2.9861936569213867, 'agree_fp32': 96.94} parity 0.9117836952209473
+qat_ptq_full_s2 PTQ (fake-quant, our placement) 80.59
+qat_ptq_full_s2 final fake-quant 80.59
+qat_ptq_full_s2 ORT int8 {'acc': 80.52, 'lat_ms': 3.307571489131078, 'MB': 2.9861936569213867, 'agree_fp32': 95.28} parity 1.4766619205474854
+qat_full_strong_e10_s2 PTQ (fake-quant, our placement) 80.59
+qat_full_strong_e10_s2 final fake-quant 80.8
+qat_full_strong_e10_s2 ORT int8 {'acc': 80.71, 'lat_ms': 3.95477149868384, 'MB': 2.9861936569213867, 'agree_fp32': 96.24000000000001} parity 1.214131236076355
