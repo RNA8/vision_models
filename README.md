@@ -48,8 +48,10 @@ Each change was a one-variable ablation of the recipe in [`ViT/train_vit.py`](Vi
 
 ## Caveats
 
-- **The recipes were chosen while watching the CIFAR test set**, as in most CIFAR papers. A rerun of both headline recipes on a fixed 5k held-out
-  split (`--holdout 5000`, [`ViT/run_holdout.sh`](ViT/run_holdout.sh)) is in progress; its held-out vs test numbers will be added here.
+- **The recipes were chosen while watching the CIFAR test set**, as in most CIFAR papers. To check that this did not inflate the numbers, the
+  CIFAR-100 headline recipe was rerun on 45k training images with a fixed 5k held-out split (`--holdout 5000`, [`ViT/run_holdout.sh`](ViT/run_holdout.sh)),
+  and the test set was scored only once at the end. Held-out val was 79.88 and test was 79.89, so recipe selection did not overfit the test set. The run is about
+  1 point below the 50k-image runs because it trains on 10% less data. The CIFAR-10 check is running.
 - Edge numbers are single seeds unless marked; repeat runs on this setup vary by about 0.3–0.6 points.
 - Published comparisons come from the papers linked above. Our search was thorough but not exhaustive, so "best we found" means exactly that.
 
