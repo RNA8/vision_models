@@ -46,6 +46,7 @@ Each change was a one-variable ablation of the recipe in [`ViT/train_vit.py`](Vi
   model trained twice as long gained +1.9, more than any MoE variant. Details: [`ViT/research/results_moe.md`](ViT/research/results_moe.md).
 - **Static INT8 post-training quantization** (ONNX Runtime defaults) collapsed several of the best FP32 edge models, for example RepViT-M0.9 88.5 → 37.6.
   Dynamic INT8 was lossless on all 11 models. Details: [`ViT/research/results_wave1_int8.md`](ViT/research/results_wave1_int8.md).
+  For our own 2.75M ViT the collapse (to about 11%) was traced to the Locality Self-Attention mask constant blowing up the softmax-input range; with that fixed, full static INT8 reaches 80.50 with plain PTQ and **80.65 with QAT** (3-seed mean in ONNX Runtime, FP32 80.91; 2.99 MB vs 10.55 MB). Details: [`ViT/research/results_qat_int8.md`](ViT/research/results_qat_int8.md).
 
 ## Caveats
 

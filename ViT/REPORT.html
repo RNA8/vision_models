@@ -10,15 +10,15 @@ tr.pend td{color:var(--mut);font-style:italic}code,pre{background:var(--hd);bord
 img{max-width:100%;height:auto;border:1px solid var(--bd);border-radius:4px;background:#fff}
 figure{margin:1rem 0}figcaption{color:var(--mut);font-size:13px}.mut{color:var(--mut)}
 </style></head><body>
-<h1>ViT training report</h1><p class='mut'>Generated 2026-10-13 19:04; 215 runs included. Gap = clean train acc minus val acc (points). Val acc shows final epoch, best in parentheses when different.</p>
+<h1>ViT training report</h1><p class='mut'>Generated 2026-10-13 19:37; 218 runs included. Gap = clean train acc minus val acc (points). Val acc shows final epoch, best in parentheses when different.</p>
 <h2>Compute summary</h2><div class='tw'><table><tr><th>section</th><th>runs done</th><th>pending</th><th>GPU minutes</th><th>cost</th></tr>
-<tr><td>CIFAR-10</td><td class='n'>70</td><td class='n'>0</td><td class='n'>2931.6</td><td class='n'>$160.75</td></tr>
+<tr><td>CIFAR-10</td><td class='n'>73</td><td class='n'>0</td><td class='n'>2931.6</td><td class='n'>$160.75</td></tr>
 <tr><td>CIFAR-100</td><td class='n'>125</td><td class='n'>0</td><td class='n'>8151.8</td><td class='n'>$446.99</td></tr>
 <tr><td>Tiny-ImageNet</td><td class='n'>10</td><td class='n'>0</td><td class='n'>559.8</td><td class='n'>$30.70</td></tr>
 <tr><td>ImageNet-64</td><td class='n'>7</td><td class='n'>0</td><td class='n'>1216.1</td><td class='n'>$66.68</td></tr>
-<tr><td><b>Total (sum of run-minutes)</b></td><td class='n'>215</td><td class='n'>0</td><td class='n'><b>12859.3</b> (214.32 h)</td><td class='n'>$705.12 at $3.29/h (upper bound)</td></tr></table></div>
-<p><strong>Wall-clock (estimated, counting in-progress runs up to now):</strong> 4565 min (76.08 h) from the earliest run start (2026-10-10 15:00) to the latest run end (2026-10-13 19:04); <strong>GPU cost on wall-clock: $250.29</strong> at $3.29/h.</p>
-<p>Sum of completed run-minutes is 12859 min. Completed runs rarely overlapped (peak 8), so the span exceeds the sum of run-minutes by idle gaps and startup/eval time (the sum will overstate wall-clock once the concurrent queues complete); 3 runs currently in progress (916 min elapsed so far; peak concurrency now 8) are counted in the span but not in the sum; time with at least one run active is 4362 min ($239.16). Start = run-directory creation time (falls back to results.json mtime minus total_minutes), end = results.json mtime (in-progress runs end at report time). Per-run minutes and img/s of overlapping runs are inflated by GPU sharing.</p>
+<tr><td><b>Total (sum of run-minutes)</b></td><td class='n'>218</td><td class='n'>0</td><td class='n'><b>12859.3</b> (214.32 h)</td><td class='n'>$705.12 at $3.29/h (upper bound)</td></tr></table></div>
+<p><strong>Wall-clock (estimated, counting in-progress runs up to now):</strong> 4598 min (76.63 h) from the earliest run start (2026-10-10 15:00) to the latest run end (2026-10-13 19:37); <strong>GPU cost on wall-clock: $252.11</strong> at $3.29/h.</p>
+<p>Sum of completed run-minutes is 12859 min. Completed runs rarely overlapped (peak 8), so the span exceeds the sum of run-minutes by idle gaps and startup/eval time (the sum will overstate wall-clock once the concurrent queues complete); 3 runs currently in progress (448 min elapsed so far; peak concurrency now 8) are counted in the span but not in the sum; time with at least one run active is 4395 min ($240.98). Start = run-directory creation time (falls back to results.json mtime minus total_minutes), end = results.json mtime (in-progress runs end at report time). Per-run minutes and img/s of overlapping runs are inflated by GPU sharing.</p>
 <h2>CIFAR-10</h2>
 <div class='tw'><table><tr><th>run</th><th>epochs</th><th>params (M)</th><th>clean train acc</th><th>val acc</th><th>train-val gap</th><th>minutes</th><th>img/s</th><th>what this step taught</th></tr>
 <tr><td>t1_plain</td><td class=n>100</td><td class=n>5.36</td><td class=n>100.00</td><td class=n>82.90</td><td class=n>17.1</td><td class=n>4.3</td><td class=n>21,861</td><td>baseline (crop+flip only)</td></tr>
@@ -81,8 +81,11 @@ figure{margin:1rem 0}figcaption{color:var(--mut);font-size:13px}.mut{color:var(-
 <tr><td>qat_full_e10</td><td class=n>10</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>qat_full_e30</td><td class=n>30</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>qat_full_strong_e10</td><td class=n>10</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
+<tr><td>qat_full_strong_e10_s1</td><td class=n>10</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
+<tr><td>qat_full_strong_e10_s2</td><td class=n>10</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>qat_ptq_full_s0</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>qat_ptq_full_s1</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
+<tr><td>qat_ptq_full_s2</td><td class=n>0</td><td class=n>nan</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>n/a</td><td class=n>0.0</td><td class=n>0</td><td>incomplete results</td></tr>
 <tr><td>rd_deep_r8</td><td class=n>100</td><td class=n>2.77</td><td class=n>83.89</td><td class=n>81.99</td><td class=n>1.9</td><td class=n>22.0</td><td class=n>3,678</td><td>no comparison available</td></tr>
 <tr><td>rd_deep_r8_add</td><td class=n>100</td><td class=n>2.69</td><td class=n>87.33</td><td class=n>84.42</td><td class=n>2.9</td><td class=n>22.3</td><td class=n>3,795</td><td>no comparison available</td></tr>
 <tr><td>rd_deep_r8_add_ds</td><td class=n>100</td><td class=n>2.69</td><td class=n>88.14</td><td class=n>85.23</td><td class=n>2.9</td><td class=n>31.9</td><td class=n>2,473</td><td>no comparison available</td></tr>
