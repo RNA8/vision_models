@@ -776,3 +776,53 @@ ep  394/400 | loss 0.2597 | lr 1.28e-06 |  80.70s |     619 img/s
 ep  354/400 | loss 0.2688 | lr 1.75e-05 |  91.19s |     547 img/s
 ep  395/400 | loss 0.2677 | lr 1.20e-06 |  80.68s |     619 img/s | train acc  97.57 | val acc  89.79 | ema val  89.82
 ep  355/400 | loss 0.2757 | lr 1.68e-05 |  91.13s |     548 img/s | train acc  97.36 | val acc  90.42 | ema val  90.50
+ep  396/400 | loss 0.2520 | lr 1.13e-06 |  80.56s |     620 img/s
+ep  356/400 | loss 0.2675 | lr 1.61e-05 |  91.33s |     547 img/s
+ep  397/400 | loss 0.2580 | lr 1.07e-06 |  80.67s |     619 img/s
+ep  357/400 | loss 0.2736 | lr 1.54e-05 |  91.24s |     547 img/s
+ep  398/400 | loss 0.2566 | lr 1.03e-06 |  80.66s |     619 img/s
+ep  358/400 | loss 0.2762 | lr 1.48e-05 |  91.33s |     547 img/s
+ep  399/400 | loss 0.2407 | lr 1.01e-06 |  80.77s |     618 img/s
+ep  359/400 | loss 0.2599 | lr 1.41e-05 |  91.37s |     546 img/s
+ep  400/400 | loss 0.2565 | lr 1.00e-06 |  80.68s |     619 img/s | train acc  97.62 | val acc  89.70 | ema val  89.74
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:     ema_val_acc ▁▆▇█████████████████████████████████████
+wandb:           epoch ▁▁▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▅▅▅▅▅▅▅▅▆▆▆▆▇▇▇▇▇█████
+wandb:       epoch_sec ██▄▄▃▂▂▂▃▃▃▃▃▂▂▃▂▃▃▃▄▄▄▄▄▄▄▅▄▄▄▄▄▄▄▄▁▄▄▄
+wandb:     img_per_sec ▃▃▂▂▂▂▃▃▃▃▃▃▃▃▃▃▃▃▃▃█▂▃▂▂▂▂▃▂▂▂▂▂▂▂▁█▃▂▂
+wandb:         kd_loss █▃▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:              lr ▅▇█████████▇▇▇▇▇▇▇▆▆▆▆▆▅▅▅▄▄▄▃▃▃▂▂▂▁▁▁▁▁
+wandb: train_acc_clean ▁▃▄▄▄▄▄▅▅▆▄▅▅▆▄▆▆▆▅▆▆▆▇▇▇▇▇▇████████████
+wandb:      train_loss █▆▆▅▅▄▄▅▄▄▄▄▃▃▃▂▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▁▂▂▁▁▁▁▁
+wandb:         val_acc ▂▃▃▄▄▄▄▃▄▄▂▅▂▃▂▄▃▁▄▁▂▄▅▆▆▆▆▆▇▇█▇████████
+wandb: 
+wandb: Run summary:
+wandb: best_ema_val_acc 89.96
+wandb:     best_val_acc 89.86
+wandb:      ema_val_acc 89.74
+wandb:            epoch 400
+wandb:        epoch_sec 80.67975
+wandb:      img_per_sec 618.74259
+wandb:          kd_loss 0.25653
+wandb:               lr 0.0
+wandb:    total_minutes 553.48354
+wandb:  train_acc_clean 97.62
+wandb:               +2 ...
+wandb: 
+wandb: 🚀 View run ec100_fm_repvit_224_e400 at: https://wandb.ai/softeye/vision_transformers/runs/e70eb547
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/ec100_fm_repvit_224_e400/wandb/run-20261013_031206-e70eb547/logs
+
+Done in 553.5 min. final val 89.70% | best val 89.86% | final EMA val 89.74% (best 89.96%)
+Steady state: 80.60 s/epoch, 619 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/ec100_fm_repvit_224_e400
+ep  360/400 | loss 0.2676 | lr 1.35e-05 |  76.14s |     656 img/s | train acc  97.31 | val acc  90.60 | ema val  90.50
+ep  361/400 | loss 0.2736 | lr 1.29e-05 |  89.45s |     558 img/s
+ep  362/400 | loss 0.2707 | lr 1.23e-05 |  89.03s |     561 img/s
+ep  363/400 | loss 0.2622 | lr 1.17e-05 |  89.07s |     560 img/s
+ep  364/400 | loss 0.2692 | lr 1.12e-05 |  89.19s |     560 img/s
+ep  365/400 | loss 0.2726 | lr 1.06e-05 |  89.27s |     559 img/s | train acc  97.33 | val acc  90.42 | ema val  90.47
