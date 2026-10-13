@@ -1378,6 +1378,7 @@ def ch_wave1():
         row("RepViT-M0.9 function-matching KD, 1000 ep at 128 px", "ec100_fm_repvit_128_e1000", "0.27 GMACs; 30-ep 128 px: 87.42"),
         row("RepViT-M0.9 no teacher, 200 ep (control)", "ec100_nokd_repvit_224_e200", "same recipe, plain labels"),
         row("TinyViT-5M function-matching KD, 200 ep", "ec100_fm_tinyvit5m_224_e200", "5.10M params, 1.26 GMACs: best ≤6M"),
+        row("TinyViT-5M / RepViT-M0.9 function-matching KD, 400 ep", "ec100_fm_tinyvit5m_224_e400", f"RepViT: {A('ec100_fm_repvit_224_e400')}; both level with 200 ep (saturated)"),
     ]
     return chap(11, "ch11", "Wave 1: patch size, recurrence ablations, mixture-of-experts", chapter_date(["ec100_in64pre_tiny_p4_64", "c100_moe_vit_e4_150ep"]),
         "<p>After the core recipe, which architectural ideas buy accuracy at a fixed edge budget: smaller patches on a pretrained ViT, a better recurrent block, or more total parameters via mixture-of-experts?</p>",

@@ -855,3 +855,45 @@ ep  391/400 | loss 0.2648 | lr 1.64e-06 |  89.43s |     558 img/s
 ep  392/400 | loss 0.2636 | lr 1.50e-06 |  89.43s |     558 img/s
 ep  393/400 | loss 0.2589 | lr 1.39e-06 |  89.31s |     559 img/s
 ep  394/400 | loss 0.2675 | lr 1.28e-06 |  89.11s |     560 img/s
+ep  395/400 | loss 0.2759 | lr 1.20e-06 |  89.32s |     559 img/s | train acc  97.35 | val acc  90.48 | ema val  90.50
+ep  396/400 | loss 0.2607 | lr 1.13e-06 |  89.01s |     561 img/s
+ep  397/400 | loss 0.2671 | lr 1.07e-06 |  89.09s |     560 img/s
+ep  398/400 | loss 0.2650 | lr 1.03e-06 |  89.31s |     559 img/s
+ep  399/400 | loss 0.2485 | lr 1.01e-06 |  89.34s |     559 img/s
+ep  400/400 | loss 0.2665 | lr 1.00e-06 |  89.19s |     560 img/s | train acc  97.44 | val acc  90.47 | ema val  90.55
+wandb: updating run metadata
+wandb: uploading history steps 398-399, summary, console lines 399-403
+wandb: 
+wandb: Run history:
+wandb:     ema_val_acc ▁▄▅▆▆▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇█▇▇▇▇███████████████
+wandb:           epoch ▁▁▁▁▂▂▂▂▂▂▂▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▇▇▇▇▇▇▇▇▇▇██
+wandb:       epoch_sec █▂▂▂▂▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁
+wandb:     img_per_sec ▄▄▅▂▁▂▁▇█▇▇▇▇█▇██▇▇▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▂▆▆▇▆
+wandb:         kd_loss █▆▅▅▅▄▄▄▄▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁
+wandb:              lr ▄████▇▇▇▇▇▆▆▆▆▆▅▅▅▅▅▄▄▄▃▃▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁
+wandb: train_acc_clean ▁▂▃▄▅▅▅▆▆▆▇▇▇▇▇▇▇▇▇▇▇█▇▇████████████████
+wandb:      train_loss █▄▃▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val_acc ▁▂▄▃▄▄▄▅▅▅▅▆▆▆▆▆▆▆▆▆▆▇▇▇▇█▇▇▇███████████
+wandb: 
+wandb: Run summary:
+wandb: best_ema_val_acc 90.55
+wandb:     best_val_acc 90.6
+wandb:      ema_val_acc 90.55
+wandb:            epoch 400
+wandb:        epoch_sec 89.1903
+wandb:      img_per_sec 559.70213
+wandb:          kd_loss 0.26648
+wandb:               lr 0.0
+wandb:    total_minutes 624.6878
+wandb:  train_acc_clean 97.44
+wandb:               +2 ...
+wandb: 
+wandb: 🚀 View run ec100_fm_tinyvit5m_224_e400 at: https://wandb.ai/softeye/vision_transformers/runs/890c76ad
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/ec100_fm_tinyvit5m_224_e400/wandb/run-20261013_030340-890c76ad/logs
+
+Done in 624.7 min. final val 90.47% | best val 90.60% | final EMA val 90.55% (best 90.55%)
+Steady state: 91.08 s/epoch, 548 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/ec100_fm_tinyvit5m_224_e400
+== run_wave5 finished Tue Oct 13 13:28:25 UTC 2026
