@@ -2523,3 +2523,4 @@ Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs
 ep    5/60 | loss 5.9005 | lr 9.89e-04 | 2139.68s |      5169 img/s | loader wait 4.0s | train acc  17.64 | val acc  16.14
 ep    6/60 | loss 5.8547 | lr 9.83e-04 | 2580.23s |      4287 img/s | loader wait 2.3s
 ep    7/60 | loss 5.8211 | lr 9.75e-04 | 2720.21s |      4066 img/s | loader wait 1.1s
+ep    8/60 | loss 5.7945 | lr 9.66e-04 | 2586.12s |      4277 img/s | loader wait 1.2s
