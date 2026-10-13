@@ -276,3 +276,55 @@ ep  194/300 | loss 2.2918 | lr 1.74e-04 |  26.87s |      3720 img/s
 ep   57/300 | loss 4.2585 | lr 4.88e-04 |  27.93s |      3579 img/s
 ep  195/300 | loss 2.2798 | lr 1.71e-04 |  32.82s |      3046 img/s
 ep   58/300 | loss 4.2446 | lr 4.87e-04 |  32.12s |      3112 img/s
+ep  196/300 | loss 2.2678 | lr 1.69e-04 |  32.78s |      3050 img/s
+ep   59/300 | loss 4.2476 | lr 4.86e-04 |  33.72s |      2965 img/s
+ep  197/300 | loss 2.2582 | lr 1.66e-04 |  38.48s |      2598 img/s
+ep   60/300 | loss 4.2427 | lr 4.85e-04 |  38.60s |      2590 img/s | train acc  47.37 | val acc  43.03
+ep  198/300 | loss 2.2490 | lr 1.63e-04 |  35.31s |      2832 img/s
+ep   61/300 | loss 4.2307 | lr 4.84e-04 |  33.68s |      2968 img/s
+ep  199/300 | loss 2.2446 | lr 1.61e-04 |  33.86s |      2952 img/s
+ep   62/300 | loss 4.2017 | lr 4.83e-04 |  35.49s |      2817 img/s
+ep  200/300 | loss 2.2370 | lr 1.58e-04 |  38.94s |      2567 img/s | train acc  83.09 | val acc  61.64
+ep   63/300 | loss 4.2023 | lr 4.82e-04 |  39.03s |      2561 img/s
+ep  201/300 | loss 2.2274 | lr 1.55e-04 |  38.06s |      2627 img/s
+ep   64/300 | loss 4.2385 | lr 4.81e-04 |  37.24s |      2684 img/s
+ep  202/300 | loss 2.2230 | lr 1.53e-04 |  32.12s |      3112 img/s
+ep   65/300 | loss 4.1703 | lr 4.80e-04 |  32.13s |      3112 img/s
+ep  203/300 | loss 2.2125 | lr 1.50e-04 |  35.23s |      2838 img/s
+ep   66/300 | loss 4.1809 | lr 4.79e-04 |  36.06s |      2772 img/s
+ep  204/300 | loss 2.2042 | lr 1.48e-04 |  36.85s |      2713 img/s
+ep   67/300 | loss 4.1793 | lr 4.78e-04 |  35.99s |      2777 img/s
+ep  205/300 | loss 2.1961 | lr 1.45e-04 |  32.11s |      3113 img/s
+ep   68/300 | loss 4.1746 | lr 4.76e-04 |  32.11s |      3113 img/s
+ep  206/300 | loss 2.1866 | lr 1.43e-04 |  32.13s |      3112 img/s
+ep   69/300 | loss 4.1429 | lr 4.75e-04 |  32.12s |      3113 img/s
+ep  207/300 | loss 2.1857 | lr 1.40e-04 |  34.21s |      2923 img/s
+ep   70/300 | loss 4.1285 | lr 4.74e-04 |  35.07s |      2850 img/s | train acc  52.83 | val acc  46.35
+ep  208/300 | loss 2.1763 | lr 1.37e-04 |  38.83s |      2575 img/s
+ep   71/300 | loss 4.1290 | lr 4.73e-04 |  38.75s |      2580 img/s
+ep  209/300 | loss 2.1671 | lr 1.35e-04 |  34.69s |      2882 img/s
+ep   72/300 | loss 4.1303 | lr 4.71e-04 |  33.21s |      3011 img/s
+ep  210/300 | loss 2.1619 | lr 1.33e-04 |  34.16s |      2926 img/s | train acc  86.08 | val acc  62.42
+ep   73/300 | loss 4.1229 | lr 4.70e-04 |  35.72s |      2799 img/s
+ep  211/300 | loss 2.1542 | lr 1.30e-04 |  33.63s |      2973 img/s
+ep   74/300 | loss 4.1063 | lr 4.69e-04 |  32.94s |      3035 img/s
+ep  212/300 | loss 2.1448 | lr 1.28e-04 |  35.59s |      2809 img/s
+ep   75/300 | loss 4.0579 | lr 4.67e-04 |  36.16s |      2764 img/s
+ep  213/300 | loss 2.1427 | lr 1.25e-04 |  32.93s |      3036 img/s
+ep   76/300 | loss 4.1037 | lr 4.66e-04 |  32.38s |      3087 img/s
+ep  214/300 | loss 2.1348 | lr 1.23e-04 |  32.24s |      3101 img/s
+ep   77/300 | loss 4.0823 | lr 4.64e-04 |  32.19s |      3106 img/s
+ep  215/300 | loss 2.1327 | lr 1.20e-04 |  32.65s |      3062 img/s
+ep   78/300 | loss 4.0466 | lr 4.63e-04 |  32.68s |      3059 img/s
+ep  216/300 | loss 2.1198 | lr 1.18e-04 |  32.12s |      3112 img/s
+ep   79/300 | loss 4.0558 | lr 4.61e-04 |  32.25s |      3100 img/s
+ep  217/300 | loss 2.1154 | lr 1.16e-04 |  38.02s |      2629 img/s
+ep   80/300 | loss 4.0151 | lr 4.60e-04 |  37.89s |      2638 img/s | train acc  56.15 | val acc  48.82
+ep  218/300 | loss 2.1090 | lr 1.13e-04 |  32.27s |      3098 img/s
+ep   81/300 | loss 4.0051 | lr 4.58e-04 |  32.21s |      3104 img/s
+ep  219/300 | loss 2.1037 | lr 1.11e-04 |  32.23s |      3102 img/s
+ep   82/300 | loss 4.0109 | lr 4.57e-04 |  32.23s |      3102 img/s
+ep  220/300 | loss 2.0969 | lr 1.09e-04 |  32.17s |      3107 img/s | train acc  88.12 | val acc  62.99
+ep   83/300 | loss 4.0027 | lr 4.55e-04 |  32.27s |      3098 img/s
+ep  221/300 | loss 2.0900 | lr 1.06e-04 |  32.13s |      3111 img/s
+ep   84/300 | loss 3.9881 | lr 4.53e-04 |  32.13s |      3111 img/s
