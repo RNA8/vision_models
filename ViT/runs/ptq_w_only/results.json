@@ -1,0 +1,63 @@
+{
+ "run_name": "ptq_w_only",
+ "args": {
+  "mode": "qat",
+  "ckpt_run": "/home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep",
+  "run_name": "ptq_w_only",
+  "out_dir": "/home/ubuntu/workspace/vision_models/ViT/runs",
+  "work": "/home/ubuntu/workspace/vision_models/ViT/runs/qat_int8_work",
+  "groups": [
+   "w"
+  ],
+  "a16": [],
+  "calib": "mse",
+  "pct": 99.99,
+  "calib_n": 512,
+  "no_learn_scales": false,
+  "epochs": 0,
+  "bs": 256,
+  "lr": 2e-05,
+  "qlr": 0.0001,
+  "wd": 0.0,
+  "kd": 1.0,
+  "label_smoothing": 0.1,
+  "aug": "cropflip",
+  "freeze_scales_epoch": -1,
+  "seed": 0,
+  "eval_every": 5,
+  "no_onnx": true,
+  "threads": 8,
+  "lat_threads": 4,
+  "keep_onnx": false,
+  "ort_calibs": [
+   "minmax",
+   "percentile",
+   "entropy"
+  ],
+  "ort_additive": [
+   "Add",
+   "Softmax",
+   "LayerNormalization",
+   "Mul",
+   "Erf",
+   "Div",
+   "Where"
+  ]
+ },
+ "ckpt": "/home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep",
+ "float_groups": [
+  "input",
+  "linout",
+  "mm",
+  "residual",
+  "softmax"
+ ],
+ "n_act_quantizers_on": 0,
+ "fp32_acc_teacher": 80.64,
+ "fp32_acc_qvit_off": 80.64,
+ "ptq_fakequant_acc": 80.62,
+ "history": [],
+ "qat_fakequant_acc": 80.62,
+ "scales": {},
+ "time": "2026-10-13 16:41:31"
+}
