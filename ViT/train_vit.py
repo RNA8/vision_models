@@ -42,7 +42,7 @@ VIT_CFGS = {
 
 
 # --------------------------------------------------------------------------- args
-def parse_args():
+def parse_args(argv=None):
     p = argparse.ArgumentParser(description="Fast ViT training on CIFAR")
     p.add_argument("--dataset", default="cifar10", help="module name in vit_data/")
     p.add_argument("--data-dir", default=os.path.join(HERE, "data"))
@@ -139,7 +139,27 @@ def parse_args():
     g.add_argument("--rd-sandwich", action="store_true", help="sandwich norm in the core (RMSNorm after attn/MLP sums)")
     g.add_argument("--qk-norm", action="store_true", help="QK-norm in attention (rd_* models)")
     g.add_argument("--eval-r", type=int, default=None, help="recurrence used by evaluate() (default r_mean)")
-    return p.parse_args()
+    # knowledge distillation (research/self_distillation.md). Off unless --teacher or --self-kd is given.
+    g = p.add_argument_group("distillation")
+    g.add_argument("--teacher", default=None,
+                   help="comma-separated run dirs (name under --out-dir, or a path) of finished train_vit.py runs; each "
+                        "is rebuilt from its results.json args and model.pt, frozen, eval mode, bf16 autocast. The "
+                        "teacher sees exactly the student's input batch (after crop/RandAug/erasing/MixUp/CutMix)")
+    g.add_argument("--teacher-avg", default="prob", choices=["prob", "logit"],
+                   help="ensemble: prob = mean of softmax(z_i/tau) (passed to the loss as tau*log(mean prob), which is "
+                        "exact for soft/hard); logit = mean of the raw logits")
+    g.add_argument("--kd", default="soft", choices=["soft", "hard", "lsd", "dist"],
+                   help="KD loss (finetune.kd_loss): soft = KL(p_t||p_s) * tau^2; hard = CE(argmax teacher) (DeiT); "
+                        "lsd = logit-standardized KL; dist = DIST (Pearson)")
+    g.add_argument("--kd-alpha", type=float, default=0.5,
+                   help="loss = (1 - a) * CE(label/mix target) + a * KD; 1.0 = labels off (function matching)")
+    g.add_argument("--kd-tau", type=float, default=1.0)
+    g.add_argument("--self-kd", default=None, choices=["ema"],
+                   help="self-distillation: teacher = EMA of the student (eval mode, same batch); alpha ramps "
+                        "PS-KD-style a_t = --self-kd-alpha * epoch / epochs")
+    g.add_argument("--self-kd-decay", type=float, default=0.999, help="EMA decay per optimizer step")
+    g.add_argument("--self-kd-alpha", type=float, default=0.8, help="final PS-KD alpha (alpha_T)")
+    return p.parse_args(argv)
 
 
 # --------------------------------------------------------------------------- data
@@ -615,6 +635,24 @@ def build_model(args, num_classes, img_size=32):
     return m
 
 
+def load_teachers(spec, args, num_classes, img_size, device):
+    """Frozen eval-mode teachers from finished runs. Each run's architecture comes from its results.json args
+    (missing keys = this file's defaults, so older runs still build); weights from model.pt."""
+    defaults = vars(parse_args([]))
+    teachers = []
+    for run in spec.split(","):
+        d = run if os.path.isdir(run) else os.path.join(args.out_dir, run)
+        with open(os.path.join(d, "results.json")) as f:
+            targs = argparse.Namespace(**{**defaults, **json.load(f)["args"]})
+        tm = build_model(targs, num_classes, img_size)
+        sd = torch.load(os.path.join(d, "model.pt"), map_location="cpu")
+        tm.load_state_dict({k.removeprefix("_orig_mod."): v for k, v in sd.items()})
+        tm.to(device).eval().requires_grad_(False)
+        print(f"teacher {d}: {targs.model} {sum(p.numel() for p in tm.parameters()) / 1e6:.2f}M")
+        teachers.append(tm)
+    return teachers
+
+
 def make_optimizer(model, args, fused):
     skip = set(getattr(model, "no_weight_decay", lambda: set())())  # pos_embed, cls_token
     decay, no_decay = [], []
@@ -753,6 +791,43 @@ def main():
         train_model = model if args.no_compile else torch.compile(
             model, mode="reduce-overhead" if args.cudagraphs else None)
 
+    # ---- distillation setup (no-op when --teacher / --self-kd are off)
+    teachers, ema, teacher_fn, kd_info = [], None, None, {}
+    assert not (args.teacher and args.self_kd), "--teacher and --self-kd are exclusive"
+    if args.teacher or args.self_kd:
+        from finetune import kd_loss  # finetune.py imports this module; lazy import avoids the cycle
+
+        if args.teacher:
+            teachers = load_teachers(args.teacher, args, num_classes, img_size, device)
+        else:
+            import copy
+
+            ema = copy.deepcopy(model).eval().requires_grad_(False)
+            teachers = [ema]
+            ema_p, mod_p = list(ema.parameters()), list(model.parameters())
+        tau = args.kd_tau
+
+        def teacher_fwd(x):
+            zs = [tm(x).float() for tm in teachers]
+            if len(zs) == 1:
+                return zs[0]
+            if args.teacher_avg == "logit":
+                return torch.stack(zs).mean(0)
+            # tau * log(mean_i softmax(z_i / tau)): softmax(this / tau) is the mean probability
+            return tau * torch.logsumexp(torch.stack([F.log_softmax(z / tau, -1) for z in zs]), 0)
+
+        rd_teacher = any(type(tm).__name__.startswith("Recurrent") for tm in teachers)
+        teacher_fn = teacher_fwd if (args.no_compile or rd_teacher) else torch.compile(
+            teacher_fwd, mode="reduce-overhead" if args.cudagraphs else None)
+        kd_info = {"teacher": args.teacher, "self_kd": args.self_kd, "kd": args.kd, "kd_tau": tau,
+                   "n_teachers": len(teachers),
+                   "teacher_params_M": sum(p.numel() for tm in teachers for p in tm.parameters()) / 1e6}
+        print(f"KD: {kd_info}" + (f" alpha {args.kd_alpha}" if args.teacher else
+                                   f" PS-KD alpha 0..{args.self_kd_alpha}, EMA decay {args.self_kd_decay}"))
+
+    def kd_alpha(epoch):
+        return args.kd_alpha if args.teacher else args.self_kd_alpha * epoch / args.epochs
+
     # resume: ckpt.pt holds everything needed to continue exactly (model, opt, sched, RNGs, history)
     ckpt_path = os.path.join(out_dir, "ckpt.pt")
     history, best_val, start_epoch, elapsed, wb_id = [], 0.0, 1, 0.0, None
@@ -767,6 +842,8 @@ def main():
         if device == "cuda" and ck["cuda_rng"] is not None:
             torch.cuda.set_rng_state_all(ck["cuda_rng"])
         rng.bit_generator.state = ck["np_rng"]
+        if ema is not None:
+            ema.load_state_dict(ck["ema"])
         print(f"Resumed from {ckpt_path}: continuing at epoch {start_epoch}/{args.epochs}")
 
     wb = None
@@ -783,8 +860,20 @@ def main():
               "elapsed": elapsed + time.time() - t_start, "torch_rng": torch.get_rng_state(),
               "cuda_rng": torch.cuda.get_rng_state_all() if device == "cuda" else None,
               "np_rng": rng.bit_generator.state}
+        if ema is not None:
+            ck["ema"] = ema.state_dict()
         torch.save(ck, ckpt_path + ".tmp")
         os.replace(ckpt_path + ".tmp", ckpt_path)
+
+    if args.teacher and start_epoch == 1:  # sanity check: the (ensemble) teacher's clean test accuracy
+        correct = torch.zeros((), device=device)
+        with torch.no_grad():
+            for k in range(0, xte.size(0), args.eval_bs):
+                with amp():
+                    z = teacher_fwd(normalize(xte[k:k + args.eval_bs], mean, std))
+                correct += (z.argmax(1) == yte[k:k + args.eval_bs]).sum()
+        kd_info["teacher_val_acc"] = 100.0 * correct.item() / xte.size(0)
+        print(f"teacher val acc: {kd_info['teacher_val_acc']:.2f}%")
 
     t_start = time.time()
     for epoch in range(start_epoch, args.epochs + 1):
@@ -794,6 +883,9 @@ def main():
         else:
             perm = torch.randperm(n_train, device=device)
         loss_sum = torch.zeros((), device=device)
+        kd_sum = torch.zeros((), device=device)
+        agree_sum = torch.zeros((), device=device)
+        a_kd = kd_alpha(epoch) if teacher_fn else 0.0
         if device == "cuda":
             torch.cuda.synchronize()
         t0 = time.time()
@@ -818,9 +910,17 @@ def main():
             if not (0 < args.mix_off_epoch <= epoch):
                 x, t = mix_batch(x, t, args, rng)
 
+            if teacher_fn:  # same (augmented, mixed) batch as the student
+                with torch.no_grad(), amp():
+                    t_logits = teacher_fn(x).clone()  # clone: CUDA-graph outputs are reused on the next replay
             with amp():
                 logits = train_model(x)
             loss = torch.sum(-t * F.log_softmax(logits.float(), dim=-1), dim=-1).mean()
+            if teacher_fn:
+                l_kd = kd_loss(logits, t_logits, args.kd, args.kd_tau)
+                loss = (1.0 - a_kd) * loss + a_kd * l_kd
+                kd_sum += l_kd.detach()
+                agree_sum += (logits.detach().argmax(1) == t_logits.argmax(1)).float().mean()
 
             opt.zero_grad(set_to_none=True)
             loss.backward()
@@ -828,6 +928,8 @@ def main():
                 torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)
             opt.step()
             sched.step()
+            if ema is not None:  # graph-safe, no host sync
+                torch._foreach_lerp_(ema_p, mod_p, 1.0 - args.self_kd_decay)
             loss_sum += loss.detach()
             gstep = (epoch - 1) * steps_per_epoch + k + 1
             if wb and args.log_every_steps > 0 and gstep % args.log_every_steps == 0:
@@ -842,9 +944,14 @@ def main():
         rec = {"epoch": epoch, "train_loss": train_loss, "lr": lr_now, "epoch_sec": dt, "img_per_sec": ips}
         if args.moe:
             rec.update(moe.epoch_stats(model))
+        if teacher_fn:
+            rec.update(kd_loss=kd_sum.item() / steps_per_epoch, kd_agree=agree_sum.item() / steps_per_epoch,
+                       kd_alpha=a_kd)
 
         line = (f"ep {epoch:4d}/{args.epochs} | loss {train_loss:.4f} | lr {lr_now:.2e} | "
                 f"{dt:6.2f}s | {ips:9.0f} img/s")
+        if teacher_fn:
+            line += f" | kd {rec['kd_loss']:.4f} agree {rec['kd_agree']:.3f} a {a_kd:.2f}"
         if stream:
             line += f" | loader wait {stream.wait_s:.1f}s"
             stream.wait_s = 0.0
@@ -858,6 +965,10 @@ def main():
             best_val = max(best_val, val)
             rec.update(val_acc=val, train_acc_clean=tr_acc)
             line += f" | train acc {tr_acc:6.2f} | val acc {val:6.2f}"
+            if ema is not None:  # the self-KD teacher is itself a weight-EMA model: track it too
+                rec["ema_val_acc"] = evaluate(ema, xte, yte, mean, std, amp, args.eval_bs)
+                ema.eval()  # evaluate() leaves its model in train mode
+                line += f" | ema val {rec['ema_val_acc']:6.2f}"
         print(line, flush=True)
         history.append(rec)
         if wb:
@@ -883,12 +994,19 @@ def main():
         "best_val_acc": best_val,
         "history": history,
     }
+    if kd_info:
+        summary["kd"] = kd_info
+    if ema is not None:
+        summary["final_ema_val_acc"] = final.get("ema_val_acc")
     if xtest is not None:
         summary["final_test_acc"] = evaluate(model, xtest, ytest, mean, std, amp, args.eval_bs)
         print(f"final test acc (scored once): {summary['final_test_acc']:.2f}%")
     with open(os.path.join(out_dir, "results.json"), "w") as f:
         json.dump(summary, f, indent=2)
     torch.save(model.state_dict(), os.path.join(out_dir, "model.pt"))
+    if ema is not None:
+        torch.save(ema.state_dict(), os.path.join(out_dir, "model_ema.pt"))
+        print(f"EMA (self-KD teacher) final val {summary['final_ema_val_acc']}")
     if not args.keep_ckpt and os.path.exists(ckpt_path):
         os.remove(ckpt_path)
     if args.moe:
