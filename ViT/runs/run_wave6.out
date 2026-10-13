@@ -1081,3 +1081,35 @@ ep   26/30 | loss 4.8703 | lr 5.58e-05 | 2178.49s |      5077 img/s | loader wai
 ep   27/30 | loss 4.8021 | lr 3.59e-05 | 2212.23s |      5000 img/s | loader wait 1.1s
 ep   28/30 | loss 4.7408 | lr 2.16e-05 | 2212.65s |      4999 img/s | loader wait 1.1s
 ep   29/30 | loss 4.6940 | lr 1.29e-05 | 2172.34s |      5091 img/s | loader wait 1.2s
+ep   30/30 | loss 4.6655 | lr 1.00e-05 | 2163.64s |      5112 img/s | loader wait 1.1s | train acc  32.85 | val acc  30.32
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇███
+wandb:       epoch_sec ▃▂▃▃▃▃▃▃▃▃▃▃▃▃▂▂▂▁▁▁██▆▆▂▁▂▂▁▁
+wandb:     img_per_sec ▅▆▆▆▆▆▅▅▅▅▅▆▆▆▇▇▇███▁▁▂▃▇█▇▇██
+wandb:              lr █████▇▇▇▇▆▆▆▅▅▅▄▄▄▃▃▃▂▂▂▂▁▁▁▁▁
+wandb: train_acc_clean ▁▂▃▄▆█
+wandb:      train_loss █▅▄▄▄▄▄▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁
+wandb:         val_acc ▁▂▃▅▇█
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 30.318
+wandb:           epoch 30
+wandb:       epoch_sec 2163.63611
+wandb:     img_per_sec 5111.86885
+wandb:              lr 1e-05
+wandb:   total_minutes 1156.6606
+wandb: train_acc_clean 32.85
+wandb:      train_loss 4.66549
+wandb:         val_acc 30.318
+wandb: 
+wandb: 🚀 View run in21kpre_slvit_spt_p8 at: https://wandb.ai/softeye/vision_transformers/runs/6947e39b
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/in21kpre_slvit_spt_p8/wandb/run-20261013_040747-6947e39b/logs
+
+Done in 1156.7 min. final val 30.32% | best val 30.32% | clean train 32.85%
+Steady state (excl. epoch 1): 2290.27 s/epoch, 4,829 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/in21kpre_slvit_spt_p8
