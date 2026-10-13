@@ -2482,3 +2482,41 @@ ep  990/1000 | loss 0.5737 | lr 1.01e-05 |  12.61s |      3959 img/s | train acc
 ep  991/1000 | loss 0.5757 | lr 1.01e-05 |  10.54s |      4736 img/s
 ep  992/1000 | loss 0.5733 | lr 1.01e-05 |   9.81s |      5086 img/s
 ep  993/1000 | loss 0.5735 | lr 1.01e-05 |  10.28s |      4856 img/s
+ep  994/1000 | loss 0.5736 | lr 1.00e-05 |  11.59s |      4307 img/s
+ep  995/1000 | loss 0.5721 | lr 1.00e-05 |  10.21s |      4887 img/s
+ep  996/1000 | loss 0.5743 | lr 1.00e-05 |   9.82s |      5082 img/s
+ep  997/1000 | loss 0.5752 | lr 1.00e-05 |  11.05s |      4518 img/s
+ep  998/1000 | loss 0.5750 | lr 1.00e-05 |  10.09s |      4949 img/s
+ep  999/1000 | loss 0.5737 | lr 1.00e-05 |  10.45s |      4779 img/s
+ep 1000/1000 | loss 0.5738 | lr 1.00e-05 |  10.52s |      4745 img/s | train acc 100.00 | val acc  96.71
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▃▄▄▄▅▅▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇█
+wandb:       epoch_sec ▃██████████████████████▇▇▇▁▇▇▇▇▇▇▇▇▇▇▇▇▇
+wandb:     img_per_sec ▅▆▅▅▅▅▅▅▅▅▆▅▅▅▅▆▅▆▆▆▆████████████████▇█▁
+wandb:              lr ▃▅▆▇██████▇▇▇▇▆▆▆▆▆▆▆▅▅▅▄▄▄▃▃▂▂▂▁▁▁▁▁▁▁▁
+wandb: train_acc_clean ▁▃▄▅▆▇▇▇▇▇▇▇████████████████████████████
+wandb:      train_loss ██▇▇▇▇▆▆▆▆▅▅▅▅▅▅▅▅▅▅▅▅▅▄▄▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val_acc ▁▃▄▅▆▆▇▇▇▇▇▇▇▇▇█████████████████████████
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 96.87
+wandb:           epoch 1000
+wandb:       epoch_sec 10.5212
+wandb:     img_per_sec 4744.70552
+wandb:              lr 1e-05
+wandb:   total_minutes 171.415
+wandb: train_acc_clean 100
+wandb:      train_loss 0.57382
+wandb:         val_acc 96.71
+wandb: 
+wandb: 🚀 View run c10_spt_slvit_1000ep_s2 at: https://wandb.ai/softeye/vision_transformers/runs/c878303f
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/c10_spt_slvit_1000ep_s2/wandb/run-20261013_132925-c878303f/logs
+
+Done in 171.4 min. final val 96.71% | best val 96.87% | clean train 100.00%
+Steady state (excl. epoch 1): 10.23 s/epoch, 4,881 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/c10_spt_slvit_1000ep_s2
