@@ -120,6 +120,11 @@ def parse_args(argv=None):
                         "training; the test set is scored once at the end as final_test_acc")
     p.add_argument("--r18-stem", default="cifar", choices=["cifar", "stride2"],
                    help="ResNet-18 stem: cifar = 3x3 s1; stride2 = 3x3 s2 (for 64x64 inputs), both no max-pool")
+    p.add_argument("--r18-width", type=int, default=64,
+                   help="resnet18 base width (stage widths w,2w,4w,8w); 64 = standard ResNet-18")
+    p.add_argument("--opt", default="adamw", choices=["adamw", "sgd"], help="optimizer (CNN controls use sgd)")
+    p.add_argument("--momentum", type=float, default=0.9, help="SGD momentum (--opt sgd)")
+    p.add_argument("--nesterov", action="store_true", help="Nesterov momentum (--opt sgd)")
     p.add_argument("--eval-bs", type=int, default=2048)
     p.add_argument("--log-every-steps", type=int, default=0, help="wandb train loss/lr every N steps; 0 = off")
     p.add_argument("--ckpt-every", type=int, default=10, help="save runs/<name>/ckpt.pt every N epochs")
@@ -597,11 +602,18 @@ def build_model(args, num_classes, img_size=32):
     if args.model == "resnet18":
         import timm
 
-        m = timm.create_model("resnet18", num_classes=num_classes, drop_path_rate=args.drop_path)
+        w = getattr(args, "r18_width", 64)  # callers like finetune.py build their own Namespace
+        if w == 64:
+            m = timm.create_model("resnet18", num_classes=num_classes, drop_path_rate=args.drop_path)
+        else:  # width-scaled ResNet-18 (same depth/blocks, stage widths w, 2w, 4w, 8w)
+            from timm.models.resnet import BasicBlock, ResNet
+
+            m = ResNet(BasicBlock, [2, 2, 2, 2], num_classes=num_classes, drop_path_rate=args.drop_path,
+                       stem_width=w, channels=(w, 2 * w, 4 * w, 8 * w))
         # CIFAR stem: 3x3 conv, stride 1, no max-pool (the ImageNet stem throws away 32x32 detail).
         # stride2: same but stride 2, so 64x64 inputs give the same feature-map cost as 32x32 with stride 1.
         stride = 2 if args.r18_stem == "stride2" else 1
-        m.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=stride, padding=1, bias=False)
+        m.conv1 = nn.Conv2d(3, m.bn1.num_features, kernel_size=3, stride=stride, padding=1, bias=False)
         m.maxpool = nn.Identity()
         return m
     from timm.layers import Attention
@@ -664,6 +676,8 @@ def make_optimizer(model, args, fused):
         {"params": decay, "weight_decay": args.weight_decay},
         {"params": no_decay, "weight_decay": 0.0},
     ]
+    if getattr(args, "opt", "adamw") == "sgd":
+        return torch.optim.SGD(groups, lr=args.lr, momentum=args.momentum, nesterov=args.nesterov, fused=fused)
     return torch.optim.AdamW(groups, lr=args.lr, betas=(0.9, 0.999), fused=fused)
 
 
