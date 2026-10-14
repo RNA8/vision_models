@@ -1432,6 +1432,7 @@ def ch_long():
         row("CIFAR-10, ViT-Tiny shape + SPT, 5.4M", "c10_spt_tinyshape_1000ep", "abl_tiny_shape", f"CCT hybrid {P('cct_c10')} (300 ep), 97.48 (1500 ep)"),
         row("CIFAR-10, ViT-Tiny shape, 5.4M", "c10_tinyshape_bf3b_1000ep", "abl_tiny_shape", f"SL-ViT {P('slvit_c10')}; impulse-init ViT-Tiny {P('structinit_c10')}; CCT hybrid {P('cct_c10')} (300 ep), {P('cct5k_c10')} (5000 ep)"),
         row("Tiny-ImageNet 64 px, SL-ViT shape + SPT (patch 8), 2.9M, 300 ep", "tin_spt_slvit_p8_300ep", "tin_p4_tiny", f"SL-ViT {P('slvit_tin')}; Gani et al. {P('gani_tin')} (two-stage); our ResNet-18 {A('tin_r18_full')}"),
+        row("Tiny-ImageNet 64 px, SL-ViT shape + SPT (patch 8), 2.9M, 1000 ep", "tin_spt_slvit_p8_1000ep", "tin_spt_slvit_p8_300ep", f"SL-ViT {P('slvit_tin')}; Gani et al. {P('gani_tin')}"),
         row("Tiny-ImageNet 64 px, ViT-Tiny shape + SPT (patch 8), 5.4M, 300 ep", "tin_spt_tinyshape_p8_300ep", "tin_p4_tiny", ""),
         row("CIFAR-100, recurrent r8 add, 2.7M (500 ep vs 100 ep)", "c100_rd_r8_add_500ep", "c100_rd_r8_add", ""),
         row("CIFAR-100, flat 6-layer control (500 ep vs 100 ep)", "c100_rd_flat6_500ep", "c100_rd_flat6", ""),
