@@ -1,0 +1,74 @@
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/ec100_iformer_t_128/wandb/run-20261011_025827-0422df5b
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ec100_iformer_t_128
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/0422df5b
+GPU: NVIDIA H100 PCIe
+Model: iformer_t.in1k  params: 2.66M  input 32->128px  mean/std [0.485, 0.456, 0.406]/[0.229, 0.224, 0.225]  train images: 50000  batch: 256  steps/epoch: 195
+ep    1/30 | loss 4.5745 | lr 1.68e-04 |  99.18s |     503 img/s
+ep    2/30 | loss 3.8779 | lr 3.34e-04 |  18.07s |    2762 img/s
+ep    3/30 | loss 3.4087 | lr 5.00e-04 |  17.19s |    2905 img/s
+ep    4/30 | loss 3.1735 | lr 4.98e-04 |  17.14s |    2912 img/s
+ep    5/30 | loss 3.1243 | lr 4.93e-04 |  17.14s |    2912 img/s | train acc  69.04 | val acc  66.66 | ema val  64.78
+ep    6/30 | loss 3.0391 | lr 4.85e-04 |  17.16s |    2909 img/s
+ep    7/30 | loss 2.9946 | lr 4.73e-04 |  17.18s |    2907 img/s
+ep    8/30 | loss 2.9703 | lr 4.59e-04 |  17.16s |    2909 img/s
+ep    9/30 | loss 2.9463 | lr 4.42e-04 |  17.18s |    2905 img/s
+ep   10/30 | loss 2.8378 | lr 4.22e-04 |  17.19s |    2904 img/s | train acc  79.29 | val acc  75.35 | ema val  77.31
+ep   11/30 | loss 2.8915 | lr 3.99e-04 |  17.17s |    2907 img/s
+ep   12/30 | loss 2.8326 | lr 3.75e-04 |  17.58s |    2840 img/s
+ep   13/30 | loss 2.7884 | lr 3.49e-04 |  17.09s |    2922 img/s
+ep   14/30 | loss 2.7503 | lr 3.22e-04 |  17.17s |    2907 img/s
+ep   15/30 | loss 2.6780 | lr 2.94e-04 |  17.16s |    2908 img/s | train acc  84.15 | val acc  78.68 | ema val  80.76
+ep   16/30 | loss 2.7612 | lr 2.65e-04 |  17.19s |    2904 img/s
+ep   17/30 | loss 2.7185 | lr 2.36e-04 |  17.16s |    2909 img/s
+ep   18/30 | loss 2.6750 | lr 2.07e-04 |  17.17s |    2907 img/s
+ep   19/30 | loss 2.7061 | lr 1.79e-04 |  17.16s |    2909 img/s
+ep   20/30 | loss 2.6930 | lr 1.52e-04 |  17.15s |    2911 img/s | train acc  88.10 | val acc  82.01 | ema val  81.95
+ep   21/30 | loss 2.6200 | lr 1.26e-04 |  17.15s |    2911 img/s
+ep   22/30 | loss 2.6259 | lr 1.02e-04 |  17.54s |    2846 img/s
+ep   23/30 | loss 2.7024 | lr 7.93e-05 |  17.17s |    2908 img/s
+ep   24/30 | loss 2.5593 | lr 5.94e-05 |  17.19s |    2904 img/s
+ep   25/30 | loss 2.6462 | lr 4.20e-05 |  17.17s |    2907 img/s | train acc  89.48 | val acc  82.94 | ema val  82.63
+ep   26/30 | loss 2.5601 | lr 2.75e-05 |  17.18s |    2907 img/s
+ep   27/30 | loss 2.5405 | lr 1.60e-05 |  17.17s |    2907 img/s
+ep   28/30 | loss 2.5802 | lr 7.73e-06 |  15.80s |    3159 img/s
+ep   29/30 | loss 2.5423 | lr 2.69e-06 |  16.06s |    3107 img/s
+ep   30/30 | loss 2.5985 | lr 1.00e-06 |  16.96s |    2943 img/s | train acc  89.68 | val acc  83.26 | ema val  83.12
+wandb: updating run metadata
+wandb: uploading history steps 28-29, summary, console lines 29-33
+wandb: 
+wandb: Run history:
+wandb:     ema_val_acc ▁▆▇███
+wandb:           epoch ▁▁▁▂▂▂▂▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇███
+wandb:       epoch_sec █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:     img_per_sec ▁▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇██▇
+wandb:              lr ▃▆█████▇▇▇▇▆▆▆▅▅▄▄▃▃▃▂▂▂▂▁▁▁▁▁
+wandb: train_acc_clean ▁▄▆▇██
+wandb:      train_loss █▆▄▃▃▃▃▂▂▂▂▂▂▂▁▂▂▁▂▂▁▁▂▁▁▁▁▁▁▁
+wandb:         val_acc ▁▅▆▇██
+wandb: 
+wandb: Run summary:
+wandb: best_ema_val_acc 83.12
+wandb:     best_val_acc 83.26
+wandb:      ema_val_acc 83.12
+wandb:            epoch 30
+wandb:        epoch_sec 16.96203
+wandb:      img_per_sec 2943.04414
+wandb:               lr 0.0
+wandb:    total_minutes 10.45125
+wandb:  train_acc_clean 89.68
+wandb:       train_loss 2.59851
+wandb:               +1 ...
+wandb: 
+wandb: 🚀 View run ec100_iformer_t_128 at: https://wandb.ai/softeye/vision_transformers/runs/0422df5b
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/ec100_iformer_t_128/wandb/run-20261011_025827-0422df5b/logs
+
+Done in 10.5 min. final val 83.26% | best val 83.26% | final EMA val 83.12% (best 83.12%)
+Steady state: 17.17 s/epoch, 2,907 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/ec100_iformer_t_128

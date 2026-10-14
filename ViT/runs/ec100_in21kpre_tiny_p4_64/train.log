@@ -1,0 +1,90 @@
+GPU: NVIDIA H100 PCIe
+Traceback (most recent call last):
+  File "/home/ubuntu/workspace/vision_models/ViT/finetune.py", line 666, in <module>
+    main()
+  File "/home/ubuntu/workspace/vision_models/ViT/finetune.py", line 461, in main
+    model, spec = load_model(args.init_ckpt, num_classes, R, drop_path=args.drop_path, transfer=True,
+  File "/home/ubuntu/workspace/vision_models/ViT/finetune.py", line 298, in load_model
+    m = build_from_spec(spec, num_classes, img_size, drop_path)
+  File "/home/ubuntu/workspace/vision_models/ViT/finetune.py", line 245, in build_from_spec
+    return build_model(a, num_classes, img_size)
+  File "/home/ubuntu/workspace/vision_models/ViT/train_vit.py", line 505, in build_model
+    if args.spt:
+AttributeError: 'Namespace' object has no attribute 'spt'
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 88cc8810
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/ec100_in21kpre_tiny_p4_64/wandb/run-20261012_160803-88cc8810
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ec100_in21kpre_tiny_p4_64
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/88cc8810
+GPU: NVIDIA H100 PCIe
+init-ckpt: loaded 164 tensors; dropped ['head.weight', 'head.bias']; re-initialised ['head.weight', 'head.bias']
+loaded runs/in21kpre_tiny_p8/model.pt
+Model: runs/in21kpre_tiny_p8  params: 5.42M  input 32->64px  mean/std [0.485, 0.456, 0.406]/[0.229, 0.224, 0.225]  train images: 50000  batch: 256  steps/epoch: 195
+ep    1/30 | loss 4.7172 | lr 1.68e-04 |  36.99s |    1349 img/s
+ep    2/30 | loss 4.0721 | lr 3.34e-04 |  30.67s |    1627 img/s
+ep    3/30 | loss 3.6593 | lr 5.00e-04 |  30.72s |    1625 img/s
+ep    4/30 | loss 3.4537 | lr 4.98e-04 |  30.75s |    1623 img/s
+ep    5/30 | loss 3.3876 | lr 4.93e-04 |  30.74s |    1624 img/s | train acc  68.74 | val acc  66.28 | ema val  59.51
+ep    6/30 | loss 3.2754 | lr 4.85e-04 |  30.75s |    1623 img/s
+ep    7/30 | loss 3.2289 | lr 4.73e-04 |  30.73s |    1624 img/s
+ep    8/30 | loss 3.2066 | lr 4.59e-04 |  30.79s |    1621 img/s
+ep    9/30 | loss 3.1570 | lr 4.42e-04 |  30.81s |    1620 img/s
+ep   10/30 | loss 3.0285 | lr 4.22e-04 |  30.74s |    1624 img/s | train acc  78.71 | val acc  74.06 | ema val  76.84
+ep   11/30 | loss 3.0772 | lr 3.99e-04 |  30.77s |    1622 img/s
+ep   12/30 | loss 2.9969 | lr 3.75e-04 |  30.71s |    1625 img/s
+ep   13/30 | loss 2.9411 | lr 3.49e-04 |  30.73s |    1624 img/s
+ep   14/30 | loss 2.8899 | lr 3.22e-04 |  30.70s |    1626 img/s
+ep   15/30 | loss 2.7968 | lr 2.94e-04 |  30.68s |    1627 img/s | train acc  85.40 | val acc  78.66 | ema val  80.65
+ep   16/30 | loss 2.8739 | lr 2.65e-04 |  30.75s |    1623 img/s
+ep   17/30 | loss 2.8193 | lr 2.36e-04 |  30.76s |    1623 img/s
+ep   18/30 | loss 2.7558 | lr 2.07e-04 |  30.71s |    1626 img/s
+ep   19/30 | loss 2.7772 | lr 1.79e-04 |  30.83s |    1619 img/s
+ep   20/30 | loss 2.7481 | lr 1.52e-04 |  30.75s |    1623 img/s | train acc  89.25 | val acc  81.91 | ema val  82.33
+ep   21/30 | loss 2.6586 | lr 1.26e-04 |  30.73s |    1624 img/s
+ep   22/30 | loss 2.6532 | lr 1.02e-04 |  30.73s |    1625 img/s
+ep   23/30 | loss 2.7222 | lr 7.93e-05 |  30.73s |    1625 img/s
+ep   24/30 | loss 2.5614 | lr 5.94e-05 |  30.76s |    1623 img/s
+ep   25/30 | loss 2.6524 | lr 4.20e-05 |  30.73s |    1624 img/s | train acc  91.49 | val acc  83.61 | ema val  83.78
+ep   26/30 | loss 2.5477 | lr 2.75e-05 |  30.69s |    1626 img/s
+ep   27/30 | loss 2.5232 | lr 1.60e-05 |  30.78s |    1622 img/s
+ep   28/30 | loss 2.5688 | lr 7.73e-06 |  30.77s |    1623 img/s
+ep   29/30 | loss 2.5056 | lr 2.69e-06 |  30.71s |    1626 img/s
+ep   30/30 | loss 2.5835 | lr 1.00e-06 |  30.72s |    1625 img/s | train acc  92.19 | val acc  84.27 | ema val  84.02
+wandb: updating run metadata
+wandb: uploading wandb-summary.json; uploading config.yaml; uploading output.log
+wandb: 
+wandb: Run history:
+wandb:     ema_val_acc ▁▆▇███
+wandb:           epoch ▁▁▁▂▂▂▂▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇███
+wandb:       epoch_sec █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:     img_per_sec ▁█████████████████████████████
+wandb:              lr ▃▆█████▇▇▇▇▆▆▆▅▅▄▄▃▃▃▂▂▂▂▁▁▁▁▁
+wandb: train_acc_clean ▁▄▆▇██
+wandb:      train_loss █▆▅▄▄▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▁▁▂▁▁▁▁▁▁▁
+wandb:         val_acc ▁▄▆▇██
+wandb: 
+wandb: Run summary:
+wandb: best_ema_val_acc 84.02
+wandb:     best_val_acc 84.27
+wandb:      ema_val_acc 84.02
+wandb:            epoch 30
+wandb:        epoch_sec 30.71519
+wandb:      img_per_sec 1625.25466
+wandb:               lr 0.0
+wandb:    total_minutes 16.34832
+wandb:  train_acc_clean 92.19
+wandb:       train_loss 2.58346
+wandb:               +1 ...
+wandb: 
+wandb: 🚀 View run ec100_in21kpre_tiny_p4_64 at: https://wandb.ai/softeye/vision_transformers/runs/88cc8810
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/ec100_in21kpre_tiny_p4_64/wandb/run-20261012_160803-88cc8810/logs
+
+Done in 16.3 min. final val 84.27% | best val 84.27% | final EMA val 84.02% (best 84.02%)
+Steady state: 30.73 s/epoch, 1,624 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/ec100_in21kpre_tiny_p4_64

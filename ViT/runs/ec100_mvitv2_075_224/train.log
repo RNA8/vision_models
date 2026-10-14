@@ -1,0 +1,75 @@
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run ffad8afd
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/ec100_mvitv2_075_224/wandb/run-20261011_042635-ffad8afd
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ec100_mvitv2_075_224
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/ffad8afd
+GPU: NVIDIA H100 PCIe
+Model: mobilevitv2_075.cvnets_in1k  params: 2.52M  input 32->224px  mean/std [0.0, 0.0, 0.0]/[1.0, 1.0, 1.0]  train images: 50000  batch: 256  steps/epoch: 195
+ep    1/30 | loss 4.5993 | lr 1.68e-04 | 150.72s |     331 img/s
+ep    2/30 | loss 4.3532 | lr 3.34e-04 |  64.11s |     779 img/s
+ep    3/30 | loss 3.9526 | lr 5.00e-04 |  73.97s |     675 img/s
+ep    4/30 | loss 3.6983 | lr 4.98e-04 |  73.79s |     677 img/s
+ep    5/30 | loss 3.6173 | lr 4.93e-04 |  69.80s |     715 img/s | train acc  64.71 | val acc  62.72 | ema val  53.63
+ep    6/30 | loss 3.5236 | lr 4.85e-04 |  62.65s |     797 img/s
+ep    7/30 | loss 3.4743 | lr 4.73e-04 |  73.07s |     683 img/s
+ep    8/30 | loss 3.4540 | lr 4.59e-04 |  74.42s |     671 img/s
+ep    9/30 | loss 3.4193 | lr 4.42e-04 |  74.35s |     671 img/s
+ep   10/30 | loss 3.3264 | lr 4.22e-04 |  74.11s |     674 img/s | train acc  76.02 | val acc  72.75 | ema val  68.98
+ep   11/30 | loss 3.3814 | lr 3.99e-04 |  74.57s |     669 img/s
+ep   12/30 | loss 3.3217 | lr 3.75e-04 |  72.70s |     687 img/s
+ep   13/30 | loss 3.2814 | lr 3.49e-04 |  49.31s |    1012 img/s
+ep   14/30 | loss 3.2583 | lr 3.22e-04 |  46.44s |    1075 img/s
+ep   15/30 | loss 3.1997 | lr 2.94e-04 |  46.64s |    1070 img/s | train acc  79.49 | val acc  75.80 | ema val  74.23
+ep   16/30 | loss 3.2762 | lr 2.65e-04 |  58.96s |     847 img/s
+ep   17/30 | loss 3.2585 | lr 2.36e-04 |  70.64s |     707 img/s
+ep   18/30 | loss 3.2154 | lr 2.07e-04 |  89.44s |     558 img/s
+ep   19/30 | loss 3.2373 | lr 1.79e-04 |  89.40s |     558 img/s
+ep   20/30 | loss 3.2329 | lr 1.52e-04 |  89.36s |     559 img/s | train acc  81.61 | val acc  77.36 | ema val  76.61
+ep   21/30 | loss 3.1808 | lr 1.26e-04 |  89.23s |     559 img/s
+ep   22/30 | loss 3.1815 | lr 1.02e-04 |  89.25s |     559 img/s
+ep   23/30 | loss 3.2595 | lr 7.93e-05 |  89.80s |     556 img/s
+ep   24/30 | loss 3.1402 | lr 5.94e-05 |  90.20s |     553 img/s
+ep   25/30 | loss 3.2215 | lr 4.20e-05 |  78.50s |     636 img/s | train acc  82.10 | val acc  77.61 | ema val  77.35
+ep   26/30 | loss 3.1505 | lr 2.75e-05 |  87.52s |     570 img/s
+ep   27/30 | loss 3.1296 | lr 1.60e-05 |  87.66s |     569 img/s
+ep   28/30 | loss 3.1782 | lr 7.73e-06 |  88.35s |     565 img/s
+ep   29/30 | loss 3.1367 | lr 2.69e-06 |  88.44s |     564 img/s
+ep   30/30 | loss 3.1949 | lr 1.00e-06 |  88.19s |     566 img/s | train acc  82.60 | val acc  78.09 | ema val  77.71
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:     ema_val_acc ▁▅▇███
+wandb:           epoch ▁▁▁▂▂▂▂▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇███
+wandb:       epoch_sec █▂▃▃▃▂▃▃▃▃▃▃▁▁▁▂▃▄▄▄▄▄▄▄▃▄▄▄▄▄
+wandb:     img_per_sec ▁▅▄▄▅▅▄▄▄▄▄▄▇██▆▅▃▃▃▃▃▃▃▄▃▃▃▃▃
+wandb:              lr ▃▆█████▇▇▇▇▆▆▆▅▅▄▄▃▃▃▂▂▂▂▁▁▁▁▁
+wandb: train_acc_clean ▁▅▇███
+wandb:      train_loss █▇▅▄▃▃▃▃▂▂▂▂▂▂▁▂▂▁▂▁▁▁▂▁▁▁▁▁▁▁
+wandb:         val_acc ▁▆▇███
+wandb: 
+wandb: Run summary:
+wandb: best_ema_val_acc 77.71
+wandb:     best_val_acc 78.09
+wandb:      ema_val_acc 77.71
+wandb:            epoch 30
+wandb:        epoch_sec 88.19137
+wandb:      img_per_sec 566.04176
+wandb:               lr 0.0
+wandb:    total_minutes 43.81191
+wandb:  train_acc_clean 82.6
+wandb:       train_loss 3.19488
+wandb:               +1 ...
+wandb: 
+wandb: 🚀 View run ec100_mvitv2_075_224 at: https://wandb.ai/softeye/vision_transformers/runs/ffad8afd
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/ec100_mvitv2_075_224/wandb/run-20261011_042635-ffad8afd/logs
+
+Done in 43.8 min. final val 78.09% | best val 78.09% | final EMA val 77.71% (best 77.71%)
+Steady state: 74.42 s/epoch, 671 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/ec100_mvitv2_075_224

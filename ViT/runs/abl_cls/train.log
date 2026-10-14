@@ -1,0 +1,342 @@
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 14a74809
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/abl_cls/wandb/run-20261011_005816-14a74809
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run abl_cls
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/14a74809
+GPU: NVIDIA H100 PCIe
+Model: slvit  params: 2.70M  train images: 50000  batch: 128  steps/epoch: 390
+ep    1/300 | loss 2.3232 | lr 1.67e-05 |  40.92s |      1220 img/s  (includes torch.compile warm-up)
+ep    2/300 | loss 2.3057 | lr 3.34e-05 |  15.58s |      3204 img/s
+ep    3/300 | loss 2.2856 | lr 5.00e-05 |  15.57s |      3206 img/s
+ep    4/300 | loss 2.2656 | lr 6.67e-05 |  15.51s |      3218 img/s
+ep    5/300 | loss 2.2470 | lr 8.34e-05 |  13.06s |      3823 img/s | train acc  27.89 | val acc  28.18
+ep    6/300 | loss 2.2333 | lr 1.00e-04 |  12.99s |      3843 img/s
+ep    7/300 | loss 2.2200 | lr 1.17e-04 |  14.84s |      3364 img/s
+ep    8/300 | loss 2.2096 | lr 1.33e-04 |  15.61s |      3198 img/s
+ep    9/300 | loss 2.1986 | lr 1.50e-04 |  15.54s |      3213 img/s
+ep   10/300 | loss 2.1913 | lr 1.67e-04 |  15.56s |      3207 img/s | train acc  40.24 | val acc  39.97
+ep   11/300 | loss 2.1780 | lr 1.83e-04 |  15.61s |      3197 img/s
+ep   12/300 | loss 2.1684 | lr 2.00e-04 |  15.30s |      3263 img/s
+ep   13/300 | loss 2.1557 | lr 2.17e-04 |  15.59s |      3203 img/s
+ep   14/300 | loss 2.1434 | lr 2.33e-04 |  15.57s |      3206 img/s
+ep   15/300 | loss 2.1255 | lr 2.50e-04 |  15.58s |      3204 img/s | train acc  46.46 | val acc  46.64
+ep   16/300 | loss 2.1235 | lr 2.67e-04 |  15.57s |      3206 img/s
+ep   17/300 | loss 2.1125 | lr 2.83e-04 |  15.56s |      3209 img/s
+ep   18/300 | loss 2.1000 | lr 3.00e-04 |  15.59s |      3201 img/s
+ep   19/300 | loss 2.0948 | lr 3.17e-04 |  15.55s |      3211 img/s
+ep   20/300 | loss 2.0737 | lr 3.33e-04 |  15.56s |      3208 img/s | train acc  53.50 | val acc  52.74
+ep   21/300 | loss 2.0795 | lr 3.50e-04 |  15.55s |      3209 img/s
+ep   22/300 | loss 2.0723 | lr 3.67e-04 |  15.60s |      3201 img/s
+ep   23/300 | loss 2.0709 | lr 3.83e-04 |  15.60s |      3199 img/s
+ep   24/300 | loss 2.0597 | lr 4.00e-04 |  15.26s |      3272 img/s
+ep   25/300 | loss 2.0507 | lr 4.17e-04 |  15.58s |      3204 img/s | train acc  56.98 | val acc  55.41
+ep   26/300 | loss 2.0405 | lr 4.33e-04 |  15.52s |      3216 img/s
+ep   27/300 | loss 2.0407 | lr 4.50e-04 |  15.56s |      3208 img/s
+ep   28/300 | loss 2.0173 | lr 4.67e-04 |  15.57s |      3207 img/s
+ep   29/300 | loss 2.0175 | lr 4.83e-04 |  15.53s |      3215 img/s
+ep   30/300 | loss 2.0189 | lr 5.00e-04 |  15.58s |      3204 img/s | train acc  59.89 | val acc  58.97
+ep   31/300 | loss 2.0024 | lr 5.00e-04 |  15.58s |      3203 img/s
+ep   32/300 | loss 1.9934 | lr 5.00e-04 |  15.60s |      3201 img/s
+ep   33/300 | loss 1.9902 | lr 5.00e-04 |  15.59s |      3202 img/s
+ep   34/300 | loss 1.9834 | lr 5.00e-04 |  15.63s |      3194 img/s
+ep   35/300 | loss 1.9606 | lr 5.00e-04 |  15.56s |      3207 img/s | train acc  64.69 | val acc  62.48
+ep   36/300 | loss 1.9624 | lr 4.99e-04 |  15.56s |      3208 img/s
+ep   37/300 | loss 1.9716 | lr 4.99e-04 |  15.57s |      3207 img/s
+ep   38/300 | loss 1.9403 | lr 4.99e-04 |  15.59s |      3203 img/s
+ep   39/300 | loss 1.9466 | lr 4.99e-04 |  15.56s |      3209 img/s
+ep   40/300 | loss 1.9265 | lr 4.98e-04 |  15.60s |      3201 img/s | train acc  68.10 | val acc  66.12
+ep   41/300 | loss 1.9202 | lr 4.98e-04 |  15.56s |      3209 img/s
+ep   42/300 | loss 1.9283 | lr 4.98e-04 |  15.60s |      3200 img/s
+ep   43/300 | loss 1.9255 | lr 4.97e-04 |  15.60s |      3201 img/s
+ep   44/300 | loss 1.9214 | lr 4.97e-04 |  15.58s |      3204 img/s
+ep   45/300 | loss 1.9282 | lr 4.96e-04 |  15.58s |      3204 img/s | train acc  71.83 | val acc  69.42
+ep   46/300 | loss 1.9252 | lr 4.96e-04 |  15.57s |      3207 img/s
+ep   47/300 | loss 1.9008 | lr 4.95e-04 |  15.56s |      3209 img/s
+ep   48/300 | loss 1.8973 | lr 4.95e-04 |  15.59s |      3201 img/s
+ep   49/300 | loss 1.8983 | lr 4.94e-04 |  15.57s |      3206 img/s
+ep   50/300 | loss 1.8658 | lr 4.93e-04 |  15.55s |      3209 img/s | train acc  73.58 | val acc  71.15
+ep   51/300 | loss 1.8905 | lr 4.93e-04 |  15.55s |      3210 img/s
+ep   52/300 | loss 1.8675 | lr 4.92e-04 |  15.56s |      3208 img/s
+ep   53/300 | loss 1.8609 | lr 4.91e-04 |  15.59s |      3203 img/s
+ep   54/300 | loss 1.8725 | lr 4.91e-04 |  15.60s |      3200 img/s
+ep   55/300 | loss 1.8776 | lr 4.90e-04 |  15.56s |      3209 img/s | train acc  74.78 | val acc  72.40
+ep   56/300 | loss 1.8824 | lr 4.89e-04 |  15.57s |      3206 img/s
+ep   57/300 | loss 1.8499 | lr 4.88e-04 |  15.56s |      3208 img/s
+ep   58/300 | loss 1.8365 | lr 4.87e-04 |  15.60s |      3200 img/s
+ep   59/300 | loss 1.8518 | lr 4.86e-04 |  15.58s |      3204 img/s
+ep   60/300 | loss 1.8423 | lr 4.85e-04 |  15.56s |      3208 img/s | train acc  75.59 | val acc  73.61
+ep   61/300 | loss 1.8400 | lr 4.84e-04 |  15.58s |      3203 img/s
+ep   62/300 | loss 1.8362 | lr 4.83e-04 |  15.66s |      3188 img/s
+ep   63/300 | loss 1.8439 | lr 4.82e-04 |  15.54s |      3213 img/s
+ep   64/300 | loss 1.8440 | lr 4.81e-04 |  15.64s |      3193 img/s
+ep   65/300 | loss 1.8230 | lr 4.80e-04 |  15.58s |      3204 img/s | train acc  77.49 | val acc  75.35
+ep   66/300 | loss 1.8302 | lr 4.79e-04 |  15.57s |      3205 img/s
+ep   67/300 | loss 1.8322 | lr 4.78e-04 |  15.51s |      3219 img/s
+ep   68/300 | loss 1.8160 | lr 4.76e-04 |  15.55s |      3211 img/s
+ep   69/300 | loss 1.7951 | lr 4.75e-04 |  15.58s |      3204 img/s
+ep   70/300 | loss 1.8118 | lr 4.74e-04 |  15.57s |      3207 img/s | train acc  79.13 | val acc  76.84
+ep   71/300 | loss 1.8137 | lr 4.73e-04 |  15.38s |      3247 img/s
+ep   72/300 | loss 1.8162 | lr 4.71e-04 |  12.87s |      3879 img/s
+ep   73/300 | loss 1.8037 | lr 4.70e-04 |  12.85s |      3884 img/s
+ep   74/300 | loss 1.7760 | lr 4.69e-04 |  12.81s |      3897 img/s
+ep   75/300 | loss 1.7869 | lr 4.67e-04 |  12.94s |      3859 img/s | train acc  79.87 | val acc  78.04
+ep   76/300 | loss 1.7876 | lr 4.66e-04 |  12.73s |      3921 img/s
+ep   77/300 | loss 1.7623 | lr 4.64e-04 |  12.82s |      3893 img/s
+ep   78/300 | loss 1.7691 | lr 4.63e-04 |  13.43s |      3716 img/s
+ep   79/300 | loss 1.7823 | lr 4.61e-04 |  13.29s |      3756 img/s
+ep   80/300 | loss 1.7675 | lr 4.60e-04 |  15.48s |      3225 img/s | train acc  81.29 | val acc  79.27
+ep   81/300 | loss 1.7694 | lr 4.58e-04 |  15.55s |      3210 img/s
+ep   82/300 | loss 1.7563 | lr 4.57e-04 |  15.54s |      3213 img/s
+ep   83/300 | loss 1.7720 | lr 4.55e-04 |  15.60s |      3200 img/s
+ep   84/300 | loss 1.7820 | lr 4.53e-04 |  15.59s |      3203 img/s
+ep   85/300 | loss 1.7600 | lr 4.52e-04 |  15.56s |      3207 img/s | train acc  82.49 | val acc  79.67
+ep   86/300 | loss 1.7563 | lr 4.50e-04 |  15.53s |      3215 img/s
+ep   87/300 | loss 1.7389 | lr 4.48e-04 |  15.54s |      3213 img/s
+ep   88/300 | loss 1.7517 | lr 4.46e-04 |  15.52s |      3216 img/s
+ep   89/300 | loss 1.7513 | lr 4.45e-04 |  15.07s |      3313 img/s
+ep   90/300 | loss 1.7462 | lr 4.43e-04 |  13.05s |      3826 img/s | train acc  84.04 | val acc  81.32
+ep   91/300 | loss 1.7335 | lr 4.41e-04 |  13.00s |      3841 img/s
+ep   92/300 | loss 1.7406 | lr 4.39e-04 |  14.55s |      3430 img/s
+ep   93/300 | loss 1.7511 | lr 4.37e-04 |  15.53s |      3214 img/s
+ep   94/300 | loss 1.7636 | lr 4.35e-04 |  15.58s |      3204 img/s
+ep   95/300 | loss 1.7343 | lr 4.33e-04 |  15.49s |      3222 img/s | train acc  84.30 | val acc  81.83
+ep   96/300 | loss 1.7140 | lr 4.31e-04 |  15.50s |      3221 img/s
+ep   97/300 | loss 1.7343 | lr 4.29e-04 |  15.25s |      3273 img/s
+ep   98/300 | loss 1.7288 | lr 4.27e-04 |  15.50s |      3221 img/s
+ep   99/300 | loss 1.7169 | lr 4.25e-04 |  15.46s |      3229 img/s
+ep  100/300 | loss 1.7236 | lr 4.23e-04 |  15.47s |      3226 img/s | train acc  84.83 | val acc  82.01
+ep  101/300 | loss 1.7245 | lr 4.21e-04 |  15.51s |      3219 img/s
+ep  102/300 | loss 1.7344 | lr 4.19e-04 |  15.50s |      3221 img/s
+ep  103/300 | loss 1.7183 | lr 4.17e-04 |  15.49s |      3223 img/s
+ep  104/300 | loss 1.7037 | lr 4.15e-04 |  15.50s |      3221 img/s
+ep  105/300 | loss 1.6961 | lr 4.12e-04 |  15.49s |      3222 img/s | train acc  86.16 | val acc  83.14
+ep  106/300 | loss 1.7221 | lr 4.10e-04 |  15.48s |      3225 img/s
+ep  107/300 | loss 1.6973 | lr 4.08e-04 |  15.48s |      3225 img/s
+ep  108/300 | loss 1.7016 | lr 4.06e-04 |  15.39s |      3245 img/s
+ep  109/300 | loss 1.6953 | lr 4.04e-04 |  15.53s |      3215 img/s
+ep  110/300 | loss 1.7104 | lr 4.01e-04 |  15.43s |      3235 img/s | train acc  85.70 | val acc  83.15
+ep  111/300 | loss 1.7079 | lr 3.99e-04 |  15.41s |      3239 img/s
+ep  112/300 | loss 1.6986 | lr 3.97e-04 |  15.43s |      3236 img/s
+ep  113/300 | loss 1.6886 | lr 3.94e-04 |  15.50s |      3220 img/s
+ep  114/300 | loss 1.6956 | lr 3.92e-04 |  15.49s |      3222 img/s
+ep  115/300 | loss 1.6706 | lr 3.90e-04 |  15.52s |      3217 img/s | train acc  87.25 | val acc  84.35
+ep  116/300 | loss 1.6900 | lr 3.87e-04 |  15.48s |      3226 img/s
+ep  117/300 | loss 1.6898 | lr 3.85e-04 |  15.43s |      3235 img/s
+ep  118/300 | loss 1.6890 | lr 3.82e-04 |  15.17s |      3290 img/s
+ep  119/300 | loss 1.6685 | lr 3.80e-04 |  13.09s |      3813 img/s
+ep  120/300 | loss 1.7002 | lr 3.78e-04 |  12.88s |      3877 img/s | train acc  87.82 | val acc  85.16
+ep  121/300 | loss 1.6850 | lr 3.75e-04 |  13.09s |      3813 img/s
+ep  122/300 | loss 1.6803 | lr 3.73e-04 |  13.40s |      3724 img/s
+ep  123/300 | loss 1.6599 | lr 3.70e-04 |  15.46s |      3229 img/s
+ep  124/300 | loss 1.6695 | lr 3.67e-04 |  15.48s |      3225 img/s
+ep  125/300 | loss 1.6838 | lr 3.65e-04 |  15.47s |      3227 img/s | train acc  88.08 | val acc  85.47
+ep  126/300 | loss 1.6602 | lr 3.62e-04 |  15.44s |      3234 img/s
+ep  127/300 | loss 1.6886 | lr 3.60e-04 |  15.21s |      3282 img/s
+ep  128/300 | loss 1.6919 | lr 3.57e-04 |  15.51s |      3219 img/s
+ep  129/300 | loss 1.6678 | lr 3.55e-04 |  15.48s |      3225 img/s
+ep  130/300 | loss 1.6577 | lr 3.52e-04 |  15.43s |      3236 img/s | train acc  88.50 | val acc  85.93
+ep  131/300 | loss 1.6634 | lr 3.49e-04 |  15.50s |      3221 img/s
+ep  132/300 | loss 1.6617 | lr 3.47e-04 |  15.50s |      3221 img/s
+ep  133/300 | loss 1.6722 | lr 3.44e-04 |  15.43s |      3235 img/s
+ep  134/300 | loss 1.6565 | lr 3.41e-04 |  15.52s |      3217 img/s
+ep  135/300 | loss 1.6753 | lr 3.39e-04 |  15.47s |      3228 img/s | train acc  89.14 | val acc  86.17
+ep  136/300 | loss 1.6599 | lr 3.36e-04 |  15.55s |      3211 img/s
+ep  137/300 | loss 1.6416 | lr 3.33e-04 |  15.45s |      3231 img/s
+ep  138/300 | loss 1.6649 | lr 3.31e-04 |  15.45s |      3230 img/s
+ep  139/300 | loss 1.6251 | lr 3.28e-04 |  15.50s |      3221 img/s
+ep  140/300 | loss 1.6426 | lr 3.25e-04 |  15.59s |      3203 img/s | train acc  88.94 | val acc  86.15
+ep  141/300 | loss 1.6639 | lr 3.23e-04 |  15.36s |      3251 img/s
+ep  142/300 | loss 1.6334 | lr 3.20e-04 |  15.55s |      3211 img/s
+ep  143/300 | loss 1.6483 | lr 3.17e-04 |  15.43s |      3235 img/s
+ep  144/300 | loss 1.6544 | lr 3.14e-04 |  15.45s |      3231 img/s
+ep  145/300 | loss 1.6428 | lr 3.12e-04 |  15.44s |      3234 img/s | train acc  90.02 | val acc  86.96
+ep  146/300 | loss 1.6532 | lr 3.09e-04 |  15.51s |      3218 img/s
+ep  147/300 | loss 1.6326 | lr 3.06e-04 |  15.45s |      3230 img/s
+ep  148/300 | loss 1.6410 | lr 3.03e-04 |  15.55s |      3210 img/s
+ep  149/300 | loss 1.6371 | lr 3.00e-04 |  15.49s |      3222 img/s
+ep  150/300 | loss 1.6077 | lr 2.98e-04 |  15.49s |      3223 img/s | train acc  90.71 | val acc  87.56
+ep  151/300 | loss 1.6398 | lr 2.95e-04 |  15.43s |      3234 img/s
+ep  152/300 | loss 1.6553 | lr 2.92e-04 |  15.46s |      3229 img/s
+ep  153/300 | loss 1.6302 | lr 2.89e-04 |  15.46s |      3230 img/s
+ep  154/300 | loss 1.6318 | lr 2.86e-04 |  15.50s |      3221 img/s
+ep  155/300 | loss 1.5940 | lr 2.83e-04 |  15.48s |      3226 img/s | train acc  90.92 | val acc  87.90
+ep  156/300 | loss 1.6292 | lr 2.81e-04 |  15.48s |      3224 img/s
+ep  157/300 | loss 1.6199 | lr 2.78e-04 |  15.46s |      3228 img/s
+ep  158/300 | loss 1.6206 | lr 2.75e-04 |  15.47s |      3227 img/s
+ep  159/300 | loss 1.5997 | lr 2.72e-04 |  15.52s |      3216 img/s
+ep  160/300 | loss 1.5931 | lr 2.69e-04 |  15.43s |      3235 img/s | train acc  91.40 | val acc  88.44
+ep  161/300 | loss 1.6160 | lr 2.66e-04 |  15.43s |      3234 img/s
+ep  162/300 | loss 1.5868 | lr 2.64e-04 |  15.45s |      3232 img/s
+ep  163/300 | loss 1.6261 | lr 2.61e-04 |  15.44s |      3232 img/s
+ep  164/300 | loss 1.5890 | lr 2.58e-04 |  15.48s |      3224 img/s
+ep  165/300 | loss 1.5805 | lr 2.55e-04 |  15.47s |      3227 img/s | train acc  92.01 | val acc  88.45
+ep  166/300 | loss 1.6028 | lr 2.52e-04 |  15.54s |      3212 img/s
+ep  167/300 | loss 1.5738 | lr 2.49e-04 |  15.50s |      3221 img/s
+ep  168/300 | loss 1.6053 | lr 2.46e-04 |  15.47s |      3227 img/s
+ep  169/300 | loss 1.5658 | lr 2.44e-04 |  15.48s |      3225 img/s
+ep  170/300 | loss 1.5824 | lr 2.41e-04 |  15.55s |      3209 img/s | train acc  92.48 | val acc  88.46
+ep  171/300 | loss 1.5746 | lr 2.38e-04 |  15.50s |      3220 img/s
+ep  172/300 | loss 1.6100 | lr 2.35e-04 |  15.32s |      3258 img/s
+ep  173/300 | loss 1.5816 | lr 2.32e-04 |  15.43s |      3235 img/s
+ep  174/300 | loss 1.5817 | lr 2.29e-04 |  15.48s |      3226 img/s
+ep  175/300 | loss 0.9659 | lr 2.27e-04 |  15.39s |      3243 img/s | train acc  93.60 | val acc  89.46
+ep  176/300 | loss 0.9537 | lr 2.24e-04 |  15.43s |      3236 img/s
+ep  177/300 | loss 0.9433 | lr 2.21e-04 |  15.41s |      3239 img/s
+ep  178/300 | loss 0.9363 | lr 2.18e-04 |  15.41s |      3240 img/s
+ep  179/300 | loss 0.9276 | lr 2.15e-04 |  15.39s |      3243 img/s
+ep  180/300 | loss 0.9347 | lr 2.12e-04 |  15.41s |      3239 img/s | train acc  94.33 | val acc  89.89
+ep  181/300 | loss 0.9292 | lr 2.10e-04 |  15.37s |      3247 img/s
+ep  182/300 | loss 0.9196 | lr 2.07e-04 |  15.36s |      3250 img/s
+ep  183/300 | loss 0.9137 | lr 2.04e-04 |  15.41s |      3240 img/s
+ep  184/300 | loss 0.9166 | lr 2.01e-04 |  15.45s |      3231 img/s
+ep  185/300 | loss 0.9144 | lr 1.98e-04 |  15.49s |      3224 img/s | train acc  94.98 | val acc  90.52
+ep  186/300 | loss 0.9099 | lr 1.96e-04 |  15.42s |      3237 img/s
+ep  187/300 | loss 0.9051 | lr 1.93e-04 |  15.45s |      3232 img/s
+ep  188/300 | loss 0.9019 | lr 1.90e-04 |  15.42s |      3237 img/s
+ep  189/300 | loss 0.9002 | lr 1.87e-04 |  15.42s |      3236 img/s
+ep  190/300 | loss 0.8962 | lr 1.85e-04 |  15.42s |      3237 img/s | train acc  95.46 | val acc  90.91
+ep  191/300 | loss 0.8907 | lr 1.82e-04 |  15.43s |      3235 img/s
+ep  192/300 | loss 0.8929 | lr 1.79e-04 |  15.42s |      3237 img/s
+ep  193/300 | loss 0.8883 | lr 1.77e-04 |  15.41s |      3239 img/s
+ep  194/300 | loss 0.8850 | lr 1.74e-04 |  15.44s |      3234 img/s
+ep  195/300 | loss 0.8802 | lr 1.71e-04 |  15.45s |      3231 img/s | train acc  96.21 | val acc  91.09
+ep  196/300 | loss 0.8765 | lr 1.69e-04 |  15.44s |      3234 img/s
+ep  197/300 | loss 0.8761 | lr 1.66e-04 |  15.46s |      3228 img/s
+ep  198/300 | loss 0.8723 | lr 1.63e-04 |  15.44s |      3234 img/s
+ep  199/300 | loss 0.8707 | lr 1.61e-04 |  15.44s |      3233 img/s
+ep  200/300 | loss 0.8639 | lr 1.58e-04 |  15.44s |      3234 img/s | train acc  96.37 | val acc  91.64
+ep  201/300 | loss 0.8698 | lr 1.55e-04 |  15.53s |      3215 img/s
+ep  202/300 | loss 0.8644 | lr 1.53e-04 |  15.51s |      3219 img/s
+ep  203/300 | loss 0.8626 | lr 1.50e-04 |  15.34s |      3255 img/s
+ep  204/300 | loss 0.8593 | lr 1.48e-04 |  15.44s |      3233 img/s
+ep  205/300 | loss 0.8561 | lr 1.45e-04 |  15.45s |      3231 img/s | train acc  96.76 | val acc  91.43
+ep  206/300 | loss 0.8556 | lr 1.43e-04 |  15.45s |      3231 img/s
+ep  207/300 | loss 0.8531 | lr 1.40e-04 |  15.44s |      3233 img/s
+ep  208/300 | loss 0.8505 | lr 1.37e-04 |  15.43s |      3234 img/s
+ep  209/300 | loss 0.8471 | lr 1.35e-04 |  15.39s |      3243 img/s
+ep  210/300 | loss 0.8428 | lr 1.33e-04 |  15.41s |      3239 img/s | train acc  97.18 | val acc  91.82
+ep  211/300 | loss 0.8439 | lr 1.30e-04 |  15.48s |      3224 img/s
+ep  212/300 | loss 0.8423 | lr 1.28e-04 |  15.43s |      3234 img/s
+ep  213/300 | loss 0.8383 | lr 1.25e-04 |  15.44s |      3234 img/s
+ep  214/300 | loss 0.8392 | lr 1.23e-04 |  15.45s |      3231 img/s
+ep  215/300 | loss 0.8340 | lr 1.20e-04 |  15.47s |      3227 img/s | train acc  97.61 | val acc  91.87
+ep  216/300 | loss 0.8337 | lr 1.18e-04 |  15.46s |      3230 img/s
+ep  217/300 | loss 0.8320 | lr 1.16e-04 |  15.45s |      3231 img/s
+ep  218/300 | loss 0.8325 | lr 1.13e-04 |  15.43s |      3234 img/s
+ep  219/300 | loss 0.8257 | lr 1.11e-04 |  15.43s |      3235 img/s
+ep  220/300 | loss 0.8272 | lr 1.09e-04 |  15.41s |      3238 img/s | train acc  97.75 | val acc  92.28
+ep  221/300 | loss 0.8232 | lr 1.06e-04 |  15.42s |      3236 img/s
+ep  222/300 | loss 0.8245 | lr 1.04e-04 |  15.49s |      3223 img/s
+ep  223/300 | loss 0.8193 | lr 1.02e-04 |  15.44s |      3233 img/s
+ep  224/300 | loss 0.8158 | lr 9.97e-05 |  15.43s |      3234 img/s
+ep  225/300 | loss 0.8215 | lr 9.75e-05 |  15.45s |      3232 img/s | train acc  97.92 | val acc  92.12
+ep  226/300 | loss 0.8144 | lr 9.53e-05 |  15.43s |      3235 img/s
+ep  227/300 | loss 0.8115 | lr 9.32e-05 |  15.47s |      3227 img/s
+ep  228/300 | loss 0.8080 | lr 9.11e-05 |  15.44s |      3234 img/s
+ep  229/300 | loss 0.8124 | lr 8.90e-05 |  15.43s |      3235 img/s
+ep  230/300 | loss 0.8092 | lr 8.69e-05 |  15.40s |      3243 img/s | train acc  97.98 | val acc  92.14
+ep  231/300 | loss 0.8052 | lr 8.48e-05 |  15.47s |      3228 img/s
+ep  232/300 | loss 0.8001 | lr 8.28e-05 |  15.50s |      3220 img/s
+ep  233/300 | loss 0.8002 | lr 8.08e-05 |  15.48s |      3224 img/s
+ep  234/300 | loss 0.8006 | lr 7.88e-05 |  15.32s |      3258 img/s
+ep  235/300 | loss 0.8002 | lr 7.68e-05 |  15.46s |      3228 img/s | train acc  98.20 | val acc  92.48
+ep  236/300 | loss 0.7966 | lr 7.48e-05 |  15.45s |      3232 img/s
+ep  237/300 | loss 0.7965 | lr 7.29e-05 |  15.44s |      3232 img/s
+ep  238/300 | loss 0.7926 | lr 7.10e-05 |  15.44s |      3232 img/s
+ep  239/300 | loss 0.7950 | lr 6.92e-05 |  15.43s |      3235 img/s
+ep  240/300 | loss 0.7928 | lr 6.73e-05 |  15.43s |      3236 img/s | train acc  98.35 | val acc  92.82
+ep  241/300 | loss 0.7868 | lr 6.55e-05 |  15.44s |      3233 img/s
+ep  242/300 | loss 0.7877 | lr 6.37e-05 |  15.44s |      3232 img/s
+ep  243/300 | loss 0.7877 | lr 6.19e-05 |  15.45s |      3231 img/s
+ep  244/300 | loss 0.7827 | lr 6.02e-05 |  15.43s |      3236 img/s
+ep  245/300 | loss 0.7854 | lr 5.85e-05 |  15.43s |      3236 img/s | train acc  98.67 | val acc  92.57
+ep  246/300 | loss 0.7825 | lr 5.68e-05 |  15.41s |      3239 img/s
+ep  247/300 | loss 0.7816 | lr 5.51e-05 |  15.44s |      3232 img/s
+ep  248/300 | loss 0.7784 | lr 5.35e-05 |  15.44s |      3233 img/s
+ep  249/300 | loss 0.7810 | lr 5.19e-05 |  15.43s |      3234 img/s
+ep  250/300 | loss 0.7766 | lr 5.03e-05 |  15.42s |      3237 img/s | train acc  98.69 | val acc  92.60
+ep  251/300 | loss 0.7787 | lr 4.88e-05 |  15.43s |      3235 img/s
+ep  252/300 | loss 0.7729 | lr 4.72e-05 |  15.45s |      3232 img/s
+ep  253/300 | loss 0.7727 | lr 4.57e-05 |  15.45s |      3231 img/s
+ep  254/300 | loss 0.7714 | lr 4.43e-05 |  15.44s |      3234 img/s
+ep  255/300 | loss 0.7736 | lr 4.28e-05 |  15.42s |      3236 img/s | train acc  98.78 | val acc  92.60
+ep  256/300 | loss 0.7705 | lr 4.14e-05 |  15.45s |      3230 img/s
+ep  257/300 | loss 0.7646 | lr 4.00e-05 |  15.43s |      3235 img/s
+ep  258/300 | loss 0.7694 | lr 3.87e-05 |  15.42s |      3237 img/s
+ep  259/300 | loss 0.7700 | lr 3.74e-05 |  15.41s |      3239 img/s
+ep  260/300 | loss 0.7647 | lr 3.61e-05 |  15.43s |      3235 img/s | train acc  98.80 | val acc  92.72
+ep  261/300 | loss 0.7677 | lr 3.48e-05 |  15.42s |      3237 img/s
+ep  262/300 | loss 0.7626 | lr 3.36e-05 |  15.45s |      3230 img/s
+ep  263/300 | loss 0.7617 | lr 3.24e-05 |  15.52s |      3215 img/s
+ep  264/300 | loss 0.7623 | lr 3.12e-05 |  15.49s |      3223 img/s
+ep  265/300 | loss 0.7617 | lr 3.00e-05 |  13.39s |      3729 img/s | train acc  98.90 | val acc  92.71
+ep  266/300 | loss 0.7578 | lr 2.89e-05 |  13.04s |      3827 img/s
+ep  267/300 | loss 0.7630 | lr 2.78e-05 |  12.84s |      3888 img/s
+ep  268/300 | loss 0.7587 | lr 2.68e-05 |  14.01s |      3562 img/s
+ep  269/300 | loss 0.7576 | lr 2.58e-05 |  13.53s |      3691 img/s
+ep  270/300 | loss 0.7579 | lr 2.48e-05 |  12.87s |      3879 img/s | train acc  98.87 | val acc  92.74
+ep  271/300 | loss 0.7536 | lr 2.38e-05 |  14.47s |      3450 img/s
+ep  272/300 | loss 0.7515 | lr 2.29e-05 |  14.23s |      3509 img/s
+ep  273/300 | loss 0.7550 | lr 2.20e-05 |  13.16s |      3793 img/s
+ep  274/300 | loss 0.7574 | lr 2.11e-05 |  12.90s |      3869 img/s
+ep  275/300 | loss 0.7558 | lr 2.03e-05 |  13.52s |      3693 img/s | train acc  99.01 | val acc  92.86
+ep  276/300 | loss 0.7572 | lr 1.95e-05 |  14.76s |      3382 img/s
+ep  277/300 | loss 0.7539 | lr 1.87e-05 |  14.92s |      3346 img/s
+ep  278/300 | loss 0.7496 | lr 1.80e-05 |  15.52s |      3216 img/s
+ep  279/300 | loss 0.7516 | lr 1.73e-05 |  15.53s |      3214 img/s
+ep  280/300 | loss 0.7479 | lr 1.66e-05 |  15.52s |      3217 img/s | train acc  99.14 | val acc  92.96
+ep  281/300 | loss 0.7532 | lr 1.60e-05 |  15.52s |      3217 img/s
+ep  282/300 | loss 0.7503 | lr 1.54e-05 |  15.52s |      3216 img/s
+ep  283/300 | loss 0.7535 | lr 1.48e-05 |  15.54s |      3213 img/s
+ep  284/300 | loss 0.7490 | lr 1.42e-05 |  15.53s |      3215 img/s
+ep  285/300 | loss 0.7467 | lr 1.37e-05 |  15.53s |      3215 img/s | train acc  99.19 | val acc  92.91
+ep  286/300 | loss 0.7566 | lr 1.32e-05 |  15.55s |      3211 img/s
+ep  287/300 | loss 0.7506 | lr 1.28e-05 |  15.52s |      3216 img/s
+ep  288/300 | loss 0.7442 | lr 1.24e-05 |  15.53s |      3215 img/s
+ep  289/300 | loss 0.7479 | lr 1.20e-05 |  15.52s |      3216 img/s
+ep  290/300 | loss 0.7429 | lr 1.17e-05 |  15.51s |      3219 img/s | train acc  99.19 | val acc  92.78
+ep  291/300 | loss 0.7458 | lr 1.13e-05 |  15.52s |      3217 img/s
+ep  292/300 | loss 0.7470 | lr 1.11e-05 |  15.50s |      3220 img/s
+ep  293/300 | loss 0.7417 | lr 1.08e-05 |  15.53s |      3214 img/s
+ep  294/300 | loss 0.7439 | lr 1.06e-05 |  15.54s |      3213 img/s
+ep  295/300 | loss 0.7430 | lr 1.04e-05 |  15.54s |      3212 img/s | train acc  99.16 | val acc  92.97
+ep  296/300 | loss 0.7461 | lr 1.03e-05 |  15.53s |      3215 img/s
+ep  297/300 | loss 0.7434 | lr 1.01e-05 |  15.53s |      3214 img/s
+ep  298/300 | loss 0.7470 | lr 1.01e-05 |  15.53s |      3215 img/s
+ep  299/300 | loss 0.7440 | lr 1.00e-05 |  15.52s |      3217 img/s
+ep  300/300 | loss 0.7421 | lr 1.00e-05 |  15.52s |      3217 img/s | train acc  99.22 | val acc  92.97
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▁▂▂▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇▇████
+wandb:       epoch_sec █▂▂▂▂▂▂▂▁▂▂▁▂▂▂▂▂▂▂▂▁▂▂▂▂▂▂▂▂▂▂▁▂▂▂▂▂▁▂▂
+wandb:     img_per_sec ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▂▁▁▁█▄▁
+wandb:              lr ▂▃▃▄▆███████▇▇▇▇▇▇▆▆▆▆▆▅▅▄▃▃▃▃▂▂▂▁▁▁▁▁▁▁
+wandb: train_acc_clean ▁▂▂▃▃▄▄▅▅▅▅▆▆▆▆▆▆▆▆▇▇▇▇▇▇███████████████
+wandb:      train_loss ██▇▇▇▇▆▆▆▆▆▅▅▅▅▅▅▅▅▅▅▅▅▅▅▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val_acc ▁▂▄▄▅▅▆▆▆▆▇▇▇▇▇▇▇▇▇█████████████████████
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 92.97
+wandb:           epoch 300
+wandb:       epoch_sec 15.5163
+wandb:     img_per_sec 3217.26235
+wandb:              lr 1e-05
+wandb:   total_minutes 78.89611
+wandb: train_acc_clean 99.22
+wandb:      train_loss 0.74212
+wandb:         val_acc 92.97
+wandb: 
+wandb: 🚀 View run abl_cls at: https://wandb.ai/softeye/vision_transformers/runs/14a74809
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/abl_cls/wandb/run-20261011_005816-14a74809/logs
+
+Done in 78.9 min. final val 92.97% | best val 92.97% | clean train 99.22%
+Steady state (excl. epoch 1): 15.47 s/epoch, 3,227 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/abl_cls

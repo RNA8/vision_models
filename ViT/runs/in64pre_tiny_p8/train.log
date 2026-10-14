@@ -1,0 +1,71 @@
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/in64pre_tiny_p8/wandb/run-20261011_084429-fb1bf879
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run in64pre_tiny_p8
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/fb1bf879
+GPU: NVIDIA H100 PCIe
+Model: tiny  params: 5.58M  train images: 1281167  batch: 256  steps/epoch: 5004
+ep    1/30 | loss 6.4789 | lr 5.00e-04 | 122.79s |     10433 img/s  (includes torch.compile warm-up)
+ep    2/30 | loss 5.7843 | lr 1.00e-03 |  98.44s |     13013 img/s
+ep    3/30 | loss 5.2775 | lr 9.97e-04 |  99.52s |     12872 img/s
+ep    4/30 | loss 4.9393 | lr 9.88e-04 |  98.75s |     12972 img/s
+ep    5/30 | loss 4.7049 | lr 9.72e-04 |  99.51s |     12874 img/s | train acc  28.93 | val acc  26.40
+ep    6/30 | loss 4.5269 | lr 9.51e-04 | 100.14s |     12792 img/s
+ep    7/30 | loss 4.3825 | lr 9.24e-04 | 100.50s |     12746 img/s
+ep    8/30 | loss 4.2586 | lr 8.92e-04 |  98.69s |     12981 img/s
+ep    9/30 | loss 4.1529 | lr 8.55e-04 |  98.17s |     13049 img/s
+ep   10/30 | loss 4.0544 | lr 8.14e-04 |  98.20s |     13045 img/s | train acc  41.26 | val acc  37.08
+ep   11/30 | loss 3.9621 | lr 7.68e-04 |  99.08s |     12929 img/s
+ep   12/30 | loss 3.8794 | lr 7.20e-04 |  98.55s |     12999 img/s
+ep   13/30 | loss 3.8023 | lr 6.68e-04 |  98.59s |     12993 img/s
+ep   14/30 | loss 3.7290 | lr 6.15e-04 |  99.42s |     12885 img/s
+ep   15/30 | loss 3.6548 | lr 5.60e-04 |  98.98s |     12942 img/s | train acc  49.55 | val acc  43.92
+ep   16/30 | loss 3.5834 | lr 5.05e-04 |  98.64s |     12987 img/s
+ep   17/30 | loss 3.5152 | lr 4.50e-04 |  98.58s |     12995 img/s
+ep   18/30 | loss 3.4447 | lr 3.95e-04 |  98.88s |     12955 img/s
+ep   19/30 | loss 3.3796 | lr 3.42e-04 |  98.46s |     13011 img/s
+ep   20/30 | loss 3.3105 | lr 2.90e-04 |  98.77s |     12970 img/s | train acc  57.26 | val acc  50.19
+ep   21/30 | loss 3.2446 | lr 2.42e-04 |  95.87s |     13361 img/s
+ep   22/30 | loss 3.1770 | lr 1.96e-04 |  91.27s |     14035 img/s
+ep   23/30 | loss 3.1131 | lr 1.55e-04 |  94.29s |     13586 img/s
+ep   24/30 | loss 3.0517 | lr 1.18e-04 |  94.28s |     13587 img/s
+ep   25/30 | loss 2.9958 | lr 8.59e-05 |  94.43s |     13566 img/s | train acc  63.07 | val acc  54.82
+ep   26/30 | loss 2.9455 | lr 5.90e-05 |  94.61s |     13540 img/s
+ep   27/30 | loss 2.9042 | lr 3.78e-05 |  94.61s |     13540 img/s
+ep   28/30 | loss 2.8724 | lr 2.24e-05 |  94.12s |     13610 img/s
+ep   29/30 | loss 2.8476 | lr 1.31e-05 |  93.01s |     13773 img/s
+ep   30/30 | loss 2.8357 | lr 1.00e-05 |  92.73s |     13815 img/s | train acc  65.72 | val acc  56.83
+wandb: updating run metadata
+wandb: uploading config.yaml; uploading output.log; uploading wandb-summary.json
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇███
+wandb:       epoch_sec █▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▂▁▂▂▂▂▂▂▁▁
+wandb:     img_per_sec ▁▆▆▆▆▆▅▆▆▆▆▆▆▆▆▆▆▆▆▆▇█▇▇▇▇▇▇▇█
+wandb:              lr ▄█████▇▇▇▇▆▆▆▅▅▄▄▄▃▃▃▂▂▂▂▁▁▁▁▁
+wandb: train_acc_clean ▁▃▅▆▇█
+wandb:      train_loss █▇▆▅▅▄▄▄▄▃▃▃▃▃▃▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁
+wandb:         val_acc ▁▃▅▆██
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 56.83
+wandb:           epoch 30
+wandb:       epoch_sec 92.72963
+wandb:     img_per_sec 13814.61412
+wandb:              lr 1e-05
+wandb:   total_minutes 49.2354
+wandb: train_acc_clean 65.72
+wandb:      train_loss 2.83566
+wandb:         val_acc 56.83
+wandb: 
+wandb: 🚀 View run in64pre_tiny_p8 at: https://wandb.ai/softeye/vision_transformers/runs/fb1bf879
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/in64pre_tiny_p8/wandb/run-20261011_084429-fb1bf879/logs
+
+Done in 49.2 min. final val 56.83% | best val 56.83% | clean train 65.72%
+Steady state (excl. epoch 1): 98.55 s/epoch, 12,999 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/in64pre_tiny_p8
