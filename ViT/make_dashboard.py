@@ -1431,6 +1431,7 @@ def ch_long():
         row("CIFAR-100, SL-ViT + SPT, 2000 ep (vs 1000 ep)", "c100_spt_slvit_2000ep", "c100_spt_slvit_1000ep", "saturated: +0.1 over the 1000-ep 3-seed mean"),
         row("CIFAR-100, ViT-Tiny shape, 5.4M", "c100_tinyshape_bf3b_1000ep", "c100_tinyshape_bf3b", ""),
         row("CIFAR-100, ViT-Tiny shape + SPT, 5.4M", "c100_spt_tinyshape_1000ep", "c100_tinyshape_bf3b", "SPT +1.9 here too; the 2.75M shape is still better"),
+        row("CIFAR-10, SL-ViT + SPT distilled from own 3-seed ensemble (97.28), 2.75M, 1000 ep", "c10_kd_ens3_fm_1000ep", "c10_spt_slvit_1000ep", f"+0.5 over the plain 3-seed mean (96.75); CCT {P('cct_c10')} (300 ep), 97.48 (1500 ep)"),
         row("CIFAR-10, SL-ViT shape + SPT, 2.75M", "c10_spt_slvit_1000ep", "bf3b_slvit_300ep_lr5e-4", f"half the params of ViT-Tiny, level on seed mean (line above); CCT hybrid {P('cct_c10')} (300 ep), 97.48 (1500 ep)"),
         row("CIFAR-10, ViT-Tiny shape + SPT, 5.4M", "c10_spt_tinyshape_1000ep", "abl_tiny_shape", f"CCT hybrid {P('cct_c10')} (300 ep), 97.48 (1500 ep)"),
         row("CIFAR-10, ViT-Tiny shape, 5.4M", "c10_tinyshape_bf3b_1000ep", "abl_tiny_shape", f"SL-ViT {P('slvit_c10')}; impulse-init ViT-Tiny {P('structinit_c10')}; CCT hybrid {P('cct_c10')} (300 ep), {P('cct5k_c10')} (5000 ep)"),
