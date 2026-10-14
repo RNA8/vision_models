@@ -30,3 +30,6 @@ ep   15/1000 | loss 2.6165 | lr 2.50e-04 |  32.19s |      3106 img/s | kd 2.6165
 ep   16/1000 | loss 2.5963 | lr 2.67e-04 |  32.10s |      3114 img/s | kd 2.5963 agree 0.085 a 1.00
 ep   17/1000 | loss 2.5816 | lr 2.83e-04 |  32.19s |      3106 img/s | kd 2.5816 agree 0.088 a 1.00
 ep   18/1000 | loss 2.5490 | lr 3.00e-04 |  32.22s |      3103 img/s | kd 2.5490 agree 0.091 a 1.00
+ep   19/1000 | loss 2.5107 | lr 3.17e-04 |  32.20s |      3105 img/s | kd 2.5107 agree 0.096 a 1.00
+ep   20/1000 | loss 2.4970 | lr 3.33e-04 |  32.16s |      3108 img/s | kd 2.4970 agree 0.097 a 1.00 | train acc  21.25 | val acc  19.90
+ep   21/1000 | loss 2.4870 | lr 3.50e-04 |  32.18s |      3107 img/s | kd 2.4870 agree 0.104 a 1.00
