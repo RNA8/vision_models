@@ -1113,3 +1113,23 @@ wandb: Find logs at: ./runs/in21kpre_slvit_spt_p8/wandb/run-20261013_040747-6947
 Done in 1156.7 min. final val 30.32% | best val 30.32% | clean train 32.85%
 Steady state (excl. epoch 1): 2290.27 s/epoch, 4,829 img/s
 Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/in21kpre_slvit_spt_p8
+== start ec100_in21kpre_slvit_spt_p8_128_kd_60ep (Wed Oct 14 06:42:23 UTC 2026)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/ec100_in21kpre_slvit_spt_p8_128_kd_60ep/wandb/run-20261014_064258-f73921a8
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ec100_in21kpre_slvit_spt_p8_128_kd_60ep
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/f73921a8
+GPU: NVIDIA H100 PCIe
+init-ckpt: loaded 127 tensors; dropped ['head.weight', 'head.bias']; re-initialised ['head.weight', 'head.bias']
+loaded runs/in21kpre_slvit_spt_p8/model.pt
+loaded runs/ec100_T_vitb_ar2_224/model_ema.pt
+teacher runs/ec100_T_vitb_ar2_224: 85.88M params, 224px, val acc 93.52
+Model: runs/in21kpre_slvit_spt_p8  params: 2.93M  input 32->128px  mean/std [0.485, 0.456, 0.406]/[0.229, 0.224, 0.225]  train images: 50000  batch: 256  steps/epoch: 195
+ep    1/60 | loss 3.0918 | lr 1.68e-04 |  74.71s |     668 img/s
+ep    2/60 | loss 2.7180 | lr 3.34e-04 |  65.81s |     759 img/s
+ep    3/60 | loss 2.4573 | lr 5.00e-04 |  65.82s |     758 img/s
+ep    4/60 | loss 2.2774 | lr 5.00e-04 |  65.83s |     758 img/s
+ep    5/60 | loss 2.1886 | lr 4.98e-04 |  65.83s |     758 img/s | train acc  64.19 | val acc  62.54 | ema val  47.99
