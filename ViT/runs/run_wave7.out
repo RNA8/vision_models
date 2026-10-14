@@ -2550,3 +2550,4 @@ ep   31/60 | loss 5.3645 | lr 4.92e-04 | 2211.11s |      5002 img/s | loader wai
 ep   32/60 | loss 5.3384 | lr 4.66e-04 | 2189.39s |      5052 img/s | loader wait 1.2s
 ep   33/60 | loss 5.3140 | lr 4.39e-04 | 2186.84s |      5058 img/s | loader wait 1.2s
 ep   34/60 | loss 5.2865 | lr 4.13e-04 | 2202.85s |      5021 img/s | loader wait 1.2s
+ep   35/60 | loss 5.2597 | lr 3.88e-04 | 2627.09s |      4210 img/s | loader wait 1.5s | train acc  24.31 | val acc  22.82
