@@ -59,6 +59,22 @@ def parse_args():
     p.add_argument("--spt", action="store_true",
                    help="Shifted Patch Tokenization (SL-ViT, arXiv 2112.13492 Eq. 6): concat 4 diagonal half-patch shifts, "
                         "then patchify, flatten, LayerNorm, Linear")
+    p.add_argument("--multiscale", action="store_true",
+                   help="multiscale input tokens: patchify the image, then 2x-downscaled copies with the same patch "
+                        "size until one patch is left, and feed all tokens to one transformer (32px, p4: 64+16+4+1)")
+    p.add_argument("--ms-proj", default="shared", choices=["shared", "per-scale"],
+                   help="multiscale: one patch projection for every scale, or one per scale")
+    p.add_argument("--ms-pos", default="learned", choices=["learned", "pooled"],
+                   help="multiscale coarse-scale position embeddings: learned = own parameters per token (initialized "
+                        "as the avg-pooled fine-grid pos-embed); pooled = always the avg-pooled fine pos-embed plus a "
+                        "learned per-scale embedding")
+    p.add_argument("--ms-down", default="avg", choices=["avg", "bilinear"],
+                   help="multiscale 2x downscale: avg-pool 2x2, or antialiased bilinear")
+    p.add_argument("--ms-pyramid", default="gauss", choices=["gauss", "laplacian"],
+                   help="multiscale: gauss = each level is the downscaled image; laplacian = each level but the "
+                        "coarsest encodes the residual from the upsampled next-coarser level")
+    p.add_argument("--reg-tokens", type=int, default=0,
+                   help="extra learnable register tokens (Darcet et al. 2309.16588; not pooled by seqpool)")
     p.add_argument("--init", default="default", choices=["default", "mimetic", "impulse"],
                    help="attention init: mimetic (Trockman & Kolter 2023) or impulse (Zheng et al. 2025)")
     p.add_argument("--epochs", type=int, default=100)
@@ -447,6 +463,87 @@ class SPTProj(nn.Module):
         return x.transpose(1, 2).reshape(B, -1, H // p, W // p)
 
 
+class MultiscaleEmbed(nn.Module):
+    """Multiscale input tokens (--multiscale). The (normalized) image x_0 is patchified; x_{s+1} = 2x-downscaled x_s
+    is patchified with the same patch size, until the grid is 1x1. Tokens of all scales are concatenated
+    fine-to-coarse: (B, sum_s (g/2^s)^2, D), e.g. 64+16+4+1 = 85 for 32 px, patch 4. Replaces timm's patch_embed;
+    `proj0` (Conv2d or SPTProj, (B,C,H,W)->(B,D,h,w)) embeds scale 0, and the other scales too if shared.
+    Laplacian pyramid: level s < S-1 gets x_s - up(x_{s+1}) (the coarsest level is the plain image).
+    Position embeddings of the coarse scales live here (coarse_pos); timm's pos_embed keeps CLS + fine grid."""
+
+    def __init__(self, proj0, make_proj, grid, patch_size, shared, down, pyramid, pos_mode, fine_pe):
+        super().__init__()
+        self.n_scales = int(math.log2(grid)) + 1
+        assert 2 ** (self.n_scales - 1) == grid, f"--multiscale needs a power-of-2 token grid, got {grid}"
+        self.grid, self.down, self.pyramid, self.pos_mode = grid, down, pyramid, pos_mode
+        self.projs = nn.ModuleList([proj0] + ([] if shared else [make_proj() for _ in range(self.n_scales - 1)]))
+        self.shared = shared
+        # timm-PatchEmbed-like attributes, for code that inspects them
+        self.grid_size, self.patch_size = (grid, grid), (patch_size, patch_size)
+        self.num_patches = sum((grid >> s) ** 2 for s in range(self.n_scales))
+        if pos_mode == "learned":
+            self.pos_coarse = nn.Parameter(self._pool_pe(fine_pe.detach()).clone())
+        else:
+            self.scale_embed = nn.Parameter(torch.zeros(self.n_scales - 1, fine_pe.size(-1)))
+
+    def _pool_pe(self, fine_pe):  # (1, g*g, D) -> (1, sum_{s>=1} (g/2^s)^2, D), avg-pooled per scale
+        D, g = fine_pe.size(-1), self.grid
+        pe = fine_pe.transpose(1, 2).reshape(1, D, g, g)
+        return torch.cat([F.avg_pool2d(pe, 2 ** s).flatten(2) for s in range(1, self.n_scales)], 2).transpose(1, 2)
+
+    def coarse_pos(self, fine_pe):
+        if self.pos_mode == "learned":
+            return self.pos_coarse
+        sizes = [(self.grid >> s) ** 2 for s in range(1, self.n_scales)]
+        se = torch.cat([self.scale_embed[i].expand(n, -1) for i, n in enumerate(sizes)], 0)
+        return self._pool_pe(fine_pe) + se[None]
+
+    def _down(self, x):
+        if self.down == "avg":
+            return F.avg_pool2d(x, 2)
+        return F.interpolate(x, scale_factor=0.5, mode="bilinear", antialias=True, align_corners=False)
+
+    def _up(self, x):
+        if self.down == "avg":  # nearest: up(avg_pool(x)) is the exact blockwise mean, so the residual sums to 0
+            return F.interpolate(x, scale_factor=2, mode="nearest")
+        return F.interpolate(x, scale_factor=2, mode="bilinear", align_corners=False)
+
+    def forward(self, x):
+        levels = [x]
+        for _ in range(self.n_scales - 1):
+            levels.append(self._down(levels[-1]))
+        if self.pyramid == "laplacian":
+            levels = [levels[s] - self._up(levels[s + 1]) for s in range(self.n_scales - 1)] + [levels[-1]]
+        toks = [self.projs[0 if self.shared else s](lv).flatten(2) for s, lv in enumerate(levels)]
+        return torch.cat(toks, 2).transpose(1, 2)  # (B, N, D)
+
+
+def _ms_pos_embed(self, x):
+    """VisionTransformer._pos_embed for --multiscale: CLS + all-scale tokens, plus [pos_embed | coarse pos]."""
+    pe = self.pos_embed
+    pe = torch.cat([pe, self.patch_embed.coarse_pos(pe[:, self.num_prefix_tokens:])], 1)
+    x = torch.cat([self.cls_token.expand(x.size(0), -1, -1), x], 1)
+    return self.pos_drop(x + pe)
+
+
+def apply_multiscale(m, args, img_size):
+    """Turn a built timm ViT (after structured_init / SPT) into the multiscale-token ViT, in place."""
+    from timm.models.vision_transformer import VisionTransformer
+
+    assert m.num_prefix_tokens == 1 and not m.no_embed_class, "--multiscale: CLS-only, timm pos_embed layout"
+    p, D = args.patch_size, m.embed_dim
+    spt = getattr(args, "spt", False)
+
+    def make_proj():
+        return SPTProj(3, D, p) if spt else nn.Conv2d(3, D, p, p)
+
+    m.patch_embed = MultiscaleEmbed(m.patch_embed.proj, make_proj, img_size // p, p,
+                                    shared=args.ms_proj == "shared", down=args.ms_down, pyramid=args.ms_pyramid,
+                                    pos_mode=args.ms_pos, fine_pe=m.pos_embed[:, m.num_prefix_tokens:])
+    nwd = VisionTransformer.no_weight_decay(m) | {"patch_embed.pos_coarse", "patch_embed.scale_embed"}
+    m.__class__ = type("MultiscaleViT", (type(m),), {"_pos_embed": _ms_pos_embed, "no_weight_decay": lambda self: nwd})
+
+
 def apply_lsa(m):
     """Switch every timm Attention in `m` to LSA (same weights): learnable per-head temperature
     initialized to head_dim^-0.5 plus diagonal masking. Works for the timm ViT and RecurrentViT."""
@@ -495,6 +592,8 @@ def build_model(args, num_classes, img_size=32):
                  ("mlp_ratio", args.mlp_ratio)]:
         if v is not None:
             cfg[k] = v
+    if getattr(args, "reg_tokens", 0):
+        cfg["reg_tokens"] = args.reg_tokens
     m = VisionTransformer(
         img_size=img_size,
         patch_size=args.patch_size,
@@ -507,6 +606,8 @@ def build_model(args, num_classes, img_size=32):
         structured_init(m, args.init)
     if getattr(args, "spt", False):  # callers like finetune.py build their own Namespace
         m.patch_embed.proj = SPTProj(3, m.embed_dim, args.patch_size)
+    if getattr(args, "multiscale", False):
+        apply_multiscale(m, args, img_size)
     if args.lsa:
         apply_lsa(m)
     if args.pool == "seqpool":
