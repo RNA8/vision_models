@@ -161,17 +161,16 @@ All runs use the exact args of `c100_spt_slvit_300ep`: SL-ViT 9×192, SPT + LSA 
   `run_wave9c_seeds.sh` (seed 2). Seed 2 was added because the seed-1 reruns showed about 1 pt of seed spread.
 - Status as of 2026-10-14 ~10:45 UTC: 7 runs finished.
   - `c100_ms_shared_300ep_s2` has since finished (76.53).
-  - `c100_ms_pooledpos_300ep`, `c100_spt_slvit_300ep_s1` and `c100_reg21_300ep_s2` were still queued.
-  - Their results will land in `runs/<name>/results.json`.
+  - The remaining runs finished on 2026-10-14 (filled in by the main session): pooled pos 76.18, baseline seed 1 77.57, register control seed 2 77.43. All 11 runs are done.
 
 | variant | tokens (+CLS) | params | MACs | s0 | s1 | s2 | mean |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| baseline `c100_spt_slvit_300ep` | 64 | 2.753M | 175.5M | 76.70 | _queued_ | 77.82 | 77.26 (n=2) |
+| baseline `c100_spt_slvit_300ep` | 64 | 2.753M | 175.5M | 76.70 | 77.57 | 77.82 | 77.36 (n=3) |
 | multiscale, shared proj (`--multiscale`) | 85 | 2.757M | 232.2M | 76.42 | 77.48 | 76.53 | 76.81 (n=3) |
 | multiscale, per-scale proj | 85 | 2.897M | 232.2M | 75.17 | | | 75.17 (n=1) |
 | multiscale, Laplacian levels | 85 | 2.757M | 232.2M | 73.95 | | | 73.95 (n=1) |
-| multiscale, pooled pos + scale emb. | 85 | 2.753M | 232.2M | _queued_ | | | |
-| control: baseline + 21 registers | 85 | 2.761M | 231.2M | 77.19 | 77.07 | _queued_ | 77.13 (n=2) |
+| multiscale, pooled pos + scale emb. | 85 | 2.753M | 232.2M | 76.18 | | | 76.18 (n=1) |
+| control: baseline + 21 registers | 85 | 2.761M | 231.2M | 77.19 | 77.07 | 77.43 | 77.23 (n=3) |
 
 ### Throughput
 - The img/s figures inside results.json depend on how many other jobs shared the GPU, so they are not comparable
