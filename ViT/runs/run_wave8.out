@@ -1661,3 +1661,70 @@ ep  961/1000 | loss 1.3727 | lr 1.20e-05 |  26.34s |      3796 img/s
 ep  962/1000 | loss 1.3801 | lr 1.19e-05 |  26.35s |      3794 img/s
 ep  963/1000 | loss 1.3802 | lr 1.18e-05 |  26.36s |      3792 img/s
 ep  964/1000 | loss 1.3747 | lr 1.17e-05 |  26.34s |      3795 img/s
+ep  965/1000 | loss 1.3765 | lr 1.16e-05 |  26.33s |      3797 img/s
+ep  966/1000 | loss 1.3757 | lr 1.15e-05 |  26.36s |      3792 img/s
+ep  967/1000 | loss 1.3805 | lr 1.14e-05 |  26.35s |      3794 img/s
+ep  968/1000 | loss 1.3769 | lr 1.13e-05 |  26.35s |      3794 img/s
+ep  969/1000 | loss 1.3775 | lr 1.12e-05 |  26.34s |      3796 img/s
+ep  970/1000 | loss 1.3780 | lr 1.12e-05 |  26.34s |      3795 img/s | train acc  99.91 | val acc  66.13
+ep  971/1000 | loss 1.3754 | lr 1.11e-05 |  26.35s |      3794 img/s
+ep  972/1000 | loss 1.3739 | lr 1.10e-05 |  26.33s |      3797 img/s
+ep  973/1000 | loss 1.3766 | lr 1.09e-05 |  26.35s |      3793 img/s
+ep  974/1000 | loss 1.3760 | lr 1.09e-05 |  26.35s |      3794 img/s
+ep  975/1000 | loss 1.3746 | lr 1.08e-05 |  26.35s |      3794 img/s
+ep  976/1000 | loss 1.3742 | lr 1.07e-05 |  26.36s |      3793 img/s
+ep  977/1000 | loss 1.3719 | lr 1.07e-05 |  26.37s |      3792 img/s
+ep  978/1000 | loss 1.3696 | lr 1.06e-05 |  26.36s |      3793 img/s
+ep  979/1000 | loss 1.3712 | lr 1.06e-05 |  26.37s |      3791 img/s
+ep  980/1000 | loss 1.3705 | lr 1.05e-05 |  26.31s |      3799 img/s | train acc  99.89 | val acc  66.01
+ep  981/1000 | loss 1.3739 | lr 1.05e-05 |  26.36s |      3792 img/s
+ep  982/1000 | loss 1.3684 | lr 1.04e-05 |  26.36s |      3792 img/s
+ep  983/1000 | loss 1.3712 | lr 1.04e-05 |  26.34s |      3795 img/s
+ep  984/1000 | loss 1.3739 | lr 1.03e-05 |  26.33s |      3796 img/s
+ep  985/1000 | loss 1.3686 | lr 1.03e-05 |  26.34s |      3795 img/s
+ep  986/1000 | loss 1.3715 | lr 1.03e-05 |  26.34s |      3795 img/s
+ep  987/1000 | loss 1.3698 | lr 1.02e-05 |  26.33s |      3797 img/s
+ep  988/1000 | loss 1.3704 | lr 1.02e-05 |  19.93s |      5015 img/s
+ep  989/1000 | loss 1.3669 | lr 1.02e-05 |  19.55s |      5114 img/s
+ep  990/1000 | loss 1.3701 | lr 1.01e-05 |  19.19s |      5209 img/s | train acc  99.91 | val acc  66.19
+ep  991/1000 | loss 1.3639 | lr 1.01e-05 |  18.54s |      5391 img/s
+ep  992/1000 | loss 1.3722 | lr 1.01e-05 |  19.43s |      5144 img/s
+ep  993/1000 | loss 1.3730 | lr 1.01e-05 |  22.43s |      4456 img/s
+ep  994/1000 | loss 1.3691 | lr 1.00e-05 |  25.91s |      3858 img/s
+ep  995/1000 | loss 1.3707 | lr 1.00e-05 |  25.76s |      3881 img/s
+ep  996/1000 | loss 1.3702 | lr 1.00e-05 |  25.91s |      3859 img/s
+ep  997/1000 | loss 1.3690 | lr 1.00e-05 |  25.84s |      3868 img/s
+ep  998/1000 | loss 1.3669 | lr 1.00e-05 |  25.82s |      3872 img/s
+ep  999/1000 | loss 1.3681 | lr 1.00e-05 |  25.81s |      3873 img/s
+ep 1000/1000 | loss 1.3692 | lr 1.00e-05 |  25.81s |      3874 img/s | train acc  99.90 | val acc  66.16
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▂▂▃▃▃▃▃▄▄▄▄▅▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆▆▆▇▇▇████
+wandb:       epoch_sec ▅▅▅▅▅▃▃▂▄▄▃▃▃▄▄▄▄▃▃▄▃▃▃▁▂▃▃▃▃▃▃▃▃▃▃▃██▇█
+wandb:     img_per_sec ▅▅▅▆▆▆▆▇▆▆▆▆▆▆▆▇▆▆▇▇▇▇▇▆▆▇▇▇▇▇▇▇▇█▇▁▁▁▁█
+wandb:              lr ███████▇▇▇▇▇▆▆▆▆▆▆▅▅▅▄▄▄▄▃▃▃▂▂▂▂▁▁▁▁▁▁▁▁
+wandb: train_acc_clean ▁▃▅▅▅▆▆▆▆▆▆▆▆▆▆▆▆▆▆▇▇▇▇▇▇▇██████████████
+wandb:      train_loss █▇▆▆▆▆▆▆▆▆▆▅▅▅▅▅▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁
+wandb:         val_acc ▁▂▂▄▅▆▆▇▇▇▇▇▇▇▇█████████████████████████
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 66.23
+wandb:           epoch 1000
+wandb:       epoch_sec 25.80703
+wandb:     img_per_sec 3873.67337
+wandb:              lr 1e-05
+wandb:   total_minutes 437.01625
+wandb: train_acc_clean 99.9
+wandb:      train_loss 1.36925
+wandb:         val_acc 66.16
+wandb: 
+wandb: 🚀 View run tin_spt_slvit_p8_1000ep at: https://wandb.ai/softeye/vision_transformers/runs/1c120808
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/tin_spt_slvit_p8_1000ep/wandb/run-20261013_223252-1c120808/logs
+
+Done in 437.0 min. final val 66.16% | best val 66.23% | clean train 99.90%
+Steady state (excl. epoch 1): 25.98 s/epoch, 3,848 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_slvit_p8_1000ep
