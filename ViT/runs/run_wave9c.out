@@ -989,3 +989,42 @@ ep  290/300 | loss 1.3972 | lr 1.17e-05 |   9.58s |      5213 img/s | train acc 
 ep  291/300 | loss 1.4029 | lr 1.13e-05 |   9.56s |      5224 img/s
 ep  292/300 | loss 1.4039 | lr 1.11e-05 |   9.57s |      5218 img/s
 ep  293/300 | loss 1.4058 | lr 1.08e-05 |   9.57s |      5219 img/s
+ep  294/300 | loss 1.3948 | lr 1.06e-05 |   9.57s |      5218 img/s
+ep  295/300 | loss 1.3992 | lr 1.04e-05 |   9.56s |      5220 img/s
+ep  296/300 | loss 1.3982 | lr 1.03e-05 |   9.56s |      5223 img/s
+ep  297/300 | loss 1.3910 | lr 1.01e-05 |   9.59s |      5204 img/s
+ep  298/300 | loss 1.3971 | lr 1.01e-05 |   9.56s |      5219 img/s
+ep  299/300 | loss 1.3924 | lr 1.00e-05 |   9.56s |      5223 img/s
+ep  300/300 | loss 1.3999 | lr 1.00e-05 |   9.56s |      5220 img/s | train acc  98.74 | val acc  77.43
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▂▂▂▃▃▃▃▃▃▃▃▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇▇███
+wandb:       epoch_sec ▁▁▂▃▁▂▂▄▂▄▁▂▁▄▂▂▁▄▁▂▄▁▁▁▁▁▂▁▁▁▁▁▂▁█▁▁▁▁▁
+wandb:     img_per_sec ▇▇▇▂▇▆▇▇▆▆▃▂▅▇▅▁▆▇▇▇▆▆▆▆▂▇▇▇▇▇▇██▆▇▇▆▇▅▄
+wandb:              lr ▂▃▄▅▅▇███████▇▇▇▆▆▆▅▅▅▅▄▄▃▃▃▃▃▂▂▂▂▂▁▁▁▁▁
+wandb: train_acc_clean ▁▂▃▃▄▄▅▅▅▆▆▆▆▆▆▇▇▇▇███████████
+wandb:      train_loss ████▇▇▇▇▇▆▆▆▆▆▆▆▆▆▅▅▅▅▅▅▅▅▂▂▂▂▂▂▂▁▁▁▁▁▁▁
+wandb:         val_acc ▁▂▃▄▄▅▅▆▆▆▇▇▇▇▇▇▇█████████████
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 77.49
+wandb:           epoch 300
+wandb:       epoch_sec 9.56269
+wandb:     img_per_sec 5220.28868
+wandb:              lr 1e-05
+wandb:   total_minutes 48.96083
+wandb: train_acc_clean 98.74
+wandb:      train_loss 1.39987
+wandb:         val_acc 77.43
+wandb: 
+wandb: 🚀 View run c100_reg21_300ep_s2 at: https://wandb.ai/softeye/vision_transformers/runs/7959c833
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/c100_reg21_300ep_s2/wandb/run-20261014_133145-7959c833/logs
+
+Done in 49.0 min. final val 77.43% | best val 77.49% | clean train 98.74%
+Steady state (excl. epoch 1): 9.57 s/epoch, 5,217 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/c100_reg21_300ep_s2
+== run_wave9c_seeds finished Wed Oct 14 14:20:46 UTC 2026
