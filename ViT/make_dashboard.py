@@ -1423,6 +1423,7 @@ def ch_long():
     rows = [
         row("CIFAR-100, SL-ViT shape, 2.7M, pure ViT", "c100_bf3b_slvit_1000ep", "c100_bf3b_slvit_300ep_lr5e-4", f"SL-ViT {P('slvit_c100')}; CCT hybrid {P('cct_c100')} (300 ep), {P('cct5k_c100')} (5000 ep)"),
         row("CIFAR-100, SL-ViT shape + SPT (full SL-ViT: SPT+LSA), 2.75M", "c100_spt_slvit_1000ep", "c100_spt_slvit_300ep", f"CCT hybrid {P('cct_c100')} (300 ep); SL-ViT {P('slvit_c100')}"),
+        row("CIFAR-100, SL-ViT + SPT, patch 2 (256 tokens, ~4x MACs), 2.75M, 1000 ep", "c100_spt_slvit_p2_1000ep", "c100_spt_slvit_1000ep", "token-count test: +1.1 over the patch-4 3-seed mean; CCT 82.72 at 1500 ep"),
         row("CIFAR-100, SL-ViT + SPT, 2000 ep (vs 1000 ep)", "c100_spt_slvit_2000ep", "c100_spt_slvit_1000ep", "saturated: +0.1 over the 1000-ep 3-seed mean"),
         row("CIFAR-100, ViT-Tiny shape, 5.4M", "c100_tinyshape_bf3b_1000ep", "c100_tinyshape_bf3b", ""),
         row("CIFAR-100, ViT-Tiny shape + SPT, 5.4M", "c100_spt_tinyshape_1000ep", "c100_tinyshape_bf3b", "SPT +1.9 here too; the 2.75M shape is still better"),
