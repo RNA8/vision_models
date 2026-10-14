@@ -160,14 +160,14 @@ All runs use the exact args of `c100_spt_slvit_300ep`: SL-ViT 9×192, SPT + LSA 
 - Queues: `run_wave9_multiscale.sh` (first seeds and variants), `run_wave9b_seeds.sh` (seed 1) and
   `run_wave9c_seeds.sh` (seed 2). Seed 2 was added because the seed-1 reruns showed about 1 pt of seed spread.
 - Status as of 2026-10-14 ~10:45 UTC: 7 runs finished.
-  - `c100_ms_shared_300ep_s2` was running.
+  - `c100_ms_shared_300ep_s2` has since finished (76.53).
   - `c100_ms_pooledpos_300ep`, `c100_spt_slvit_300ep_s1` and `c100_reg21_300ep_s2` were still queued.
   - Their results will land in `runs/<name>/results.json`.
 
 | variant | tokens (+CLS) | params | MACs | s0 | s1 | s2 | mean |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | baseline `c100_spt_slvit_300ep` | 64 | 2.753M | 175.5M | 76.70 | _queued_ | 77.82 | 77.26 (n=2) |
-| multiscale, shared proj (`--multiscale`) | 85 | 2.757M | 232.2M | 76.42 | 77.48 | _running_ | 76.95 (n=2) |
+| multiscale, shared proj (`--multiscale`) | 85 | 2.757M | 232.2M | 76.42 | 77.48 | 76.53 | 76.81 (n=3) |
 | multiscale, per-scale proj | 85 | 2.897M | 232.2M | 75.17 | | | 75.17 (n=1) |
 | multiscale, Laplacian levels | 85 | 2.757M | 232.2M | 73.95 | | | 73.95 (n=1) |
 | multiscale, pooled pos + scale emb. | 85 | 2.753M | 232.2M | _queued_ | | | |
@@ -195,8 +195,8 @@ All runs use the exact args of `c100_spt_slvit_300ep`: SL-ViT 9×192, SPT + LSA 
 **No gain from multiscale input tokens on CIFAR-100 with our recipe.**
 
 1. **Shared projection (the RetinaViT design)** is at parity with the baseline:
-   - multiscale mean 76.95 vs baseline mean 77.26 over two seeds;
-   - the gap is −0.3 pt, inside a seed spread of about 1 pt (baseline 76.70 to 77.82, multiscale 76.42 to 77.48).
+   - multiscale mean 76.81 over three seeds vs baseline mean 77.26 over two seeds;
+   - the gap is −0.45 pt, inside a seed spread of about 1 pt (baseline 76.70 to 77.82, multiscale 76.42 to 77.48).
    - It is 32% more MACs for nothing measurable. This matches RetinaViT's ImageNet result at full depth (+0.2).
 2. **Per-scale projection (−1.5 to −2 pt) and Laplacian levels (−2.7 to −3.3 pt) are clearly worse.** These are
    single seeds, but the gaps are larger than the seed spread.
