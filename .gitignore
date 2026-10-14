@@ -232,3 +232,4 @@ ViT/runs/int8_audit/
 *.onnx
 *.onnx.data
 ViT/*-*-*-*-*.data
+ViT/runs/.gate.lock
