@@ -3,8 +3,10 @@
 Plan and literature: `research/self_distillation.md` (E1 = ensemble function matching, E4 = EMA self-KD).
 Queues: `run_wave10_selfkd.sh` (300-ep screens), `run_wave10b_kd1000.sh` (1000-ep confirms).
 
-**Status (2026-10-14 06:40 UTC):** all 300-ep screens are done, and the 1000-ep FM seed 0 is done (**82.88**).
-1000-ep seed 1 is running.
+**Status (2026-10-14 11:30 UTC): complete.** 1000-ep function matching from the 3-seed ViT ensemble gives
+**82.88 / 82.85 (2-seed mean 82.87)**. The baseline is 80.91 ± 0.26 (3 seeds), so the gain is **+1.96**, and the
+plan's success bar (≥ 82.3) is met. This matches CCT-7/3x1 (82.72 at 1500 ep, 82.87 at 5000 ep) with a 2.75M pure
+ViT: no convolutions, no extra data, and the same inference cost.
 
 ## Setup
 
@@ -79,14 +81,36 @@ forward + backward, which matches about 1.85x.
 | Run | Final | Best | Clean train | s/epoch | Minutes |
 |---|---|---|---|---|---|
 | `c100_kd_ens3_fm_1000ep` (seed 0) | **82.88** | 82.99 | 99.82 | 19.5 | 328 |
-| `c100_kd_ens3_fm_1000ep_s1` (seed 1) | running | | | | |
+| `c100_kd_ens3_fm_1000ep_s1` (seed 1) | **82.85** | 82.96 | 99.90 | 20.0 | 342 |
+| **FM 2-seed mean** | **82.87 ± 0.02** | | | | |
 | baseline 3-seed mean (`c100_spt_slvit_1000ep{,_s1,_s2}`) | 80.91 ± 0.26 | | | 10.4 | |
 | teacher: 3-seed ensemble (prob avg) | 83.27 | | | | |
 | CCT-7/3x1 (arXiv 2104.05704, conv tokenizer) | 82.72 (1500 ep) / 82.87 (5000 ep) | | | | |
 
-Seed 0 test accuracy along the run (KD vs baseline seed 0): 640 ep 81.38 vs 78.93, 800 ep 82.25 vs 79.55,
-1000 ep 82.88 vs 80.66. The student ends 0.4 below its teacher ensemble, consistent with function matching closing
+Test accuracy along the run, KD vs the baseline with the same seed:
+- seed 0: 640 ep 81.38 vs 78.93; 800 ep 82.25 vs 79.55; 1000 ep 82.88 vs 80.66
+- seed 1: 300 ep 78.13 vs 75.18; 640 ep 80.91 vs 79.37; 800 ep 82.16 vs 80.19; 1000 ep 82.85 vs 81.17
+
+ The student ends 0.4 below its teacher ensemble, consistent with function matching closing
 most of the gap on long schedules.
+
+## Verdict and caveats
+
+- **Verdict:** ensemble function matching works. At 1000 ep it adds +1.96 (2 seeds, spread 0.03) over a 3-seed
+  baseline with std 0.26, which is about 7 sigma. At 300 ep it adds +3.85. The pure-ViT vs CCT gap at long schedules
+  is closed for this 2.75M student. Self-KD (EMA teacher) is within noise and was dropped.
+- **Train-time cost:** about 1.9x per epoch for 3 teacher forwards, plus the three 1000-ep teacher runs (sunk; they
+  already existed as seed repeats). For a fresh project, the honest total cost is 4 x 1000 student-epochs + KD
+  overhead.
+- **The deployed model is unchanged:** 2.75M params, the same MACs and the same architecture. The 8.26M-param
+  teacher ensemble exists only during training.
+- **Selection on test:** the FM vs a = 0.5 arm was picked from 300-ep test accuracy (a +0.27 difference, within
+  noise). Final numbers are last-epoch, not best-epoch. CIFAR has no separate validation split in these runs, as for
+  every other number in this repo.
+- **Teacher/student seed overlap:** student seeds 0 and 1 share init seeds with two teacher members, but the
+  students are trained from scratch with a different objective. The two seeds agree to within 0.03.
+- **Next (not run):** add the 2000-ep model to the teacher (ensemble 83.57); run longer FM (Beyer: FM keeps
+  improving to 10k epochs); test whether a 2-member teacher (cheaper) is enough.
 
 ## Not run
 
