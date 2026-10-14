@@ -3057,3 +3057,93 @@ ep  990/1000 | loss 1.3917 | lr 1.01e-05 |  25.03s |      3993 img/s | train acc
 ep  987/1000 | loss 0.4997 | lr 1.02e-05 |  31.37s |      3186 img/s | kd 0.4997 agree 0.637 a 1.00
 ep  991/1000 | loss 1.3893 | lr 1.01e-05 |  25.02s |      3996 img/s
 ep  988/1000 | loss 0.5053 | lr 1.02e-05 |  31.28s |      3196 img/s | kd 0.5053 agree 0.628 a 1.00
+ep  992/1000 | loss 1.3872 | lr 1.01e-05 |  25.01s |      3997 img/s
+ep  993/1000 | loss 1.3844 | lr 1.01e-05 |  25.05s |      3991 img/s
+ep  989/1000 | loss 0.4957 | lr 1.02e-05 |  31.30s |      3194 img/s | kd 0.4957 agree 0.641 a 1.00
+ep  994/1000 | loss 1.3860 | lr 1.00e-05 |  25.03s |      3993 img/s
+ep  990/1000 | loss 0.5025 | lr 1.01e-05 |  31.29s |      3195 img/s | kd 0.5025 agree 0.632 a 1.00 | train acc  97.05 | val acc  67.83
+ep  995/1000 | loss 1.3822 | lr 1.00e-05 |  25.11s |      3981 img/s
+ep  991/1000 | loss 0.5001 | lr 1.01e-05 |  31.28s |      3196 img/s | kd 0.5001 agree 0.635 a 1.00
+ep  996/1000 | loss 1.3849 | lr 1.00e-05 |  25.03s |      3995 img/s
+ep  992/1000 | loss 0.4999 | lr 1.01e-05 |  31.28s |      3196 img/s | kd 0.4999 agree 0.633 a 1.00
+ep  997/1000 | loss 1.3864 | lr 1.00e-05 |  25.03s |      3994 img/s
+ep  998/1000 | loss 1.3811 | lr 1.00e-05 |  25.03s |      3994 img/s
+ep  993/1000 | loss 0.4930 | lr 1.01e-05 |  31.27s |      3197 img/s | kd 0.4930 agree 0.646 a 1.00
+ep  999/1000 | loss 1.3848 | lr 1.00e-05 |  25.03s |      3994 img/s
+ep  994/1000 | loss 0.4988 | lr 1.00e-05 |  31.28s |      3196 img/s | kd 0.4988 agree 0.638 a 1.00
+ep 1000/1000 | loss 1.3802 | lr 1.00e-05 |  25.01s |      3997 img/s | train acc  99.93 | val acc  66.36
+wandb: updating run metadata
+wandb: uploading wandb-summary.json; uploading config.yaml; uploading output.log
+wandb: uploading history steps 998-999, summary, console lines 999-1003
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▁▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▆▆▆▆▆▆▇▇▇▇▇▇▇█████
+wandb:       epoch_sec ▁▁▁▁▁██▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:     img_per_sec ▄▄▄▄▄█▄▄▄▄▁▁▁▁▁▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+wandb:              lr ██████████▇▇▇▇▇▆▆▆▆▅▅▅▄▄▄▄▄▄▄▃▂▂▂▂▁▁▁▁▁▁
+wandb: train_acc_clean ▁▂▂▃▄▅▅▅▆▆▆▆▆▆▆▆▆▆▆▆▇▇██████████████████
+wandb:      train_loss ███▇▇▆▆▆▆▆▆▅▅▅▅▅▅▅▅▅▅▅▅▅▅▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁
+wandb:         val_acc ▁▄▄▅▆▇▇▇▇▇▇▇▇▇██████████████████████████
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 66.36
+wandb:           epoch 1000
+wandb:       epoch_sec 25.01289
+wandb:     img_per_sec 3996.65992
+wandb:              lr 1e-05
+wandb:   total_minutes 436.30024
+wandb: train_acc_clean 99.93
+wandb:      train_loss 1.38022
+wandb:         val_acc 66.36
+wandb: 
+wandb: 🚀 View run tin_spt_slvit_p8_1000ep_s1 at: https://wandb.ai/softeye/vision_transformers/runs/0546df50
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/tin_spt_slvit_p8_1000ep_s1/wandb/run-20261014_123644-0546df50/logs
+
+Done in 436.3 min. final val 66.36% | best val 66.36% | clean train 99.93%
+Steady state (excl. epoch 1): 25.11 s/epoch, 3,981 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_slvit_p8_1000ep_s1
+ep  995/1000 | loss 0.4986 | lr 1.00e-05 |  27.65s |      3616 img/s | kd 0.4986 agree 0.638 a 1.00
+ep  996/1000 | loss 0.5030 | lr 1.00e-05 |  23.80s |      4201 img/s | kd 0.5030 agree 0.630 a 1.00
+ep  997/1000 | loss 0.4962 | lr 1.00e-05 |  23.79s |      4202 img/s | kd 0.4962 agree 0.643 a 1.00
+ep  998/1000 | loss 0.4960 | lr 1.00e-05 |  23.69s |      4219 img/s | kd 0.4960 agree 0.638 a 1.00
+ep  999/1000 | loss 0.4987 | lr 1.00e-05 |  23.88s |      4186 img/s | kd 0.4987 agree 0.634 a 1.00
+ep 1000/1000 | loss 0.4970 | lr 1.00e-05 |  28.83s |      3467 img/s | kd 0.4970 agree 0.638 a 1.00 | train acc  97.10 | val acc  68.09
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▁▂▂▂▂▂▃▃▃▃▄▄▄▄▄▄▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇▇▇▇██
+wandb:       epoch_sec ███▂▂▂▂▁▁▁▁▁▁▁▁▇▇▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:     img_per_sec ▁▁▁▅█▅▅▅▅▅▆▆▆▆▆▁▁▁▁▁▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆
+wandb:        kd_agree ▁▂▄▄▄▄▄▅▅▅▅▅▅▅▅▅▅▅▅▆▆▅▆▆▆▆▆▆▆▇▇▇▇▇▇█████
+wandb:        kd_alpha ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         kd_loss ██▆▅▄▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁
+wandb:              lr ▂▃▄▅██████▇▇▆▆▆▅▅▅▄▄▄▃▃▃▃▃▂▂▂▂▂▂▁▁▁▁▁▁▁▁
+wandb: train_acc_clean ▁▃▅▅▆▆▆▆▆▆▆▆▆▆▆▇▇▇▇▇▇▇▇▇▇▇▇█████████████
+wandb:      train_loss ██▆▆▆▄▄▄▄▄▄▃▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁
+wandb:         val_acc ▁▂▅▆▇▇▇▇▇▇▇█████████████████████████████
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 68.09
+wandb:           epoch 1000
+wandb:       epoch_sec 28.83202
+wandb:     img_per_sec 3467.25674
+wandb:        kd_agree 0.63807
+wandb:        kd_alpha 1
+wandb:         kd_loss 0.49697
+wandb:              lr 1e-05
+wandb:   total_minutes 552.53414
+wandb: train_acc_clean 97.1
+wandb:              +2 ...
+wandb: 
+wandb: 🚀 View run tin_kd_ba_fm_1000ep at: https://wandb.ai/softeye/vision_transformers/runs/1648b5b1
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/tin_kd_ba_fm_1000ep/wandb/run-20261014_104245-1648b5b1/logs
+
+Done in 552.5 min. final val 68.09% | best val 68.09% | clean train 97.10%
+Steady state (excl. epoch 1): 31.41 s/epoch, 3,183 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/tin_kd_ba_fm_1000ep
+== run_wave12 finished Wed Oct 14 19:55:24 UTC 2026
