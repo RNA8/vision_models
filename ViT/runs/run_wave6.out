@@ -1186,3 +1186,41 @@ ep   55/60 | loss 1.4145 | lr 1.04e-05 |  65.76s |     759 img/s | train acc  93
 ep   56/60 | loss 1.4023 | lr 7.04e-06 |  65.71s |     760 img/s
 ep   57/60 | loss 1.3892 | lr 4.40e-06 |  65.75s |     759 img/s
 ep   58/60 | loss 1.4605 | lr 2.51e-06 |  65.72s |     760 img/s
+ep   59/60 | loss 1.4513 | lr 1.38e-06 |  65.72s |     760 img/s
+ep   60/60 | loss 1.4376 | lr 1.00e-06 |  65.77s |     759 img/s | train acc  93.33 | val acc  84.93 | ema val  84.83
+wandb: updating run metadata
+wandb: uploading wandb-summary.json; uploading config.yaml; uploading output.log
+wandb: 
+wandb: Run history:
+wandb:     ema_val_acc ▁▆▇▇▇███████
+wandb:           epoch ▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇████
+wandb:       epoch_sec █▆▆▆▆▆▆▆▆▆▆▆▅▆▆▆▆▆▁▄▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▅▅▆
+wandb:     img_per_sec ▁▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅█▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
+wandb:         kd_loss █▆▆▅▅▄▄▄▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁
+wandb:              lr ▃▆███████▇▇▇▇▇▆▆▆▅▅▅▅▄▄▄▄▃▃▃▃▃▂▂▂▂▂▁▁▁▁▁
+wandb: train_acc_clean ▁▄▅▆▆▇▇█████
+wandb:      train_loss █▅▄▄▄▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val_acc ▁▄▅▆▆▇▇█████
+wandb: 
+wandb: Run summary:
+wandb: best_ema_val_acc 84.83
+wandb:     best_val_acc 84.93
+wandb:      ema_val_acc 84.83
+wandb:            epoch 60
+wandb:        epoch_sec 65.77288
+wandb:      img_per_sec 758.97539
+wandb:          kd_loss 0.42398
+wandb:               lr 0.0
+wandb:    total_minutes 68.37972
+wandb:  train_acc_clean 93.33
+wandb:               +2 ...
+wandb: 
+wandb: 🚀 View run ec100_in21kpre_slvit_spt_p8_128_kd_60ep at: https://wandb.ai/softeye/vision_transformers/runs/f73921a8
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/ec100_in21kpre_slvit_spt_p8_128_kd_60ep/wandb/run-20261014_064258-f73921a8/logs
+
+Done in 68.4 min. final val 84.93% | best val 84.93% | final EMA val 84.83% (best 84.83%)
+Steady state: 65.88 s/epoch, 758 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/ec100_in21kpre_slvit_spt_p8_128_kd_60ep
+== run_wave6 finished Wed Oct 14 07:51:24 UTC 2026

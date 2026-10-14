@@ -1361,6 +1361,7 @@ def ch_wave1():
         row("  IN-21k-P, patch 4 at 64 px", "ec100_in21kpre_tiny_p4_64", f"IN-64 pretrain: {A('ec100_in64pre_tiny_p4_64')}; with KD {A('ec100_in21kpre_tiny_p4_64_kd')}"),
         row("  IN-21k-P, patch 4 at 64 px, KD, 60 ep fine-tune", "ec100_in21kpre_tiny_p4_64_kd_60ep", f"seed 1: {A('ec100_in21kpre_tiny_p4_64_kd_60ep_s1')}"),
         row("  IN-21k-P, patch 8 at 128 px, KD, 60 ep (same 256 tokens as patch 4 at 64 px)", "ec100_in21kpre_tiny_p8_128_kd_60ep", "smaller patches beat larger input at equal tokens"),
+        row("  IN-21k-P SL-ViT + SPT (2.75M, ours, 30 ep pretrain), patch 8 at 128 px, KD, 60 ep", "ec100_in21kpre_slvit_spt_p8_128_kd_60ep", f"same setup with ViT-Tiny 5.4M: {A('ec100_in21kpre_tiny_p8_128_kd_60ep')}; from scratch 2.75M: 80.91"),
         row("  IN-21k-P, patch 4 at 64 px, KD, 120 ep fine-tune", "ec100_in21kpre_tiny_p4_64_kd_120ep", f"seed 1: {A('ec100_in21kpre_tiny_p4_64_kd_120ep_s1')}"),
         row("  IN-21k-P, patch 4 at 64 px, KD, 200 ep fine-tune", "ec100_in21kpre_tiny_p4_64_kd_200ep", "best pure ViT at 64 px input; +0.3 over 120 ep, near saturation"),
         row("Dense IN-64 ViT-Tiny fine-tune, 30 ep, seed 1", "ec100_dense_in64pre_tiny_64_s1", f"seed 0: {A('ec100_in64pre_tiny_64')}"),
