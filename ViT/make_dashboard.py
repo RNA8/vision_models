@@ -1410,7 +1410,8 @@ def seeds_line():
                          ("CIFAR-100 SL-ViT + SPT, 1000 ep", ["c100_spt_slvit_1000ep", "c100_spt_slvit_1000ep_s1", "c100_spt_slvit_1000ep_s2"]),
                          ("CIFAR-10 ViT-Tiny shape, 1000 ep", ["c10_tinyshape_bf3b_1000ep", "c10_tinyshape_bf3b_1000ep_s1", "c10_tinyshape_bf3b_1000ep_s2"]),
                          ("CIFAR-10 ViT-Tiny + SPT, 1000 ep", ["c10_spt_tinyshape_1000ep", "c10_spt_tinyshape_1000ep_s1", "c10_spt_tinyshape_1000ep_s2"]),
-                         ("CIFAR-10 SL-ViT + SPT (2.75M), 1000 ep", ["c10_spt_slvit_1000ep", "c10_spt_slvit_1000ep_s1", "c10_spt_slvit_1000ep_s2"])]:
+                         ("CIFAR-10 SL-ViT + SPT (2.75M), 1000 ep", ["c10_spt_slvit_1000ep", "c10_spt_slvit_1000ep_s1", "c10_spt_slvit_1000ep_s2"]),
+                         ("CIFAR-100 SL-ViT + SPT distilled from own 3-seed ensemble, 1000 ep", ["c100_kd_ens3_fm_1000ep", "c100_kd_ens3_fm_1000ep_s1"])]:
         m = ms(names)
         if m:
             parts.append(f"{label}: <b>{m}</b>")
