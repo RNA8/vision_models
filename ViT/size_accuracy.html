@@ -1,0 +1,285 @@
+<title>Small ViTs: Accuracy vs Size</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column; title + takeaway, dataset tabs, a single log-x scatter plot, then the point table with sources. */
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --ink: #18202c; --muted: #5d6878; --rule: #dde2ea; --grid: #e9edf2;
+  --ours: #0a7d74; --ours-soft: #0a7d7433; --cnn: #2f5fb8; --pubvit: #7b8798; --hybrid: #b8681c; --pre: #8a5bb5;
+  --display: "Source Serif 4", Georgia, serif; --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11161d; --panel: #171e27; --ink: #e6ebf2; --muted: #9aa6b6; --rule: #2a3442; --grid: #212a36;
+  --ours: #3cc4b7; --ours-soft: #3cc4b733; --cnn: #7aa2f0; --pubvit: #8d99ab; --hybrid: #e09a52; --pre: #b48be0; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #11161d; --panel: #171e27; --ink: #e6ebf2; --muted: #9aa6b6; --rule: #2a3442; --grid: #212a36;
+  --ours: #3cc4b7; --ours-soft: #3cc4b733; --cnn: #7aa2f0; --pubvit: #8d99ab; --hybrid: #e09a52; --pre: #b48be0; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 48px; display: grid; gap: 22px; }
+h1 { font-family: var(--display); font-weight: 650; font-size: clamp(1.7rem, 3.4vw, 2.4rem); line-height: 1.15; margin: 0; text-wrap: balance; }
+.lede { margin: 0; max-width: 68ch; color: var(--muted); }
+.lede b { color: var(--ink); font-weight: 600; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tab { font: 600 0.95rem var(--body); padding: 7px 14px; border-radius: 999px; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tab:focus-visible, .toggle input:focus-visible, circle:focus-visible, rect:focus-visible, path:focus-visible { outline: 2px solid var(--ours); outline-offset: 2px; }
+.toggle { margin-left: auto; display: flex; gap: 8px; align-items: center; font-size: 0.92rem; color: var(--muted); }
+.figure { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 16px 10px; display: grid; gap: 10px; position: relative; }
+.figure h2 { font-family: var(--display); font-weight: 500; font-size: 1.2rem; margin: 0; }
+.figure .sub { margin: 0; color: var(--muted); font-size: 0.92rem; max-width: 80ch; }
+.chart { width: 100%; overflow-x: auto; }
+svg { display: block; width: 100%; min-width: 560px; height: auto; font-family: var(--mono); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.88rem; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend svg { width: 14px; min-width: 0; height: 14px; }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 0.82rem; line-height: 1.35; padding: 7px 9px; border-radius: 6px; max-width: 290px; box-shadow: 0 4px 16px #0003; }
+.tip b { font-weight: 600; }
+.takeaways { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.takeaways div { border-top: 2px solid var(--ours); padding-top: 8px; font-size: 0.95rem; min-width: 0; }
+.takeaways div.warn { border-top-color: var(--cnn); }
+.takeaways b { display: block; font-family: var(--mono); font-weight: 500; font-size: 1.05rem; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+td.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
+td .sw { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; }
+a { color: var(--ours); }
+.foot { color: var(--muted); font-size: 0.85rem; max-width: 90ch; margin: 0; }
+@media (max-width: 560px) { .toggle { margin-left: 0; } }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <h1>Small vision transformers: accuracy vs size</h1>
+    <p class="lede">Our family of pure ViTs (no convolutions, trained only on the target dataset) against published models under 10M parameters. <b>Filled teal</b> = our ViT distilled from an ensemble of our own ViTs; <b>hollow teal</b> = the same recipe without a teacher. Hover or tap any point for its source.</p>
+  </header>
+
+  <div class="takeaways" id="takeaways"></div>
+
+  <div class="tabs" role="tablist" aria-label="Dataset">
+    <button class="tab" role="tab" id="tab-c100" aria-selected="true" data-ds="c100">CIFAR-100</button>
+    <button class="tab" role="tab" id="tab-c10" aria-selected="false" data-ds="c10">CIFAR-10</button>
+    <button class="tab" role="tab" id="tab-tin" aria-selected="false" data-ds="tin">Tiny-ImageNet</button>
+    <label class="toggle" id="pre-wrap"><input type="checkbox" id="pre-toggle"> show models pretrained on ImageNet</label>
+  </div>
+
+  <section class="figure" aria-live="polite">
+    <h2 id="fig-title"></h2>
+    <p class="sub" id="fig-sub"></p>
+    <div class="chart" id="chart"></div>
+    <div class="legend" id="legend"></div>
+    <div class="tip" id="tip" hidden></div>
+  </section>
+
+  <section style="display:grid;gap:8px">
+    <h2 style="font-family:var(--display);font-weight:500;font-size:1.2rem;margin:0">Every point on the chart</h2>
+    <div class="tablewrap"><table id="table"><thead><tr><th>Model</th><th>Params</th><th>Top-1 %</th><th>Notes</th><th>Source</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <p class="foot">Our numbers are final-epoch test accuracy from <code>runs/*/results.json</code> in <a href="https://github.com/RNA8/vision_models" target="_blank" rel="noopener">RNA8/vision_models</a>; "3 seeds" means a mean over three runs, otherwise one run. Published numbers are as reported in each paper (single runs unless stated). "Distilled" models use only teachers we trained ourselves on the same dataset; no outside data or pretrained teacher. Points marked 224 px run the image upsampled to 224, roughly 6× our inference compute at 64 px. As of 2026-10-15.</p>
+</div>
+
+<script>
+const REPO = "https://github.com/RNA8/vision_models";
+const CAT = {
+  ours_kd:    { name: "Ours: pure ViT, distilled from our own ViTs", color: "--ours", fill: true,  shape: "circle" },
+  ours_plain: { name: "Ours: pure ViT, no teacher",                  color: "--ours", fill: false, shape: "circle" },
+  ours_cnn:   { name: "Ours: ResNet-18 control, same recipe",         color: "--cnn",  fill: true,  shape: "diamond" },
+  pub_vit:    { name: "Published: pure transformer",                 color: "--pubvit", fill: true, shape: "circle" },
+  pub_hyb:    { name: "Published: conv hybrid or CNN",               color: "--hybrid", fill: true, shape: "square" },
+  pre:        { name: "Uses ImageNet pretraining",                   color: "--pre", fill: false, shape: "square" },
+};
+const D = {
+  c100: {
+    title: "CIFAR-100, trained from scratch",
+    sub: "Distillation moves the whole family up: the 1.25M student beats our 2.75M model trained without a teacher, and the 2.75M student matches CCT, a conv-tokenizer hybrid, at 1500–5000 epochs.",
+    y: [71, 84], yPre: [71, 91.5],
+    frontier: ["kd071", "kd125", "kd275"],
+    pts: [
+      { id: "kd071", n: "Ours, width 96", p: 0.713, a: 78.38, c: "ours_kd", lab: "0.71M · 78.4", lx: 8, ly: 16, note: "1000 ep, 1 seed (seed 2 running)", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
+      { id: "kd125", n: "Ours, width 128", p: 1.245, a: 81.39, c: "ours_kd", lab: "1.25M · 81.4", lx: -6, ly: -12, anchor: "end", note: "1000 ep, 1 seed", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
+      { id: "kd275", n: "Ours, 2.75M", p: 2.753, a: 82.77, c: "ours_kd", lab: "2.75M · 82.8", lx: -8, ly: 9, anchor: "end", note: "1000 ep, 3 seeds (82.88 / 82.85 / 82.59)", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
+      { id: "kd2k", n: "Ours, 2.75M, 2000 ep", p: 2.753, a: 83.15, c: "ours_kd", lab: "2000 ep · 83.2", lx: -8, ly: -6, anchor: "end", note: "2000 ep, 1 seed", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
+      { id: "pl275", n: "Ours, 2.75M, no teacher", p: 2.753, a: 80.91, c: "ours_plain", lab: "80.9", lx: -8, ly: 4, anchor: "end", note: "1000 ep, 3 seeds (80.66 / 81.17 / 80.91)", src: REPO + "/blob/main/README.md" },
+      { id: "pl54", n: "Ours, ViT-Tiny shape, no teacher", p: 5.418, a: 79.30, c: "ours_plain", lab: "5.4M · 79.3", lx: 8, ly: 4, note: "1000 ep, 1 seed; wider is not better here", src: REPO + "/blob/main/README.md" },
+      { id: "cct5k", n: "CCT-7/3x1, 5000 ep", p: 3.76, a: 82.87, c: "pub_hyb", lab: "CCT 5000 ep", lx: 8, ly: -8, note: "conv tokenizer", src: "https://arxiv.org/abs/2104.05704" },
+      { id: "cct", n: "CCT-7/3x1, 300 ep", p: 3.76, a: 80.92, c: "pub_hyb", lab: "CCT 300 ep", lx: 8, ly: 12, note: "conv tokenizer; 82.72 at 1500 ep", src: "https://arxiv.org/abs/2104.05704" },
+      { id: "gani", n: "ViT + SSL pretraining on CIFAR (Gani et al.)", p: 2.8, a: 79.15, c: "pub_vit", lab: "Gani et al. 79.2", lx: -8, ly: 14, anchor: "end", note: "two-stage: self-supervised then supervised, same data", src: "https://arxiv.org/abs/2210.07240" },
+      { id: "slvit", n: "SL-ViT (SPT + LSA)", p: 2.9, a: 76.92, c: "pub_vit", lab: "SL-ViT 76.9", lx: 8, ly: 4, note: "", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "vitlite", n: "ViT-Lite-7/4", p: 3.72, a: 73.94, c: "pub_vit", lab: "ViT-Lite 73.9", lx: 8, ly: 4, note: "300 ep", src: "https://arxiv.org/abs/2104.05704" },
+      { id: "sptbase", n: "ViT baseline (SPT/LSA paper)", p: 2.8, a: 73.81, c: "pub_vit", lab: "", note: "", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "vitrm", n: "ViTRM (recursion model)", p: 3.6, a: 72.1, c: "pub_vit", lab: "ViTRM 72.1", lx: 8, ly: 4, note: "", src: "https://arxiv.org/abs/2603.19503" },
+      { id: "tinyvit", n: "TinyViT-5M fine-tuned + KD (ours)", p: 5.1, a: 90.40, c: "pre", lab: "TinyViT-5M 90.4", lx: -8, ly: -8, anchor: "end", pre: true, note: "ImageNet-pretrained timm weights, 200-ep KD fine-tune from an ImageNet-pretrained ViT-B teacher, 2 seeds", src: REPO + "/blob/main/README.md" },
+      { id: "repvit", n: "RepViT-M0.9 fine-tuned + KD (ours)", p: 4.8, a: 89.85, c: "pre", lab: "", pre: true, note: "ImageNet-pretrained, 2 seeds", src: REPO + "/blob/main/README.md" },
+      { id: "mnv3", n: "MobileNetV3-L, IN-21k-P, 224 px", p: 4.2, a: 88.5, c: "pre", lab: "MobileNetV3 88.5", lx: -8, ly: 14, anchor: "end", pre: true, note: "", src: "https://arxiv.org/abs/2104.10972" },
+      { id: "effb0", n: "EfficientNet-B0, IN-1k", p: 4.0, a: 88.1, c: "pre", lab: "", pre: true, note: "", src: "https://arxiv.org/abs/1905.11946" },
+      { id: "in21k", n: "Our ViT-Tiny, own IN-21k pretraining, 64 px", p: 5.4, a: 88.14, c: "pre", lab: "", pre: true, note: "pure ViT; 30-ep ImageNet-21k pretraining, KD fine-tune", src: REPO + "/blob/main/README.md" },
+      { id: "deit", n: "DeiT-Tiny fine-tune, 224 px", p: 5.5, a: 86.78, c: "pre", lab: "DeiT-Tiny 86.8", lx: 8, ly: 4, pre: true, note: "", src: "https://arxiv.org/abs/2404.00672" },
+    ],
+  },
+  c10: {
+    title: "CIFAR-10, trained from scratch",
+    sub: "At 2.75M the recipe alone reaches 96.8%, level with our 5.4M model; distillation adds half a point. CCT's 98.0% needs 5000 epochs and a conv tokenizer.",
+    y: [87, 98.6],
+    frontier: [],
+    pts: [
+      { id: "kd", n: "Ours, 2.75M, distilled", p: 2.735, a: 97.22, c: "ours_kd", lab: "2.75M · 97.2", lx: -8, ly: -8, anchor: "end", note: "1000 ep, 1 seed; teacher = our 3 seeds (97.28)", src: REPO + "/blob/main/README.md" },
+      { id: "pl", n: "Ours, 2.75M, no teacher", p: 2.735, a: 96.75, c: "ours_plain", lab: "96.8", lx: -8, ly: 12, anchor: "end", note: "1000 ep, 3 seeds (97.03 / 96.51 / 96.71)", src: REPO + "/blob/main/README.md" },
+      { id: "pl54", n: "Ours, ViT-Tiny shape + SPT", p: 5.4, a: 96.87, c: "ours_plain", lab: "5.4M · 96.9", lx: 8, ly: 4, note: "1000 ep, 3 seeds", src: REPO + "/blob/main/README.md" },
+      { id: "cct5k", n: "CCT-7/3x1, 5000 ep", p: 3.76, a: 98.00, c: "pub_hyb", lab: "CCT 5000 ep", lx: 8, ly: 4, note: "conv tokenizer", src: "https://arxiv.org/abs/2104.05704" },
+      { id: "cct", n: "CCT-7/3x1, 300 ep", p: 3.76, a: 96.53, c: "pub_hyb", lab: "CCT 300 ep", lx: 8, ly: 14, note: "conv tokenizer; 97.48 at 1500 ep", src: "https://arxiv.org/abs/2104.05704" },
+      { id: "gani", n: "ViT + SSL pretraining (Gani et al.)", p: 2.8, a: 96.41, c: "pub_vit", lab: "Gani et al.", lx: -8, ly: 16, anchor: "end", note: "two-stage, same data", src: "https://arxiv.org/abs/2210.07240" },
+      { id: "slvit", n: "SL-ViT", p: 2.9, a: 94.53, c: "pub_vit", lab: "SL-ViT 94.5", lx: 8, ly: 4, note: "", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "cvt", n: "CVT-7/4 (SeqPool)", p: 3.72, a: 94.01, c: "pub_vit", lab: "CVT 94.0", lx: 8, ly: 4, note: "", src: "https://arxiv.org/abs/2104.05704" },
+      { id: "sptbase", n: "ViT baseline (SPT/LSA paper)", p: 2.8, a: 93.58, c: "pub_vit", lab: "", note: "100 ep", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "vitlite", n: "ViT-Lite-7/4", p: 3.72, a: 93.57, c: "pub_vit", lab: "ViT-Lite 93.6", lx: 8, ly: 14, note: "300 ep", src: "https://arxiv.org/abs/2104.05704" },
+      { id: "vitrm", n: "ViTRM (recursion model)", p: 3.6, a: 93.1, c: "pub_vit", lab: "", note: "", src: "https://arxiv.org/abs/2603.19503" },
+      { id: "mim", n: "ViT-Tiny p4, plain init (mimetic init paper)", p: 5.4, a: 88.43, c: "pub_vit", lab: "ViT-Tiny 88.4", lx: 8, ly: 4, note: "100 ep", src: "https://arxiv.org/abs/2305.09828" },
+    ],
+  },
+  tin: {
+    title: "Tiny-ImageNet (64 px), trained from scratch",
+    sub: "Distilled from two copies of itself, our 2.9M ViT beats every published transformer under 10M at native 64 px. Our own ResNet-18 control keeps this honest: at the same size it ties the plain ViT, and at 11.3M it edges the distilled one.",
+    y: [57.5, 71.5],
+    frontier: [],
+    pts: [
+      { id: "kd2", n: "Ours, 2.9M, distilled from 2 copies", p: 2.912, a: 69.66, c: "ours_kd", lab: "2.9M · 69.7", lx: -8, ly: -8, anchor: "end", note: "1000 ep, 1 seed; teacher ensemble 68.98", src: REPO + "/blob/main/ViT/research/tinyimagenet_sota.md" },
+      { id: "kd1", n: "Ours, 2.9M, distilled from 1 copy", p: 2.912, a: 67.99, c: "ours_kd", lab: "68.0", lx: -8, ly: 4, anchor: "end", note: "1000 ep, 2 seeds (68.09 / 67.89)", src: REPO + "/blob/main/ViT/research/tinyimagenet_sota.md" },
+      { id: "pl", n: "Ours, 2.9M, no teacher", p: 2.912, a: 66.26, c: "ours_plain", lab: "66.3", lx: -8, ly: -3, anchor: "end", note: "1000 ep, 2 seeds (66.16 / 66.36)", src: REPO + "/blob/main/ViT/research/tinyimagenet_sota.md" },
+      { id: "r18w32", n: "Our ResNet-18, width 32", p: 2.859, a: 66.52, c: "ours_cnn", lab: "ResNet-18 66.5", lx: -8, ly: 22, anchor: "end", note: "same recipe, SGD screened on held-out data, 1000 ep, 1 seed", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
+      { id: "r18", n: "Our ResNet-18, standard", p: 11.27, a: 69.84, c: "ours_cnn", lab: "ResNet-18 69.8", lx: -8, ly: 18, anchor: "end", note: "11.27M (over the 10M budget), same recipe, 1 seed", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
+      { id: "dw", n: "CaiT-xxs12 + depth-wise conv shortcut, 224 px", p: 6.4, a: 70.47, c: "pub_hyb", lab: "hybrid @224 px 70.5", lx: 8, ly: -6, note: "conv hybrid, upsampled to 224 px", src: "https://arxiv.org/abs/2407.19394" },
+      { id: "dw2", n: "Same, 2-block DWConv, 224 px", p: 6.2, a: 68.76, c: "pub_hyb", lab: "", note: "<6.4M, upsampled to 224 px", src: "https://arxiv.org/abs/2407.19394" },
+      { id: "gani", n: "CaiT + SSL init (Gani et al.)", p: 7.7, a: 67.46, c: "pub_vit", lab: "CaiT (Gani) 67.5", lx: 8, ly: 4, note: "best published transformer ≤10M at 64 px", src: "https://arxiv.org/abs/2210.07240" },
+      { id: "slcait", n: "SL-CaiT", p: 9.2, a: 67.18, c: "pub_vit", lab: "", note: "100 ep", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "effb0", n: "EfficientNet-B0", p: 3.7, a: 66.79, c: "pub_hyb", lab: "EffNet-B0 66.8", lx: 8, ly: 14, note: "100 ep", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "shuf", n: "ShuffleNetV2 + DKD/DOT distillation", p: 1.5, a: 66.21, c: "pub_hyb", lab: "ShuffleNetV2 KD 66.2", lx: -8, ly: 4, anchor: "end", note: "ResNet-18 teacher", src: "https://arxiv.org/abs/2307.08436" },
+      { id: "swin", n: "Swin + SSL init (Gani et al.)", p: 7.1, a: 65.13, c: "pub_vit", lab: "", note: "", src: "https://arxiv.org/abs/2210.07240" },
+      { id: "mnv2", n: "MobileNetV2 + DKD/DOT", p: 2.5, a: 64.60, c: "pub_hyb", lab: "", note: "", src: "https://arxiv.org/abs/2307.08436" },
+      { id: "cct", n: "MMA-CCT-7/3x2", p: 3.86, a: 64.41, c: "pub_hyb", lab: "", note: "conv tokenizer", src: "https://arxiv.org/abs/2207.08569" },
+      { id: "cait", n: "CaiT", p: 9.1, a: 64.37, c: "pub_vit", lab: "", note: "", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "dwvit", n: "ViT-Tiny + DWConv shortcut, 224 px", p: 5.6, a: 64.10, c: "pub_hyb", lab: "", note: "upsampled to 224 px", src: "https://arxiv.org/abs/2407.19394" },
+      { id: "r8x4", n: "ResNet8x4 + CRLD distillation", p: 1.3, a: 63.84, c: "pub_hyb", lab: "", note: "", src: "https://arxiv.org/abs/2412.16493" },
+      { id: "cmt", n: "CMT-Ti, 224 px", p: 8.7, a: 63.75, c: "pub_hyb", lab: "", note: "", src: "https://arxiv.org/abs/2501.06040" },
+      { id: "ganivit", n: "ViT + SSL init (Gani et al.)", p: 2.8, a: 63.36, c: "pub_vit", lab: "ViT (Gani) 63.4", lx: -8, ly: 4, anchor: "end", note: "", src: "https://arxiv.org/abs/2210.07240" },
+      { id: "r110", n: "ResNet-110", p: 1.7, a: 62.96, c: "pub_hyb", lab: "", note: "", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "slpit", n: "SL-PiT", p: 8.7, a: 62.91, c: "pub_vit", lab: "", note: "", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "slvit", n: "SL-ViT", p: 2.9, a: 61.07, c: "pub_vit", lab: "SL-ViT 61.1", lx: 8, ly: 4, note: "100 ep", src: "https://arxiv.org/abs/2112.13492" },
+      { id: "sata", n: "SATA-ViT", p: 2.8, a: 58.77, c: "pub_vit", lab: "", note: "", src: "https://arxiv.org/abs/2210.12333" },
+    ],
+  },
+};
+const TAKE = [
+  { k: "0.71M → 78.4%", t: "Our smallest distilled ViT beats published SL-ViT (76.9%, 2.9M) on CIFAR-100 at a quarter of the size." },
+  { k: "1.25M → 81.4%", t: "Half-size distilled ViT beats our own 2.75M model trained without a teacher (80.9%)." },
+  { k: "2.75M → 82.8%", t: "Pure ViT, no extra data, level with CCT (conv-tokenizer hybrid) at 1500–5000 epochs." },
+  { k: "Tiny-ImageNet 69.7%", t: "Best pure transformer ≤10M at 64 px we found. A same-size ResNet-18 trained our way ties the plain ViT (66.5 vs 66.3).", warn: true },
+];
+
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const svgNS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(svgNS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (parent) parent.appendChild(e); return e; };
+let ds = "c100";
+try { const h = location.hash.replace("#", ""); if (D[h]) ds = h; } catch (e) {}
+
+function marker(g, cat, x, y, r) {
+  const c = CAT[cat], col = css(c.color), fill = c.fill ? col : css("--panel");
+  let m;
+  if (c.shape === "circle") m = el("circle", { cx: x, cy: y, r, fill, stroke: col, "stroke-width": 2 }, g);
+  else if (c.shape === "square") m = el("rect", { x: x - r * 0.88, y: y - r * 0.88, width: r * 1.76, height: r * 1.76, fill, stroke: col, "stroke-width": 2 }, g);
+  else m = el("path", { d: `M${x} ${y - r * 1.25}L${x + r * 1.25} ${y}L${x} ${y + r * 1.25}L${x - r * 1.25} ${y}Z`, fill, stroke: col, "stroke-width": 2 }, g);
+  return m;
+}
+
+function render() {
+  const d = D[ds], showPre = document.getElementById("pre-toggle").checked && ds === "c100";
+  document.getElementById("pre-wrap").hidden = ds !== "c100";
+  document.getElementById("fig-title").textContent = d.title;
+  document.getElementById("fig-sub").textContent = d.sub;
+  const pts = d.pts.filter(p => !p.pre || showPre);
+  const W = 900, H = 520, m = { l: 58, r: 26, t: 18, b: 52 };
+  const [y0, y1] = showPre ? d.yPre : d.y;
+  const lx0 = Math.log10(0.5), lx1 = Math.log10(12.5);
+  const X = p => m.l + (Math.log10(p) - lx0) / (lx1 - lx0) * (W - m.l - m.r);
+  const Y = a => m.t + (1 - (a - y0) / (y1 - y0)) * (H - m.t - m.b);
+  const chart = document.getElementById("chart"); chart.innerHTML = "";
+  const s = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": d.title + ": top-1 accuracy against parameter count" }, chart);
+  const muted = css("--muted"), grid = css("--grid"), ink = css("--ink");
+  // over-budget band
+  el("rect", { x: X(10), y: m.t, width: X(12.5) - X(10), height: H - m.t - m.b, fill: grid }, s);
+  el("text", { x: X(10) + 6, y: m.t + 14, fill: muted, "font-size": 11 }, s).textContent = "> 10M";
+  // y grid
+  const step = (y1 - y0) > 12 ? 2 : 1;
+  for (let v = Math.ceil(y0); v <= y1; v += 1) {
+    if (v % step) continue;
+    el("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), stroke: grid, "stroke-width": 1 }, s);
+    el("text", { x: m.l - 8, y: Y(v) + 4, fill: muted, "font-size": 12, "text-anchor": "end" }, s).textContent = v;
+  }
+  for (const v of [0.5, 1, 2, 3, 5, 10]) {
+    el("line", { x1: X(v), x2: X(v), y1: m.t, y2: H - m.b, stroke: grid, "stroke-width": 1 }, s);
+    el("text", { x: X(v), y: H - m.b + 18, fill: muted, "font-size": 12, "text-anchor": "middle" }, s).textContent = v + "M";
+  }
+  el("line", { x1: X(10), x2: X(10), y1: m.t, y2: H - m.b, stroke: muted, "stroke-width": 1.2, "stroke-dasharray": "5 4" }, s);
+  el("text", { x: (m.l + W - m.r) / 2, y: H - 10, fill: muted, "font-size": 12, "text-anchor": "middle" }, s).textContent = "parameters (log scale)";
+  const yl = el("text", { x: 16, y: (m.t + H - m.b) / 2, fill: muted, "font-size": 12, "text-anchor": "middle", transform: `rotate(-90 16 ${(m.t + H - m.b) / 2})` }, s); yl.textContent = "top-1 accuracy (%)";
+  // frontier
+  const fr = d.frontier.map(id => pts.find(p => p.id === id)).filter(Boolean);
+  if (fr.length > 1) el("polyline", { points: fr.map(p => `${X(p.p)},${Y(p.a)}`).join(" "), fill: "none", stroke: css("--ours"), "stroke-width": 2.2, "stroke-opacity": 0.55 }, s);
+  // points: published first, ours on top
+  const order = ["pre", "pub_vit", "pub_hyb", "ours_cnn", "ours_plain", "ours_kd"];
+  const sorted = [...pts].sort((a, b) => order.indexOf(a.c) - order.indexOf(b.c));
+  const tip = document.getElementById("tip"), fig = tip.parentElement;
+  for (const p of sorted) {
+    const g = el("g", {}, s), ours = p.c.startsWith("ours");
+    const mk = marker(g, p.c, X(p.p), Y(p.a), ours ? 7 : 5.5);
+    mk.setAttribute("tabindex", "0");
+    mk.setAttribute("aria-label", `${p.n}: ${p.a}% at ${p.p}M parameters`);
+    if (p.lab) el("text", { x: X(p.p) + (p.lx || 8), y: Y(p.a) + (p.ly || 4), fill: ours ? css(CAT[p.c].color) : muted, "font-size": ours ? 13 : 11.5, "font-weight": ours ? 500 : 400, "text-anchor": p.anchor || "start" }, g).textContent = p.lab;
+    const show = () => {
+      tip.innerHTML = `<b>${p.n}</b><br>${p.a.toFixed(2)}% · ${p.p}M params${p.note ? "<br>" + p.note : ""}`;
+      tip.hidden = false;
+      const r = mk.getBoundingClientRect(), f = fig.getBoundingClientRect();
+      let left = r.left - f.left + 14, top = r.top - f.top - 10;
+      if (left + 290 > f.width) left = r.left - f.left - 300;
+      tip.style.left = Math.max(6, left) + "px"; tip.style.top = Math.max(6, top) + "px";
+    };
+    const hide = () => { tip.hidden = true; };
+    mk.addEventListener("mouseenter", show); mk.addEventListener("mouseleave", hide);
+    mk.addEventListener("focus", show); mk.addEventListener("blur", hide);
+    mk.addEventListener("click", show);
+  }
+  // legend
+  const used = order.slice().reverse().filter(c => pts.some(p => p.c === c));
+  const lg = document.getElementById("legend"); lg.innerHTML = "";
+  for (const c of used) {
+    const span = document.createElement("span");
+    const mini = document.createElementNS(svgNS, "svg"); mini.setAttribute("viewBox", "0 0 14 14");
+    marker(mini, c, 7, 7, 4.5);
+    span.appendChild(mini); span.appendChild(document.createTextNode(CAT[c].name));
+    lg.appendChild(span);
+  }
+  if (fr.length > 1) { const sp = document.createElement("span"); sp.textContent = "— line: our distilled family"; lg.appendChild(sp); }
+  // table
+  const tb = document.querySelector("#table tbody"); tb.innerHTML = "";
+  for (const p of [...pts].sort((a, b) => b.a - a.a)) {
+    const tr = document.createElement("tr");
+    const host = (() => { try { return new URL(p.src).hostname === "arxiv.org" ? "arXiv " + p.src.split("/abs/")[1] : "this repo"; } catch (e) { return "link"; } })();
+    tr.innerHTML = `<td><span class="sw" style="background:${css(CAT[p.c].color)}"></span>${p.n}</td><td class="num">${p.p}M</td><td class="num">${p.a.toFixed(2)}</td><td>${p.note || ""}</td><td><a href="${p.src}" target="_blank" rel="noopener">${host}</a></td>`;
+    tb.appendChild(tr);
+  }
+}
+
+const tk = document.getElementById("takeaways");
+for (const t of TAKE) { const dv = document.createElement("div"); if (t.warn) dv.className = "warn"; dv.innerHTML = `<b>${t.k}</b>${t.t}`; tk.appendChild(dv); }
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
+  ds = b.dataset.ds;
+  document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x === b ? "true" : "false"));
+  render();
+}));
+document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x.dataset.ds === ds ? "true" : "false"));
+document.getElementById("pre-toggle").addEventListener("change", render);
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+render();
+</script>
