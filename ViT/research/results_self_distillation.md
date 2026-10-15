@@ -131,3 +131,15 @@ Same 3-seed ensemble teacher, same function-matching recipe, 1000 epochs, only t
 The 1.25M student (1 seed) is above the undistilled 2.75M model (80.91 ± 0.26, 3 seeds) and above the best
 pure-ViT CIFAR-100 number we found in the literature (79.15, Gani et al.), at less than half the parameters.
 It is 1.4 below the 2.75M distilled student (82.77 ± 0.16).
+
+## Longer distillation (2026-10-15, `run_wave13.sh`)
+
+| Run | Epochs | Final | Best | Minutes |
+|---|---|---|---|---|
+| `c100_kd_ens3_fm_2000ep` | 2000 | **83.15** | 83.27 | 654 |
+| 3-seed mean at 1000 ep | 1000 | 82.77 ± 0.16 | | ~330 |
+
+Doubling the distillation schedule adds +0.38 (1 seed, about 2.4 seed-std), unlike plain training, where 2000 epochs
+added only +0.07 over 1000. With a teacher the extra epochs keep paying because the target is the teacher's soft output
+on each new augmented view, not a fixed label. 83.15 is above CCT-7/3x1 at 5000 epochs (82.87), still with a 2.75M pure
+ViT and no extra data.
