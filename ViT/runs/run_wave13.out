@@ -2516,3 +2516,48 @@ ep 1444/2000 | loss 0.2936 | lr 1.00e-04 |  19.47s |      2563 img/s | kd 0.2936
 ep 1445/2000 | loss 0.2930 | lr 9.99e-05 |  19.45s |      2566 img/s | kd 0.2930 agree 0.765 a 1.00
 ep 1446/2000 | loss 0.2952 | lr 9.96e-05 |  19.46s |      2565 img/s | kd 0.2952 agree 0.761 a 1.00
 ep 1447/2000 | loss 0.2938 | lr 9.93e-05 |  19.45s |      2567 img/s | kd 0.2938 agree 0.764 a 1.00
+ep 1448/2000 | loss 0.2948 | lr 9.90e-05 |  19.45s |      2566 img/s | kd 0.2948 agree 0.763 a 1.00
+ep 1449/2000 | loss 0.2962 | lr 9.87e-05 |  19.46s |      2565 img/s | kd 0.2962 agree 0.760 a 1.00
+ep 1450/2000 | loss 0.2877 | lr 9.83e-05 |  19.45s |      2567 img/s | kd 0.2877 agree 0.773 a 1.00 | train acc  99.70 | val acc  81.77
+ep 1451/2000 | loss 0.2936 | lr 9.80e-05 |  19.49s |      2561 img/s | kd 0.2936 agree 0.763 a 1.00
+ep 1452/2000 | loss 0.2958 | lr 9.77e-05 |  19.45s |      2567 img/s | kd 0.2958 agree 0.758 a 1.00
+ep 1453/2000 | loss 0.2888 | lr 9.75e-05 |  19.54s |      2555 img/s | kd 0.2888 agree 0.774 a 1.00
+ep 1454/2000 | loss 0.2992 | lr 9.72e-05 |  19.47s |      2564 img/s | kd 0.2992 agree 0.753 a 1.00
+ep 1455/2000 | loss 0.2913 | lr 9.69e-05 |  19.45s |      2566 img/s | kd 0.2913 agree 0.766 a 1.00
+ep 1456/2000 | loss 0.2923 | lr 9.66e-05 |  19.47s |      2564 img/s | kd 0.2923 agree 0.766 a 1.00
+ep 1457/2000 | loss 0.2919 | lr 9.63e-05 |  19.48s |      2562 img/s | kd 0.2919 agree 0.762 a 1.00
+ep 1458/2000 | loss 0.2938 | lr 9.60e-05 |  19.48s |      2563 img/s | kd 0.2938 agree 0.758 a 1.00
+ep 1459/2000 | loss 0.2891 | lr 9.57e-05 |  19.47s |      2564 img/s | kd 0.2891 agree 0.768 a 1.00
+ep 1460/2000 | loss 0.2898 | lr 9.54e-05 |  19.47s |      2564 img/s | kd 0.2898 agree 0.770 a 1.00 | train acc  99.74 | val acc  81.98
+ep 1461/2000 | loss 0.2907 | lr 9.51e-05 |  19.46s |      2566 img/s | kd 0.2907 agree 0.767 a 1.00
+ep 1462/2000 | loss 0.2871 | lr 9.48e-05 |  19.46s |      2565 img/s | kd 0.2871 agree 0.772 a 1.00
+ep 1463/2000 | loss 0.2929 | lr 9.45e-05 |  19.47s |      2564 img/s | kd 0.2929 agree 0.760 a 1.00
+ep 1464/2000 | loss 0.2923 | lr 9.42e-05 |  19.47s |      2564 img/s | kd 0.2923 agree 0.763 a 1.00
+ep 1465/2000 | loss 0.2902 | lr 9.39e-05 |  19.47s |      2564 img/s | kd 0.2902 agree 0.763 a 1.00
+ep 1466/2000 | loss 0.2969 | lr 9.36e-05 |  19.48s |      2563 img/s | kd 0.2969 agree 0.757 a 1.00
+ep 1467/2000 | loss 0.2882 | lr 9.33e-05 |  19.46s |      2565 img/s | kd 0.2882 agree 0.766 a 1.00
+ep 1468/2000 | loss 0.2936 | lr 9.30e-05 |  19.47s |      2564 img/s | kd 0.2936 agree 0.759 a 1.00
+ep 1469/2000 | loss 0.2869 | lr 9.27e-05 |  19.46s |      2566 img/s | kd 0.2869 agree 0.769 a 1.00
+ep 1470/2000 | loss 0.2902 | lr 9.24e-05 |  19.52s |      2557 img/s | kd 0.2902 agree 0.764 a 1.00 | train acc  99.63 | val acc  81.92
+ep 1471/2000 | loss 0.2863 | lr 9.21e-05 |  19.45s |      2567 img/s | kd 0.2863 agree 0.766 a 1.00
+ep 1472/2000 | loss 0.2887 | lr 9.18e-05 |  19.47s |      2564 img/s | kd 0.2887 agree 0.766 a 1.00
+ep 1473/2000 | loss 0.2861 | lr 9.15e-05 |  19.47s |      2564 img/s | kd 0.2861 agree 0.774 a 1.00
+ep 1474/2000 | loss 0.2883 | lr 9.13e-05 |  19.46s |      2565 img/s | kd 0.2883 agree 0.767 a 1.00
+ep 1475/2000 | loss 0.2843 | lr 9.10e-05 |  19.46s |      2566 img/s | kd 0.2843 agree 0.771 a 1.00
+ep 1476/2000 | loss 0.2895 | lr 9.07e-05 |  19.48s |      2563 img/s | kd 0.2895 agree 0.764 a 1.00
+ep 1477/2000 | loss 0.2869 | lr 9.04e-05 |  19.44s |      2568 img/s | kd 0.2869 agree 0.770 a 1.00
+ep 1478/2000 | loss 0.2860 | lr 9.01e-05 |  19.46s |      2566 img/s | kd 0.2860 agree 0.767 a 1.00
+ep 1479/2000 | loss 0.2865 | lr 8.98e-05 |  19.46s |      2566 img/s | kd 0.2865 agree 0.771 a 1.00
+ep 1480/2000 | loss 0.2887 | lr 8.95e-05 |  19.46s |      2565 img/s | kd 0.2887 agree 0.759 a 1.00 | train acc  99.77 | val acc  81.94
+ep 1481/2000 | loss 0.2923 | lr 8.92e-05 |  19.41s |      2571 img/s | kd 0.2923 agree 0.759 a 1.00
+ep 1482/2000 | loss 0.2857 | lr 8.89e-05 |  19.45s |      2566 img/s | kd 0.2857 agree 0.768 a 1.00
+ep 1483/2000 | loss 0.2882 | lr 8.87e-05 |  19.46s |      2565 img/s | kd 0.2882 agree 0.764 a 1.00
+ep 1484/2000 | loss 0.2846 | lr 8.84e-05 |  19.48s |      2563 img/s | kd 0.2846 agree 0.768 a 1.00
+ep 1485/2000 | loss 0.2824 | lr 8.81e-05 |  19.45s |      2566 img/s | kd 0.2824 agree 0.772 a 1.00
+ep 1486/2000 | loss 0.2852 | lr 8.78e-05 |  19.46s |      2565 img/s | kd 0.2852 agree 0.767 a 1.00
+ep 1487/2000 | loss 0.2840 | lr 8.75e-05 |  19.52s |      2558 img/s | kd 0.2840 agree 0.767 a 1.00
+ep 1488/2000 | loss 0.2857 | lr 8.72e-05 |  19.46s |      2566 img/s | kd 0.2857 agree 0.769 a 1.00
+ep 1489/2000 | loss 0.2782 | lr 8.69e-05 |  19.46s |      2565 img/s | kd 0.2782 agree 0.777 a 1.00
+ep 1490/2000 | loss 0.2872 | lr 8.67e-05 |  19.46s |      2565 img/s | kd 0.2872 agree 0.763 a 1.00 | train acc  99.75 | val acc  82.15
+ep 1491/2000 | loss 0.2872 | lr 8.64e-05 |  19.47s |      2564 img/s | kd 0.2872 agree 0.761 a 1.00
+ep 1492/2000 | loss 0.2844 | lr 8.61e-05 |  19.47s |      2564 img/s | kd 0.2844 agree 0.765 a 1.00
