@@ -1414,6 +1414,7 @@ def seeds_line():
                          ("CIFAR-10 ViT-Tiny + SPT, 1000 ep", ["c10_spt_tinyshape_1000ep", "c10_spt_tinyshape_1000ep_s1", "c10_spt_tinyshape_1000ep_s2"]),
                          ("CIFAR-10 SL-ViT + SPT (2.75M), 1000 ep", ["c10_spt_slvit_1000ep", "c10_spt_slvit_1000ep_s1", "c10_spt_slvit_1000ep_s2"]),
                          ("CIFAR-100 SL-ViT + SPT distilled from own 3-seed ensemble, 1000 ep", ["c100_kd_ens3_fm_1000ep", "c100_kd_ens3_fm_1000ep_s1", "c100_kd_ens3_fm_1000ep_s2"]),
+                         ("CIFAR-100 1.25M width-128 student, distilled, 1000 ep", ["c100_kd_ens3_fm_d128_1000ep", "c100_kd_ens3_fm_d128_1000ep_s1"]),
                          ("Tiny-ImageNet SL-ViT + SPT (2.9M), 1000 ep", ["tin_spt_slvit_p8_1000ep", "tin_spt_slvit_p8_1000ep_s1"]),
                          ("Tiny-ImageNet 2.9M born-again distilled (teacher: seed-0 copy, 66.16), 1000 ep", ["tin_kd_ba_fm_1000ep", "tin_kd_ba_fm_1000ep_s1"])]:
         m = ms(names)
@@ -1448,6 +1449,7 @@ def ch_long():
         row("Tiny-ImageNet, 2.9M distilled from one copy of itself (born-again, function matching), 1000 ep", "tin_kd_ba_fm_1000ep", "tin_spt_slvit_p8_1000ep", f"teacher 66.16; seed 1 {A('tin_kd_ba_fm_1000ep_s1')} (same teacher); 2-seed mean 67.99, +1.8 over its teacher"),
         row("Tiny-ImageNet, 2.9M distilled from a 2-model ensemble of itself (seeds 0+1, ensemble 68.98), 1000 ep", "tin_kd_ens2_fm_1000ep", "tin_kd_ba_fm_1000ep", "best Tiny-ImageNet result here (1 seed): +0.7 over its teacher ensemble; above every pure transformer <= 10M we found (67.46) and the 2-block conv hybrid at 224 px (68.76); 70.47 hybrid at 224 px still leads"),
         row("Tiny-ImageNet CNN control: ResNet-18 width 32 (2.86M), same aug/reg stack, SGD lr 0.1 wd 5e-4 (held-out screen), 1000 ep", "tin_r18w32_sgd_1000ep", "tin_spt_slvit_p8_1000ep", "same size, no teacher: level with the 2.9M ViT (66.26, 2 seeds)"),
+        row("Tiny-ImageNet CNN control: ResNet-18 width 56 (8.65M, widest under 10M), same recipe, 1000 ep", "tin_r18w56_sgd_1000ep", "tin_kd_ens2_fm_1000ep", "under 10M: level with our best distilled ViT at 3x the params"),
         row("Tiny-ImageNet CNN control: ResNet-18 standard (11.27M), same recipe, 1000 ep", "tin_r18_sgd_1000ep", "tin_kd_ens2_fm_1000ep", "~4x params: edges our best distilled ViT; above ResNet-18 + AdAutoMix 69.19 (arXiv 2312.11954)"),
         row("Tiny-ImageNet 64 px, ViT-Tiny shape + SPT (patch 8), 5.4M, 300 ep", "tin_spt_tinyshape_p8_300ep", "tin_p4_tiny", ""),
         row("CIFAR-100, recurrent r8 add, 2.7M (500 ep vs 100 ep)", "c100_rd_r8_add_500ep", "c100_rd_r8_add", ""),

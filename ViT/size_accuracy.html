@@ -98,7 +98,7 @@ const D = {
     frontier: ["kd071", "kd125", "kd275"],
     pts: [
       { id: "kd071", n: "Ours, width 96", p: 0.713, a: 78.38, c: "ours_kd", lab: "0.71M · 78.4", lx: 8, ly: 16, note: "1000 ep, 1 seed (seed 2 running)", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
-      { id: "kd125", n: "Ours, width 128", p: 1.245, a: 81.39, c: "ours_kd", lab: "1.25M · 81.4", lx: -6, ly: -12, anchor: "end", note: "1000 ep, 1 seed", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
+      { id: "kd125", n: "Ours, width 128", p: 1.245, a: 81.39, c: "ours_kd", lab: "1.25M · 81.4", lx: -6, ly: -12, anchor: "end", note: "1000 ep, 2 seeds (81.39 / 81.41)", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
       { id: "kd275", n: "Ours, 2.75M", p: 2.753, a: 82.77, c: "ours_kd", lab: "2.75M · 82.8", lx: -8, ly: 9, anchor: "end", note: "1000 ep, 3 seeds (82.88 / 82.85 / 82.59)", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
       { id: "kd2k", n: "Ours, 2.75M, 2000 ep", p: 2.753, a: 83.15, c: "ours_kd", lab: "2000 ep · 83.2", lx: -8, ly: -6, anchor: "end", note: "2000 ep, 1 seed", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
       { id: "pl275", n: "Ours, 2.75M, no teacher", p: 2.753, a: 80.91, c: "ours_plain", lab: "80.9", lx: -8, ly: 4, anchor: "end", note: "1000 ep, 3 seeds (80.66 / 81.17 / 80.91)", src: REPO + "/blob/main/README.md" },
@@ -140,7 +140,7 @@ const D = {
   },
   tin: {
     title: "Tiny-ImageNet (64 px), trained from scratch",
-    sub: "Distilled from two copies of itself, our 2.9M ViT beats every published transformer under 10M at native 64 px. Our own ResNet-18 control keeps this honest: at the same size it ties the plain ViT, and at 11.3M it edges the distilled one.",
+    sub: "Distilled from two copies of itself, our 2.9M ViT beats every published transformer under 10M at native 64 px. Our own ResNet-18 controls keep this honest: at the same size a ResNet-18 trained our way ties the plain ViT, and at 8.65M (3x the parameters, still under 10M) it ties the distilled one.",
     y: [57.5, 71.5],
     frontier: [],
     pts: [
@@ -148,7 +148,8 @@ const D = {
       { id: "kd1", n: "Ours, 2.9M, distilled from 1 copy", p: 2.912, a: 67.99, c: "ours_kd", lab: "68.0", lx: -8, ly: 4, anchor: "end", note: "1000 ep, 2 seeds (68.09 / 67.89)", src: REPO + "/blob/main/ViT/research/tinyimagenet_sota.md" },
       { id: "pl", n: "Ours, 2.9M, no teacher", p: 2.912, a: 66.26, c: "ours_plain", lab: "66.3", lx: -8, ly: -3, anchor: "end", note: "1000 ep, 2 seeds (66.16 / 66.36)", src: REPO + "/blob/main/ViT/research/tinyimagenet_sota.md" },
       { id: "r18w32", n: "Our ResNet-18, width 32", p: 2.859, a: 66.52, c: "ours_cnn", lab: "ResNet-18 66.5", lx: -8, ly: 22, anchor: "end", note: "same recipe, SGD screened on held-out data, 1000 ep, 1 seed", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
-      { id: "r18", n: "Our ResNet-18, standard", p: 11.27, a: 69.84, c: "ours_cnn", lab: "ResNet-18 69.8", lx: -8, ly: 18, anchor: "end", note: "11.27M (over the 10M budget), same recipe, 1 seed", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
+      { id: "r18w56", n: "Our ResNet-18, width 56", p: 8.65, a: 69.81, c: "ours_cnn", lab: "ResNet-18 8.65M 69.8", lx: -8, ly: -9, anchor: "end", note: "widest ResNet-18 under 10M; same recipe, 1 seed", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
+      { id: "r18", n: "Our ResNet-18, standard", p: 11.27, a: 69.84, c: "ours_cnn", lab: "11.3M", lx: 8, ly: 18, note: "11.27M (over the 10M budget), same recipe, 1 seed", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
       { id: "dw", n: "CaiT-xxs12 + depth-wise conv shortcut, 224 px", p: 6.4, a: 70.47, c: "pub_hyb", lab: "hybrid @224 px 70.5", lx: 8, ly: -6, note: "conv hybrid, upsampled to 224 px", src: "https://arxiv.org/abs/2407.19394" },
       { id: "dw2", n: "Same, 2-block DWConv, 224 px", p: 6.2, a: 68.76, c: "pub_hyb", lab: "", note: "<6.4M, upsampled to 224 px", src: "https://arxiv.org/abs/2407.19394" },
       { id: "gani", n: "CaiT + SSL init (Gani et al.)", p: 7.7, a: 67.46, c: "pub_vit", lab: "CaiT (Gani) 67.5", lx: 8, ly: 4, note: "best published transformer ≤10M at 64 px", src: "https://arxiv.org/abs/2210.07240" },
@@ -174,7 +175,7 @@ const TAKE = [
   { k: "0.71M → 78.4%", t: "Our smallest distilled ViT beats published SL-ViT (76.9%, 2.9M) on CIFAR-100 at a quarter of the size." },
   { k: "1.25M → 81.4%", t: "Half-size distilled ViT beats our own 2.75M model trained without a teacher (80.9%)." },
   { k: "2.75M → 82.8%", t: "Pure ViT, no extra data, level with CCT (conv-tokenizer hybrid) at 1500–5000 epochs." },
-  { k: "Tiny-ImageNet 69.7%", t: "Best pure transformer ≤10M at 64 px we found. A same-size ResNet-18 trained our way ties the plain ViT (66.5 vs 66.3).", warn: true },
+  { k: "Tiny-ImageNet 69.7%", t: "Best pure transformer ≤10M at 64 px we found. Our own ResNet-18 controls tie it: 66.5 vs 66.3 at the same size, 69.8 at 8.65M.", warn: true },
 ];
 
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();

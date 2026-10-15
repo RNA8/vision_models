@@ -27,7 +27,7 @@ differ, so this is only a hint. The 1000-epoch runs below settle it.
 |---|---|---|---|---|
 | `tin_r18w32_sgd_1000ep` | 32 | 2.86M | **66.52** (best 66.67) | 657 |
 | `tin_r18_sgd_1000ep` | 64 | 11.27M | **69.84** | 659 |
-| `tin_r18w56_sgd_1000ep` | 56 | 8.65M | running | |
+| `tin_r18w56_sgd_1000ep` | 56 | 8.65M | **69.81** | 764 |
 | ViT reference: `tin_spt_slvit_p8_1000ep{,_s1}` | | 2.9M | 66.26 (2 seeds) | |
 | ViT distilled from a copy of itself: `tin_kd_ba_fm_1000ep{,_s1}` | | 2.9M | 67.99 (2 seeds) | |
 | ViT distilled from 2 copies of itself: `tin_kd_ens2_fm_1000ep` | | 2.9M | 69.66 (1 seed) | 657 |
@@ -36,7 +36,7 @@ GPU minutes are wall-clock with 4 jobs sharing one H100, so they depend on what 
 shared the GPU with each other (~39 s/epoch), the ViT reference runs with lighter neighbours (~25-26 s/epoch).
 Treat them as rough cost, not a speed comparison.
 
-## Verdict (2026-10-15 20:00 UTC; width-56 still running)
+## Verdict (2026-10-15 22:00 UTC)
 
 - **Same size, no teacher: level.** ResNet-18 at 2.86M gets 66.52 (1 seed); our 2.9M pure ViT gets 66.26 (2 seeds:
   66.16, 66.36). The 0.26 gap is inside seed noise. With the same augmentation/regularization stack and a tuned
@@ -49,3 +49,7 @@ Treat them as rough cost, not a speed comparison.
   at ~4x the parameters, and above the published ResNet-18 + AdAutoMix (69.19, arXiv 2312.11954) with a plain
   recipe. So "best Tiny-ImageNet result under 10M parameters" claims for the ViT must say "pure transformer" and
   "at 2.9M"; a 11M convnet trained the same way still edges it.
+- **Under 10M, a convnet trained our way ties our best ViT.** ResNet-18 at width 56 (8.65M) gets 69.81, level with
+  the distilled 2.9M ViT (69.66; 1 seed each, within noise) at 3x the parameters. The ViT is the better
+  accuracy-per-parameter model only once it is distilled; per FLOP the comparison is closer, since the CIFAR-stem
+  ResNet runs full 64x64 resolution in its first stage.
