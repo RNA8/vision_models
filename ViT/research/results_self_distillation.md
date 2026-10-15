@@ -4,7 +4,7 @@ Plan and literature: `research/self_distillation.md` (E1 = ensemble function mat
 Queues: `run_wave10_selfkd.sh` (300-ep screens), `run_wave10b_kd1000.sh` (1000-ep confirms).
 
 **Status (2026-10-14 11:30 UTC): complete.** 1000-ep function matching from the 3-seed ViT ensemble gives
-**82.88 / 82.85 (2-seed mean 82.87)**. The baseline is 80.91 ± 0.26 (3 seeds), so the gain is **+1.96**, and the
+**82.88 / 82.85 / 82.59 (3-seed mean 82.77 ± 0.16;** third seed added 2026-10-15). The baseline is 80.91 ± 0.26 (3 seeds), so the gain is **+1.86**, and the
 plan's success bar (≥ 82.3) is met. This matches CCT-7/3x1 (82.72 at 1500 ep, 82.87 at 5000 ep) with a 2.75M pure
 ViT: no convolutions, no extra data, and the same inference cost.
 
@@ -82,7 +82,8 @@ forward + backward, which matches about 1.85x.
 |---|---|---|---|---|---|
 | `c100_kd_ens3_fm_1000ep` (seed 0) | **82.88** | 82.99 | 99.82 | 19.5 | 328 |
 | `c100_kd_ens3_fm_1000ep_s1` (seed 1) | **82.85** | 82.96 | 99.90 | 20.0 | 342 |
-| **FM 2-seed mean** | **82.87 ± 0.02** | | | | |
+| `c100_kd_ens3_fm_1000ep_s2` (seed 2) | **82.59** | 82.68 | 99.84 | 19.3 | 326 |
+| **FM 3-seed mean** | **82.77 ± 0.16** | | | | |
 | baseline 3-seed mean (`c100_spt_slvit_1000ep{,_s1,_s2}`) | 80.91 ± 0.26 | | | 10.4 | |
 | teacher: 3-seed ensemble (prob avg) | 83.27 | | | | |
 | CCT-7/3x1 (arXiv 2104.05704, conv tokenizer) | 82.72 (1500 ep) / 82.87 (5000 ep) | | | | |
