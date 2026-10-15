@@ -1447,6 +1447,8 @@ def ch_long():
         row("Tiny-ImageNet 64 px, SL-ViT shape + SPT (patch 8), 2.9M, 1000 ep", "tin_spt_slvit_p8_1000ep", "tin_spt_slvit_p8_300ep", f"SL-ViT {P('slvit_tin')}; Gani et al. {P('gani_tin')}"),
         row("Tiny-ImageNet, 2.9M distilled from one copy of itself (born-again, function matching), 1000 ep", "tin_kd_ba_fm_1000ep", "tin_spt_slvit_p8_1000ep", f"teacher 66.16; seed 1 {A('tin_kd_ba_fm_1000ep_s1')} (same teacher); 2-seed mean 67.99, +1.8 over its teacher"),
         row("Tiny-ImageNet, 2.9M distilled from a 2-model ensemble of itself (seeds 0+1, ensemble 68.98), 1000 ep", "tin_kd_ens2_fm_1000ep", "tin_kd_ba_fm_1000ep", "best Tiny-ImageNet result here (1 seed): +0.7 over its teacher ensemble; above every pure transformer <= 10M we found (67.46) and the 2-block conv hybrid at 224 px (68.76); 70.47 hybrid at 224 px still leads"),
+        row("Tiny-ImageNet CNN control: ResNet-18 width 32 (2.86M), same aug/reg stack, SGD lr 0.1 wd 5e-4 (held-out screen), 1000 ep", "tin_r18w32_sgd_1000ep", "tin_spt_slvit_p8_1000ep", "same size, no teacher: level with the 2.9M ViT (66.26, 2 seeds)"),
+        row("Tiny-ImageNet CNN control: ResNet-18 standard (11.27M), same recipe, 1000 ep", "tin_r18_sgd_1000ep", "tin_kd_ens2_fm_1000ep", "~4x params: edges our best distilled ViT; above ResNet-18 + AdAutoMix 69.19 (arXiv 2312.11954)"),
         row("Tiny-ImageNet 64 px, ViT-Tiny shape + SPT (patch 8), 5.4M, 300 ep", "tin_spt_tinyshape_p8_300ep", "tin_p4_tiny", ""),
         row("CIFAR-100, recurrent r8 add, 2.7M (500 ep vs 100 ep)", "c100_rd_r8_add_500ep", "c100_rd_r8_add", ""),
         row("CIFAR-100, flat 6-layer control (500 ep vs 100 ep)", "c100_rd_flat6_500ep", "c100_rd_flat6", ""),
