@@ -2575,3 +2575,36 @@ ep   56/60 | loss 4.4848 | lr 2.12e-05 | 2137.32s |      5175 img/s | loader wai
 ep   57/60 | loss 4.4520 | lr 1.63e-05 | 2136.95s |      5176 img/s | loader wait 1.2s
 ep   58/60 | loss 4.4244 | lr 1.28e-05 | 2136.77s |      5176 img/s | loader wait 1.2s
 ep   59/60 | loss 4.4046 | lr 1.07e-05 | 2102.61s |      5260 img/s | loader wait 1.2s
+ep   60/60 | loss 4.3923 | lr 1.00e-05 | 2163.78s |      5112 img/s | loader wait 1.2s | train acc  35.53 | val acc  33.06
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▃▃▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▆▇▇▇▇▇████
+wandb:       epoch_sec ▃▃▃▂▂▇█▃▃▂▂▂▂▂▂▂▂▂▂▂▃▂▃▂▃▂▂▁▇▄▁▁▁▁▁▂▂▂▂▂
+wandb:     img_per_sec ▆▆▇▇▂▂▁▆▆▇▆▇▇▇▇▇▇▇▇▆▇▆▆▆▆▆▇█▂▄█████▇▇▇▇▇
+wandb:              lr ███████▇▇▇▇▇▆▆▆▆▆▅▅▅▅▄▄▄▃▃▃▃▂▂▂▂▂▂▁▁▁▁▁▁
+wandb: train_acc_clean ▁▁▂▂▃▃▄▄▅▆▇█
+wandb:      train_loss █▅▅▄▄▄▄▄▄▄▄▄▄▄▄▄▃▃▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁
+wandb:         val_acc ▁▁▂▂▃▃▄▄▅▆▇█
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 33.06
+wandb:           epoch 60
+wandb:       epoch_sec 2163.77977
+wandb:     img_per_sec 5111.52944
+wandb:              lr 1e-05
+wandb:   total_minutes 2203.27302
+wandb: train_acc_clean 35.53
+wandb:      train_loss 4.39226
+wandb:         val_acc 33.06
+wandb: 
+wandb: 🚀 View run in21kpre_tiny_p8_e60 at: https://wandb.ai/softeye/vision_transformers/runs/b90c25c1
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/in21kpre_tiny_p8_e60/wandb/run-20261013_133424-b90c25c1/logs
+
+Done in 2203.3 min. final val 33.06% | best val 33.06% | clean train 35.53%
+Steady state (excl. epoch 1): 2155.75 s/epoch, 5,131 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/in21kpre_tiny_p8_e60
+== run_wave7 finished Thu Oct 15 02:17:46 UTC 2026
