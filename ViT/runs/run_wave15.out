@@ -877,3 +877,19 @@ Steady state (excl. epoch 1): 35.65 s/epoch, 2,524 img/s
 Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/tin_r18_screen_lr0.1_wd1e-4
 ep  719/1000 | loss 0.6685 | lr 1.05e-04 |  26.27s |      3806 img/s | kd 0.6685 agree 0.571 a 1.00
 ep  720/1000 | loss 0.6670 | lr 1.04e-04 |  24.29s |      4116 img/s | kd 0.6670 agree 0.575 a 1.00 | train acc  91.80 | val acc  66.84
+ep  721/1000 | loss 0.6672 | lr 1.03e-04 |  23.97s |      4170 img/s | kd 0.6672 agree 0.568 a 1.00
+ep  722/1000 | loss 0.6672 | lr 1.03e-04 |  24.14s |      4141 img/s | kd 0.6672 agree 0.573 a 1.00
+ep  723/1000 | loss 0.6659 | lr 1.02e-04 |  24.06s |      4155 img/s | kd 0.6659 agree 0.575 a 1.00
+ep  724/1000 | loss 0.6628 | lr 1.02e-04 |  27.49s |      3636 img/s | kd 0.6628 agree 0.578 a 1.00
+ep  725/1000 | loss 0.6633 | lr 1.01e-04 |  32.45s |      3081 img/s | kd 0.6633 agree 0.575 a 1.00
+ep  726/1000 | loss 0.6626 | lr 1.00e-04 |  32.46s |      3080 img/s | kd 0.6626 agree 0.571 a 1.00
+ep  727/1000 | loss 0.6609 | lr 9.97e-05 |  32.45s |      3081 img/s | kd 0.6609 agree 0.573 a 1.00
+ep  728/1000 | loss 0.6609 | lr 9.91e-05 |  32.47s |      3079 img/s | kd 0.6609 agree 0.581 a 1.00
+ep  729/1000 | loss 0.6575 | lr 9.85e-05 |  32.07s |      3117 img/s | kd 0.6575 agree 0.576 a 1.00
+ep  730/1000 | loss 0.6572 | lr 9.79e-05 |  32.47s |      3078 img/s | kd 0.6572 agree 0.583 a 1.00 | train acc  92.17 | val acc  67.03
+ep  731/1000 | loss 0.6569 | lr 9.72e-05 |  32.47s |      3079 img/s | kd 0.6569 agree 0.578 a 1.00
+ep  732/1000 | loss 0.6556 | lr 9.66e-05 |  32.46s |      3079 img/s | kd 0.6556 agree 0.577 a 1.00
+ep  733/1000 | loss 0.6531 | lr 9.60e-05 |  32.44s |      3082 img/s | kd 0.6531 agree 0.587 a 1.00
+ep  734/1000 | loss 0.6543 | lr 9.54e-05 |  32.48s |      3078 img/s | kd 0.6543 agree 0.578 a 1.00
+ep  735/1000 | loss 0.6484 | lr 9.48e-05 |  32.45s |      3081 img/s | kd 0.6484 agree 0.589 a 1.00
+ep  736/1000 | loss 0.6536 | lr 9.42e-05 |  32.47s |      3078 img/s | kd 0.6536 agree 0.581 a 1.00

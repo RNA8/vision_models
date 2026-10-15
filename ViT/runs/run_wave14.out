@@ -1493,3 +1493,76 @@ ep  422/1000 | loss 0.6902 | lr 3.28e-04 |  12.19s |      4097 img/s | kd 0.6902
 ep  423/1000 | loss 0.6850 | lr 3.27e-04 |  12.26s |      4073 img/s | kd 0.6850 agree 0.601 a 1.00
 == start c100_kd_ens3_fm_d96_1000ep (Thu Oct 15 03:19:24 UTC 2026)
 ep  424/1000 | loss 0.6861 | lr 3.26e-04 |  12.48s |      4000 img/s | kd 0.6861 agree 0.601 a 1.00
+ep  425/1000 | loss 0.6835 | lr 3.25e-04 |  12.37s |      4034 img/s | kd 0.6835 agree 0.599 a 1.00
+ep  426/1000 | loss 0.6779 | lr 3.25e-04 |  12.10s |      4126 img/s | kd 0.6779 agree 0.610 a 1.00
+ep  427/1000 | loss 0.6801 | lr 3.24e-04 |  12.18s |      4098 img/s | kd 0.6801 agree 0.615 a 1.00
+ep  428/1000 | loss 0.6851 | lr 3.23e-04 |  12.52s |      3986 img/s | kd 0.6851 agree 0.601 a 1.00
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 2d08bbfc
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/c100_kd_ens3_fm_d96_1000ep/wandb/run-20261015_032031-2d08bbfc
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run c100_kd_ens3_fm_d96_1000ep
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/2d08bbfc
+ep  429/1000 | loss 0.6868 | lr 3.22e-04 |  12.71s |      3928 img/s | kd 0.6868 agree 0.605 a 1.00
+ep  430/1000 | loss 0.6752 | lr 3.22e-04 |  13.53s |      3690 img/s | kd 0.6752 agree 0.600 a 1.00 | train acc  90.67 | val acc  77.39
+GPU: NVIDIA H100 PCIe
+Model: slvit  params: 0.71M  train images: 50000  batch: 128  steps/epoch: 390
+teacher /home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep: slvit 2.75M
+teacher /home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep_s1: slvit 2.75M
+teacher /home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep_s2: slvit 2.75M
+KD: {'teacher': '/home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep,/home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep_s1,/home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep_s2', 'self_kd': None, 'kd': 'soft', 'kd_tau': 1.0, 'n_teachers': 3, 'teacher_params_M': 8.257875} alpha 1.0
+teacher val acc: 83.27%
+ep    1/1000 | loss 2.9495 | lr 1.67e-05 |  23.97s |      2083 img/s | kd 2.9495 agree 0.010 a 1.00  (includes torch.compile warm-up)
+ep  431/1000 | loss 0.6821 | lr 3.21e-04 |  16.22s |      3078 img/s | kd 0.6821 agree 0.604 a 1.00
+ep    2/1000 | loss 2.9582 | lr 3.34e-05 |  16.22s |      3078 img/s | kd 2.9582 agree 0.011 a 1.00
+ep  432/1000 | loss 0.6753 | lr 3.20e-04 |  16.21s |      3080 img/s | kd 0.6753 agree 0.604 a 1.00
+ep    3/1000 | loss 2.9182 | lr 5.00e-05 |  16.20s |      3081 img/s | kd 2.9182 agree 0.015 a 1.00
+ep  433/1000 | loss 0.6761 | lr 3.19e-04 |  16.21s |      3079 img/s | kd 0.6761 agree 0.609 a 1.00
+ep    4/1000 | loss 2.8455 | lr 6.67e-05 |  16.21s |      3079 img/s | kd 2.8455 agree 0.025 a 1.00
+ep  434/1000 | loss 0.6728 | lr 3.19e-04 |  16.21s |      3079 img/s | kd 0.6728 agree 0.606 a 1.00
+ep    5/1000 | loss 2.8043 | lr 8.34e-05 |  16.20s |      3081 img/s | kd 2.8043 agree 0.031 a 1.00
+ep  435/1000 | loss 0.6748 | lr 3.18e-04 |  16.20s |      3081 img/s | kd 0.6748 agree 0.605 a 1.00
+ep    6/1000 | loss 2.7586 | lr 1.00e-04 |  16.21s |      3079 img/s | kd 2.7586 agree 0.041 a 1.00
+ep  436/1000 | loss 0.6728 | lr 3.17e-04 |  16.21s |      3079 img/s | kd 0.6728 agree 0.602 a 1.00
+ep    7/1000 | loss 2.7465 | lr 1.17e-04 |  16.22s |      3077 img/s | kd 2.7465 agree 0.048 a 1.00
+ep  437/1000 | loss 0.6771 | lr 3.16e-04 |  16.22s |      3077 img/s | kd 0.6771 agree 0.611 a 1.00
+ep    8/1000 | loss 2.7082 | lr 1.33e-04 |  16.23s |      3076 img/s | kd 2.7082 agree 0.054 a 1.00
+ep  438/1000 | loss 0.6693 | lr 3.15e-04 |  16.22s |      3078 img/s | kd 0.6693 agree 0.601 a 1.00
+ep    9/1000 | loss 2.6557 | lr 1.50e-04 |  16.21s |      3079 img/s | kd 2.6557 agree 0.061 a 1.00
+ep  439/1000 | loss 0.6789 | lr 3.15e-04 |  16.21s |      3079 img/s | kd 0.6789 agree 0.603 a 1.00
+ep   10/1000 | loss 2.6055 | lr 1.67e-04 |  16.21s |      3079 img/s | kd 2.6055 agree 0.067 a 1.00 | train acc  13.40 | val acc  13.43
+ep  440/1000 | loss 0.6714 | lr 3.14e-04 |  15.83s |      3154 img/s | kd 0.6714 agree 0.611 a 1.00 | train acc  90.86 | val acc  76.88
+ep   11/1000 | loss 2.6218 | lr 1.83e-04 |  16.21s |      3079 img/s | kd 2.6218 agree 0.073 a 1.00
+ep  441/1000 | loss 0.6731 | lr 3.13e-04 |  16.22s |      3078 img/s | kd 0.6731 agree 0.601 a 1.00
+ep   12/1000 | loss 2.5814 | lr 2.00e-04 |  16.22s |      3077 img/s | kd 2.5814 agree 0.075 a 1.00
+ep  442/1000 | loss 0.6738 | lr 3.12e-04 |  16.23s |      3077 img/s | kd 0.6738 agree 0.604 a 1.00
+ep   13/1000 | loss 2.5375 | lr 2.17e-04 |  16.31s |      3061 img/s | kd 2.5375 agree 0.081 a 1.00
+ep  443/1000 | loss 0.6678 | lr 3.12e-04 |  16.30s |      3063 img/s | kd 0.6678 agree 0.607 a 1.00
+ep   14/1000 | loss 2.5340 | lr 2.33e-04 |  16.21s |      3079 img/s | kd 2.5340 agree 0.082 a 1.00
+ep  444/1000 | loss 0.6730 | lr 3.11e-04 |  16.23s |      3077 img/s | kd 0.6730 agree 0.602 a 1.00
+ep   15/1000 | loss 2.5359 | lr 2.50e-04 |  16.21s |      3079 img/s | kd 2.5359 agree 0.091 a 1.00
+ep  445/1000 | loss 0.6646 | lr 3.10e-04 |  16.21s |      3079 img/s | kd 0.6646 agree 0.607 a 1.00
+ep   16/1000 | loss 2.4757 | lr 2.67e-04 |  16.22s |      3078 img/s | kd 2.4757 agree 0.093 a 1.00
+ep  446/1000 | loss 0.6726 | lr 3.09e-04 |  16.22s |      3077 img/s | kd 0.6726 agree 0.610 a 1.00
+ep   17/1000 | loss 2.4549 | lr 2.83e-04 |  16.21s |      3080 img/s | kd 2.4549 agree 0.095 a 1.00
+ep  447/1000 | loss 0.6662 | lr 3.09e-04 |  16.21s |      3080 img/s | kd 0.6662 agree 0.611 a 1.00
+ep   18/1000 | loss 2.4642 | lr 3.00e-04 |  16.20s |      3082 img/s | kd 2.4642 agree 0.100 a 1.00
+ep  448/1000 | loss 0.6657 | lr 3.08e-04 |  16.20s |      3082 img/s | kd 0.6657 agree 0.609 a 1.00
+ep   19/1000 | loss 2.4159 | lr 3.17e-04 |  16.21s |      3080 img/s | kd 2.4159 agree 0.104 a 1.00
+ep  449/1000 | loss 0.6648 | lr 3.07e-04 |  16.21s |      3079 img/s | kd 0.6648 agree 0.610 a 1.00
+ep   20/1000 | loss 2.4347 | lr 3.33e-04 |  16.23s |      3077 img/s | kd 2.4347 agree 0.107 a 1.00 | train acc  22.75 | val acc  22.60
+ep  450/1000 | loss 0.6648 | lr 3.06e-04 |  16.24s |      3073 img/s | kd 0.6648 agree 0.609 a 1.00 | train acc  91.24 | val acc  77.41
+ep   21/1000 | loss 2.3925 | lr 3.50e-04 |  16.22s |      3079 img/s | kd 2.3925 agree 0.111 a 1.00
+ep  451/1000 | loss 0.6632 | lr 3.05e-04 |  16.22s |      3078 img/s | kd 0.6632 agree 0.611 a 1.00
+ep   22/1000 | loss 2.3783 | lr 3.67e-04 |  16.20s |      3081 img/s | kd 2.3783 agree 0.114 a 1.00
+ep  452/1000 | loss 0.6613 | lr 3.05e-04 |  16.20s |      3081 img/s | kd 0.6613 agree 0.609 a 1.00
+ep   23/1000 | loss 2.3216 | lr 3.83e-04 |  16.21s |      3079 img/s | kd 2.3216 agree 0.116 a 1.00
+ep  453/1000 | loss 0.6675 | lr 3.04e-04 |  16.22s |      3079 img/s | kd 0.6675 agree 0.605 a 1.00
+ep   24/1000 | loss 2.3385 | lr 4.00e-04 |  16.23s |      3076 img/s | kd 2.3385 agree 0.123 a 1.00
+ep  454/1000 | loss 0.6596 | lr 3.03e-04 |  16.23s |      3076 img/s | kd 0.6596 agree 0.617 a 1.00
+ep   25/1000 | loss 2.3100 | lr 4.17e-04 |  16.23s |      3076 img/s | kd 2.3100 agree 0.126 a 1.00
+ep  455/1000 | loss 0.6637 | lr 3.02e-04 |  16.22s |      3078 img/s | kd 0.6637 agree 0.613 a 1.00
+ep   26/1000 | loss 2.3143 | lr 4.33e-04 |  16.21s |      3080 img/s | kd 2.3143 agree 0.128 a 1.00
