@@ -1,0 +1,18 @@
+== start tin_kd_ens2_fm_1000ep_s1 (Thu Oct 15 22:31:50 UTC 2026)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run caec1cbb
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/tin_kd_ens2_fm_1000ep_s1/wandb/run-20261015_223256-caec1cbb
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tin_kd_ens2_fm_1000ep_s1
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/caec1cbb
+GPU: NVIDIA H100 PCIe
+Model: slvit  params: 2.91M  train images: 100000  batch: 128  steps/epoch: 781
+teacher /home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_slvit_p8_1000ep: slvit 2.91M
+teacher /home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_slvit_p8_1000ep_s1: slvit 2.91M
+KD: {'teacher': '/home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_slvit_p8_1000ep,/home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_slvit_p8_1000ep_s1', 'self_kd': None, 'kd': 'soft', 'kd_tau': 1.0, 'n_teachers': 2, 'teacher_params_M': 5.82321} alpha 1.0
+teacher val acc: 68.98%
+ep    1/1000 | loss 2.9489 | lr 1.67e-05 |  46.29s |      2160 img/s | kd 2.9489 agree 0.006 a 1.00  (includes torch.compile warm-up)
+ep    2/1000 | loss 3.0123 | lr 3.34e-05 |  39.22s |      2549 img/s | kd 3.0123 agree 0.009 a 1.00

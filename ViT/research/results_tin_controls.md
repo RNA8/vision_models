@@ -53,3 +53,18 @@ Treat them as rough cost, not a speed comparison.
   the distilled 2.9M ViT (69.66; 1 seed each, within noise) at 3x the parameters. The ViT is the better
   accuracy-per-parameter model only once it is distilled; per FLOP the comparison is closer, since the CIFAR-stem
   ResNet runs full 64x64 resolution in its first stage.
+
+## CIFAR-100 counterpart (2026-10-15 22:30 UTC, `run_wave18.sh`)
+
+Same CNN recipe (lr 0.1 / wd 5e-4 from the Tiny-ImageNet screen, not re-screened on CIFAR-100), 1000 epochs, no teacher.
+
+| Run | Params | Top-1 | Minutes |
+|---|---|---|---|
+| `c100_r18w32_sgd_1000ep` (ResNet-18 width 32) | 2.83M | **78.59** (1 seed) | 158 |
+| ViT reference: `c100_spt_slvit_1000ep{,_s1,_s2}` | 2.75M | 80.91 ± 0.26 (3 seeds) | |
+| ViT distilled from its 3-seed ensemble | 2.75M | 82.77 ± 0.16 (3 seeds) | |
+
+On CIFAR-100 at 32 px the recipe-trained ViT is **+2.3 ahead** of a same-size ResNet-18 with no teacher on either
+side, unlike Tiny-ImageNet where they tie. Caveat: the CNN hyperparameters were screened on Tiny-ImageNet, so a
+CIFAR-specific screen could narrow the gap. The distilled-CNN counterpart (`c100_r18w32_kd_ens3_fm_1000ep`, same ViT
+teacher) is queued in `run_wave20.sh`.
