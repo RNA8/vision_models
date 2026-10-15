@@ -349,3 +349,182 @@ ep   86/100 | loss 2.4932 | lr 1.05e-02 |  36.53s |      2463 img/s
 ep   91/100 | loss 1.8989 | lr 4.41e-03 |  36.55s |      2462 img/s
 ep   87/100 | loss 2.4529 | lr 9.11e-03 |  36.56s |      2461 img/s
 ep   92/100 | loss 1.8858 | lr 3.49e-03 |  36.56s |      2461 img/s
+ep   88/100 | loss 2.4084 | lr 7.78e-03 |  36.57s |      2461 img/s
+ep   93/100 | loss 1.8731 | lr 2.68e-03 |  36.57s |      2461 img/s
+ep   89/100 | loss 2.3732 | lr 6.55e-03 |  36.56s |      2461 img/s
+ep   94/100 | loss 1.8525 | lr 1.97e-03 |  36.56s |      2461 img/s
+ep   90/100 | loss 2.3237 | lr 5.43e-03 |  36.58s |      2460 img/s | train acc  81.35 | val acc  64.52
+ep   95/100 | loss 1.8466 | lr 1.37e-03 |  36.59s |      2459 img/s
+ep   91/100 | loss 2.2850 | lr 4.41e-03 |  36.54s |      2463 img/s
+ep   96/100 | loss 1.8361 | lr 8.84e-04 |  36.63s |      2456 img/s
+ep   92/100 | loss 2.2474 | lr 3.49e-03 |  36.65s |      2455 img/s
+ep   97/100 | loss 1.8368 | lr 5.02e-04 |  36.54s |      2463 img/s
+ep   93/100 | loss 2.2143 | lr 2.68e-03 |  36.56s |      2461 img/s
+ep   98/100 | loss 1.8259 | lr 2.29e-04 |  36.57s |      2461 img/s
+ep   94/100 | loss 2.1727 | lr 1.97e-03 |  36.57s |      2460 img/s
+ep   99/100 | loss 1.8218 | lr 6.47e-05 |  36.59s |      2459 img/s
+ep   95/100 | loss 2.1487 | lr 1.37e-03 |  36.59s |      2459 img/s
+ep  100/100 | loss 1.8219 | lr 1.00e-05 |  36.59s |      2459 img/s | train acc  94.66 | val acc  67.29
+wandb: uploading history steps 98-98, summary, console lines 99-99; updating run metadata
+wandb: uploading history steps 99-99, summary, console lines 100-104
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▄▄▅▅▅▅▆▆▆▆▆▆▆▇▇▇▇▇███
+wandb:       epoch_sec █▁▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
+wandb:     img_per_sec █▂▂▁▂▂▂▂▂▂▂▂▂▂▂▂▂▃▂▂▂▃▂▂▂▃▃▃▄▃▃▃▃▄▃▃▃▃▃▃
+wandb:              lr ▂█████████▇▇▇▇▇▆▅▅▅▅▄▄▄▄▄▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁
+wandb: train_acc_clean ▁▂▃▄▄▅▆▇██
+wandb:      train_loss ███▇▇▆▆▆▆▆▆▆▆▆▆▆▆▅▅▅▃▃▃▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁
+wandb:         val_acc ▁▃▄▅▆▆▇███
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 67.29
+wandb:           epoch 100
+wandb:       epoch_sec 36.59175
+wandb:     img_per_sec 2459.13362
+wandb:              lr 1e-05
+wandb:   total_minutes 61.4701
+wandb: train_acc_clean 94.66
+wandb:      train_loss 1.82187
+wandb:         val_acc 67.29
+wandb: 
+wandb: 🚀 View run tin_r18_screen_lr0.2_wd1e-4 at: https://wandb.ai/softeye/vision_transformers/runs/d04e9ed4
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/tin_r18_screen_lr0.2_wd1e-4/wandb/run-20261015_075249-d04e9ed4/logs
+final test acc (scored once): 68.16%
+
+Done in 61.5 min. final val 67.29% | best val 67.29% | clean train 94.66%
+Steady state (excl. epoch 1): 36.64 s/epoch, 2,456 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/tin_r18_screen_lr0.2_wd1e-4
+ep   96/100 | loss 2.1243 | lr 8.84e-04 |  33.38s |      2696 img/s
+ep   97/100 | loss 2.1136 | lr 5.02e-04 |  27.27s |      3299 img/s
+ep   98/100 | loss 2.0909 | lr 2.29e-04 |  27.24s |      3303 img/s
+ep   99/100 | loss 2.0824 | lr 6.47e-05 |  27.17s |      3312 img/s
+ep  100/100 | loss 2.0814 | lr 1.00e-05 |  27.25s |      3303 img/s | train acc  86.77 | val acc  67.03
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▁▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▆▆▆▆▆▆▆▇▇▇▇▇▇██
+wandb:       epoch_sec █▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▄▁
+wandb:     img_per_sec ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃███
+wandb:              lr ▂▄▅▇██████▇▇▇▇▇▆▆▆▆▆▅▅▅▅▄▄▃▃▃▃▂▂▁▁▁▁▁▁▁▁
+wandb: train_acc_clean ▁▂▂▂▃▄▅▆▇█
+wandb:      train_loss █▇▇▇▇▇▇▇▇▇▆▇▆▆▆▆▆▆▆▆▆▆▆▆▄▃▃▃▃▃▃▂▂▂▂▂▂▂▁▁
+wandb:         val_acc ▁▂▃▃▄▅▆▇██
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 67.03
+wandb:           epoch 100
+wandb:       epoch_sec 27.2464
+wandb:     img_per_sec 3302.60146
+wandb:              lr 1e-05
+wandb:   total_minutes 61.03479
+wandb: train_acc_clean 86.77
+wandb:      train_loss 2.08137
+wandb:         val_acc 67.03
+wandb: 
+wandb: 🚀 View run tin_r18_screen_lr0.2_wd5e-4 at: https://wandb.ai/softeye/vision_transformers/runs/c79c6575
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/tin_r18_screen_lr0.2_wd5e-4/wandb/run-20261015_075518-c79c6575/logs
+final test acc (scored once): 68.11%
+
+Done in 61.0 min. final val 67.03% | best val 67.03% | clean train 86.77%
+Steady state (excl. epoch 1): 36.65 s/epoch, 2,455 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/tin_r18_screen_lr0.2_wd5e-4
+screen tin_r18_screen_lr0.1_wd1e-4: held-out val 66.63
+screen tin_r18_screen_lr0.1_wd5e-4: held-out val 67.35
+screen tin_r18_screen_lr0.2_wd1e-4: held-out val 67.29
+screen tin_r18_screen_lr0.2_wd5e-4: held-out val 67.03
+== CNN lr 0.1 wd 0.0005 (best held-out screen config)
+== start tin_r18w32_sgd_1000ep (Thu Oct 15 08:56:25 UTC 2026)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 66719c5b
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/tin_r18w32_sgd_1000ep/wandb/run-20261015_085635-66719c5b
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tin_r18w32_sgd_1000ep
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/66719c5b
+GPU: NVIDIA H100 PCIe
+Model: resnet18  params: 2.86M  train images: 100000  batch: 128  steps/epoch: 781
+ep    1/1000 | loss 5.2973 | lr 1.00e-02 |  54.45s |      1836 img/s  (includes torch.compile warm-up)
+== start tin_r18_sgd_1000ep (Thu Oct 15 08:57:55 UTC 2026)
+ep    2/1000 | loss 5.2286 | lr 2.00e-02 |  29.05s |      3441 img/s
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 7e90b37a
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/tin_r18_sgd_1000ep/wandb/run-20261015_085804-7e90b37a
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tin_r18_sgd_1000ep
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/7e90b37a
+ep    3/1000 | loss 5.1844 | lr 3.00e-02 |  36.27s |      2756 img/s
+GPU: NVIDIA H100 PCIe
+Model: resnet18  params: 11.27M  train images: 100000  batch: 128  steps/epoch: 781
+ep    1/1000 | loss 5.2850 | lr 1.00e-02 |  42.64s |      2344 img/s  (includes torch.compile warm-up)
+ep    4/1000 | loss 5.1450 | lr 4.00e-02 |  39.55s |      2527 img/s
+ep    2/1000 | loss 5.2143 | lr 2.00e-02 |  39.54s |      2528 img/s
+ep    5/1000 | loss 5.0889 | lr 5.00e-02 |  39.43s |      2535 img/s
+ep    3/1000 | loss 5.1769 | lr 3.00e-02 |  39.46s |      2534 img/s
+ep    6/1000 | loss 5.0317 | lr 6.00e-02 |  39.50s |      2531 img/s
+ep    4/1000 | loss 5.1207 | lr 4.00e-02 |  39.52s |      2530 img/s
+ep    7/1000 | loss 4.9834 | lr 7.00e-02 |  39.51s |      2530 img/s
+ep    5/1000 | loss 5.0691 | lr 5.00e-02 |  39.51s |      2530 img/s
+ep    8/1000 | loss 4.9428 | lr 8.00e-02 |  39.52s |      2530 img/s
+ep    6/1000 | loss 5.0113 | lr 6.00e-02 |  39.51s |      2530 img/s
+ep    9/1000 | loss 4.9002 | lr 9.00e-02 |  39.51s |      2530 img/s
+ep    7/1000 | loss 4.9659 | lr 7.00e-02 |  39.57s |      2526 img/s
+ep   10/1000 | loss 4.8599 | lr 1.00e-01 |  39.52s |      2529 img/s | train acc  13.67 | val acc  12.98
+ep    8/1000 | loss 4.9214 | lr 8.00e-02 |  39.63s |      2523 img/s
+ep   11/1000 | loss 4.8316 | lr 1.00e-01 |  39.62s |      2523 img/s
+ep    9/1000 | loss 4.8731 | lr 9.00e-02 |  39.67s |      2520 img/s
+ep   12/1000 | loss 4.8040 | lr 1.00e-01 |  39.45s |      2534 img/s
+ep   10/1000 | loss 4.8264 | lr 1.00e-01 |  39.49s |      2531 img/s | train acc  16.87 | val acc  16.01
+ep   13/1000 | loss 4.7651 | lr 1.00e-01 |  39.52s |      2529 img/s
+ep   11/1000 | loss 4.7925 | lr 1.00e-01 |  39.55s |      2528 img/s
+ep   14/1000 | loss 4.7402 | lr 1.00e-01 |  39.52s |      2529 img/s
+ep   12/1000 | loss 4.7607 | lr 1.00e-01 |  39.51s |      2530 img/s
+ep   15/1000 | loss 4.7197 | lr 1.00e-01 |  39.51s |      2530 img/s
+ep   13/1000 | loss 4.7131 | lr 1.00e-01 |  39.51s |      2531 img/s
+ep   16/1000 | loss 4.6893 | lr 1.00e-01 |  39.52s |      2529 img/s
+ep   14/1000 | loss 4.6846 | lr 1.00e-01 |  39.52s |      2530 img/s
+ep   17/1000 | loss 4.6748 | lr 1.00e-01 |  39.51s |      2530 img/s
+ep   15/1000 | loss 4.6583 | lr 1.00e-01 |  39.50s |      2531 img/s
+ep   18/1000 | loss 4.6364 | lr 1.00e-01 |  39.49s |      2531 img/s
+ep   16/1000 | loss 4.6212 | lr 1.00e-01 |  39.51s |      2530 img/s
+ep   19/1000 | loss 4.6363 | lr 1.00e-01 |  39.50s |      2531 img/s
+ep   17/1000 | loss 4.6034 | lr 1.00e-01 |  39.51s |      2530 img/s
+ep   20/1000 | loss 4.6084 | lr 1.00e-01 |  33.89s |      2950 img/s | train acc  24.55 | val acc  23.57
+ep   18/1000 | loss 4.5611 | lr 1.00e-01 |  30.09s |      3322 img/s
+ep   21/1000 | loss 4.5973 | lr 1.00e-01 |  28.87s |      3462 img/s
+ep   19/1000 | loss 4.5570 | lr 1.00e-01 |  28.88s |      3462 img/s
+== start tin_r18w56_sgd_1000ep (Thu Oct 15 09:10:26 UTC 2026)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 1c5179b8
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/tin_r18w56_sgd_1000ep/wandb/run-20261015_091036-1c5179b8
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tin_r18w56_sgd_1000ep
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/1c5179b8
+ep   22/1000 | loss 4.6019 | lr 1.00e-01 |  28.86s |      3464 img/s
+ep   20/1000 | loss 4.5226 | lr 1.00e-01 |  29.29s |      3413 img/s | train acc  26.86 | val acc  25.72
+ep   23/1000 | loss 4.6020 | lr 1.00e-01 |  34.33s |      2912 img/s
+ep   21/1000 | loss 4.5073 | lr 1.00e-01 |  38.15s |      2620 img/s
+GPU: NVIDIA H100 PCIe
+Model: resnet18  params: 8.65M  train images: 100000  batch: 128  steps/epoch: 781
+ep    1/1000 | loss 5.2877 | lr 1.00e-02 |  70.35s |      1421 img/s  (includes torch.compile warm-up)
+ep   24/1000 | loss 4.5713 | lr 1.00e-01 |  39.01s |      2563 img/s
+ep   22/1000 | loss 4.5132 | lr 1.00e-01 |  39.01s |      2562 img/s
+ep    2/1000 | loss 5.2132 | lr 2.00e-02 |  45.55s |      2195 img/s
+ep   25/1000 | loss 4.5539 | lr 9.99e-02 |  39.04s |      2560 img/s
+ep   23/1000 | loss 4.5111 | lr 1.00e-01 |  39.09s |      2558 img/s
+ep   26/1000 | loss 4.5490 | lr 9.99e-02 |  39.04s |      2561 img/s
+ep    3/1000 | loss 5.1759 | lr 3.00e-02 |  45.54s |      2195 img/s
+ep   24/1000 | loss 4.4778 | lr 1.00e-01 |  39.00s |      2563 img/s
