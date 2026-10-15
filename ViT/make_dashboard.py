@@ -1365,7 +1365,7 @@ def ch_wave1():
         row("  IN-21k-P, patch 4 at 64 px, KD, 120 ep fine-tune", "ec100_in21kpre_tiny_p4_64_kd_120ep", f"seed 1: {A('ec100_in21kpre_tiny_p4_64_kd_120ep_s1')}"),
         row("  IN-21k-P, patch 4 at 64 px, KD, 200 ep fine-tune", "ec100_in21kpre_tiny_p4_64_kd_200ep", "best pure ViT at 64 px input; +0.3 over 120 ep, near saturation"),
         row("  IN-21k-P pretraining itself, 60 ep (ViT-Tiny p8 at 64 px; val = IN-21k-P held-out)", "in21kpre_tiny_p8_e60", f"30 ep: {A('in21kpre_tiny_p8')}; ~36.7 GPU-hours at 4 jobs/GPU; its 200-ep KD fine-tune below"),
-        row("  IN-21k-P 60-ep pretrain init, patch 4 at 64 px, KD, 200 ep fine-tune", "ec100_in21kpre_e60_tiny_p4_64_kd_200ep", "ec100_in21kpre_tiny_p4_64_kd_200ep", "negative: 2x pretraining (+0.7 IN-21k val) gives -1.4 on CIFAR-100; behind at every eval (1 seed each)"),
+        row("  IN-21k-P 60-ep pretrain init, patch 4 at 64 px, KD, 200 ep fine-tune", "ec100_in21kpre_e60_tiny_p4_64_kd_200ep", f"negative: 30-ep init gives {A('ec100_in21kpre_tiny_p4_64_kd_200ep')}; 2x pretraining (+0.7 IN-21k val) costs 1.4 on CIFAR-100, behind at every eval (1 seed each)"),
         row("Dense IN-64 ViT-Tiny fine-tune, 30 ep, seed 1", "ec100_dense_in64pre_tiny_64_s1", f"seed 0: {A('ec100_in64pre_tiny_64')}"),
         row("Dense, 60 ep (equal-compute control)", "ec100_dense_in64pre_tiny_64_60ep"),
         row("MoE upcycled E4, 30 ep, seed 0", "ec100_upcyc_in64pre_tiny_e4_64", f"seed 1: {A('ec100_upcyc_in64pre_tiny_e4_64_s1')}"),
