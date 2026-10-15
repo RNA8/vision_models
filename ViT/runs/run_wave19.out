@@ -17,3 +17,11 @@ teacher val acc: 68.98%
 ep    1/1000 | loss 3.0238 | lr 1.00e-02 |  50.34s |      1986 img/s | kd 3.0238 agree 0.010 a 1.00  (includes torch.compile warm-up)
 ep    2/1000 | loss 2.9167 | lr 2.00e-02 |  44.11s |      2266 img/s | kd 2.9167 agree 0.021 a 1.00
 ep    3/1000 | loss 2.8480 | lr 3.00e-02 |  44.12s |      2266 img/s | kd 2.8480 agree 0.028 a 1.00
+ep    4/1000 | loss 2.7987 | lr 4.00e-02 |  44.06s |      2269 img/s | kd 2.7987 agree 0.034 a 1.00
+ep    5/1000 | loss 2.6615 | lr 5.00e-02 |  44.11s |      2266 img/s | kd 2.6615 agree 0.047 a 1.00
+ep    6/1000 | loss 2.6062 | lr 6.00e-02 |  44.05s |      2269 img/s | kd 2.6062 agree 0.057 a 1.00
+ep    7/1000 | loss 2.5092 | lr 7.00e-02 |  44.06s |      2269 img/s | kd 2.5092 agree 0.069 a 1.00
+ep    8/1000 | loss 2.4686 | lr 8.00e-02 |  44.24s |      2259 img/s | kd 2.4686 agree 0.080 a 1.00
+ep    9/1000 | loss 2.3965 | lr 9.00e-02 |  44.19s |      2262 img/s | kd 2.3965 agree 0.091 a 1.00
+ep   10/1000 | loss 2.3432 | lr 1.00e-01 |  44.14s |      2265 img/s | kd 2.3432 agree 0.104 a 1.00 | train acc  19.07 | val acc  18.03
+ep   11/1000 | loss 2.2692 | lr 1.00e-01 |  44.09s |      2267 img/s | kd 2.2692 agree 0.114 a 1.00
