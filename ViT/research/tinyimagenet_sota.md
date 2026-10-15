@@ -2,7 +2,7 @@
 
 Searched 2026-10-14. The question: is our 2.9M pure ViT (SL-ViT shape + SPT + LSA + SeqPool, patch 8, 64 px, 1000 epochs) the best published Tiny-ImageNet result at 10M parameters or fewer when trained only on Tiny-ImageNet?
 
-- Our numbers: **66.26** (2 seeds: 66.16, 66.36), and **68.09** for the same model distilled from one 66.16 copy of itself (born-again, function matching, 1 seed).
+- Our numbers: **66.26** (2 seeds: 66.16, 66.36), and **68.09** for the same model distilled from one 66.16 copy of itself (born-again, function matching, 1 seed). Update 2026-10-15: a second born-again seed (same teacher) gives 67.89, so the distilled 2-seed mean is **67.99 ± 0.14**; the comparisons below still hold (above 67.46 and 67.18, below 68.76 and 70.47).
 - "From scratch" here means no ImageNet or other external data. Self-supervised pretraining on Tiny-ImageNet itself is allowed but flagged [SSL]. Distillation from a teacher trained only on Tiny-ImageNet is allowed but flagged [KD].
 - Every number below was read from the paper's own table, using the PDF text or the arXiv HTML. Error rates were converted to accuracy (100 - error) where noted. Unless stated otherwise, "Tiny-ImageNet accuracy" means the official 10k validation set, which every paper here uses as its test set.
 

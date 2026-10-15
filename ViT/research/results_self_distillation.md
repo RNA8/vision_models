@@ -118,3 +118,16 @@ most of the gap on long schedules.
 - **E2 (CIFAR-only ResNet-18 teacher + DeiT hard KD):** skipped. `train_vit.py` only has AdamW (`make_optimizer`),
   and the plan's CNN recipe needs SGD 0.1 + nesterov. `--kd hard` is implemented and smoke-tested, so the hard-KD
   screen only needs a properly trained CNN teacher.
+
+## Smaller students (2026-10-15, `run_wave14.sh`)
+
+Same 3-seed ensemble teacher, same function-matching recipe, 1000 epochs, only the student width changes.
+
+| Run | Width / heads | Params | Final | Best | Minutes |
+|---|---|---|---|---|---|
+| `c100_kd_ens3_fm_d128_1000ep` | 128 / 8 | 1.25M | **81.39** | 81.45 | 274 |
+| `c100_kd_ens3_fm_d96_1000ep` | 96 / 6 | ~0.7M | running | | |
+
+The 1.25M student (1 seed) is above the undistilled 2.75M model (80.91 ± 0.26, 3 seeds) and above the best
+pure-ViT CIFAR-100 number we found in the literature (79.15, Gani et al.), at less than half the parameters.
+It is 1.4 below the 2.75M distilled student (82.77 ± 0.16).

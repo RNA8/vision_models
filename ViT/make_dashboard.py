@@ -1413,7 +1413,8 @@ def seeds_line():
                          ("CIFAR-10 ViT-Tiny + SPT, 1000 ep", ["c10_spt_tinyshape_1000ep", "c10_spt_tinyshape_1000ep_s1", "c10_spt_tinyshape_1000ep_s2"]),
                          ("CIFAR-10 SL-ViT + SPT (2.75M), 1000 ep", ["c10_spt_slvit_1000ep", "c10_spt_slvit_1000ep_s1", "c10_spt_slvit_1000ep_s2"]),
                          ("CIFAR-100 SL-ViT + SPT distilled from own 3-seed ensemble, 1000 ep", ["c100_kd_ens3_fm_1000ep", "c100_kd_ens3_fm_1000ep_s1", "c100_kd_ens3_fm_1000ep_s2"]),
-                         ("Tiny-ImageNet SL-ViT + SPT (2.9M), 1000 ep", ["tin_spt_slvit_p8_1000ep", "tin_spt_slvit_p8_1000ep_s1"])]:
+                         ("Tiny-ImageNet SL-ViT + SPT (2.9M), 1000 ep", ["tin_spt_slvit_p8_1000ep", "tin_spt_slvit_p8_1000ep_s1"]),
+                         ("Tiny-ImageNet 2.9M born-again distilled (teacher: seed-0 copy, 66.16), 1000 ep", ["tin_kd_ba_fm_1000ep", "tin_kd_ba_fm_1000ep_s1"])]:
         m = ms(names)
         if m:
             parts.append(f"{label}: <b>{m}</b>")
@@ -1429,6 +1430,7 @@ def ch_long():
         row("CIFAR-100, SL-ViT shape + SPT (full SL-ViT: SPT+LSA), 2.75M", "c100_spt_slvit_1000ep", "c100_spt_slvit_300ep", f"CCT hybrid {P('cct_c100')} (300 ep); SL-ViT {P('slvit_c100')}"),
         row("CIFAR-100, SL-ViT + SPT distilled from our own 3-seed ensemble (function matching, mix on), 2.75M, 1000 ep", "c100_kd_ens3_fm_1000ep", "c100_spt_slvit_1000ep", f"teacher = 3 x 2.75M pure ViTs, CIFAR-only; 300-ep screen {A('c100_kd_ens3_fm_300ep')} vs no-teacher mix-on control {A('c100_mixon_300ep')}; CCT 82.72 (1500 ep)"),
         row("CIFAR-100, multiscale pyramid tokens (64+16+4+1 = 85, shared projection), 300 ep", "c100_ms_shared_300ep", "c100_spt_slvit_300ep", f"seeds 1/2 {A('c100_ms_shared_300ep_s1')} / {A('c100_ms_shared_300ep_s2')}; baseline seed 2 {A('c100_spt_slvit_300ep_s2')}; per-scale proj {A('c100_ms_perscale_300ep')}; Laplacian {A('c100_ms_lap_300ep')}; 21-register control {A('c100_reg21_300ep')} / {A('c100_reg21_300ep_s1')}. No gain (RetinaViT, arXiv 2403.13677, is the same idea)"),
+        row("CIFAR-100, width-128 student (8 heads, 1.25M) distilled from the same 3-seed ensemble, 1000 ep", "c100_kd_ens3_fm_d128_1000ep", "c100_spt_slvit_1000ep", "less than half the params, +0.5 over the undistilled 2.75M 3-seed mean (80.91); Gani et al. pure ViT 79.15"),
         row("CIFAR-100, distilled from a 4-model teacher (3 seeds + 2000-ep run, ensemble 83.61), 2.75M, 1000 ep", "c100_kd_ens4_fm_1000ep", "c100_kd_ens3_fm_1000ep", "stronger teacher: +0.3 over the 3-model teacher's 3-seed mean 82.77 (1 seed, within ~2 std)"),
         row("CIFAR-100, SL-ViT + SPT, patch 2 (256 tokens, ~4x MACs), 2.75M, 1000 ep", "c100_spt_slvit_p2_1000ep", "c100_spt_slvit_1000ep", "token-count test: +1.1 over the patch-4 3-seed mean; CCT 82.72 at 1500 ep"),
         row("CIFAR-100, SL-ViT + SPT, 2000 ep (vs 1000 ep)", "c100_spt_slvit_2000ep", "c100_spt_slvit_1000ep", "saturated: +0.1 over the 1000-ep 3-seed mean"),
@@ -1440,7 +1442,7 @@ def ch_long():
         row("CIFAR-10, ViT-Tiny shape, 5.4M", "c10_tinyshape_bf3b_1000ep", "abl_tiny_shape", f"SL-ViT {P('slvit_c10')}; impulse-init ViT-Tiny {P('structinit_c10')}; CCT hybrid {P('cct_c10')} (300 ep), {P('cct5k_c10')} (5000 ep)"),
         row("Tiny-ImageNet 64 px, SL-ViT shape + SPT (patch 8), 2.9M, 300 ep", "tin_spt_slvit_p8_300ep", "tin_p4_tiny", f"SL-ViT {P('slvit_tin')}; Gani et al. {P('gani_tin')} (two-stage); our ResNet-18 {A('tin_r18_full')}"),
         row("Tiny-ImageNet 64 px, SL-ViT shape + SPT (patch 8), 2.9M, 1000 ep", "tin_spt_slvit_p8_1000ep", "tin_spt_slvit_p8_300ep", f"SL-ViT {P('slvit_tin')}; Gani et al. {P('gani_tin')}"),
-        row("Tiny-ImageNet, 2.9M distilled from one copy of itself (born-again, function matching), 1000 ep", "tin_kd_ba_fm_1000ep", "tin_spt_slvit_p8_1000ep", "teacher 66.16; student beats its own teacher by 1.9"),
+        row("Tiny-ImageNet, 2.9M distilled from one copy of itself (born-again, function matching), 1000 ep", "tin_kd_ba_fm_1000ep", "tin_spt_slvit_p8_1000ep", f"teacher 66.16; seed 1 {A('tin_kd_ba_fm_1000ep_s1')} (same teacher); 2-seed mean 67.99, +1.8 over its teacher"),
         row("Tiny-ImageNet 64 px, ViT-Tiny shape + SPT (patch 8), 5.4M, 300 ep", "tin_spt_tinyshape_p8_300ep", "tin_p4_tiny", ""),
         row("CIFAR-100, recurrent r8 add, 2.7M (500 ep vs 100 ep)", "c100_rd_r8_add_500ep", "c100_rd_r8_add", ""),
         row("CIFAR-100, flat 6-layer control (500 ep vs 100 ep)", "c100_rd_flat6_500ep", "c100_rd_flat6", ""),

@@ -1,0 +1,22 @@
+== start ec100_in21kpre_e60_tiny_p4_64_kd_200ep (Thu Oct 15 05:52:02 UTC 2026)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/ubuntu/.netrc.
+wandb: Currently logged in as: ravi-softeye (softeye) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /home/ubuntu/workspace/vision_models/ViT/runs/ec100_in21kpre_e60_tiny_p4_64_kd_200ep/wandb/run-20261015_055234-3b0a1cb8
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ec100_in21kpre_e60_tiny_p4_64_kd_200ep
+wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
+wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/3b0a1cb8
+GPU: NVIDIA H100 PCIe
+init-ckpt: loaded 164 tensors; dropped ['head.weight', 'head.bias']; re-initialised ['head.weight', 'head.bias']
+loaded runs/in21kpre_tiny_p8_e60/model.pt
+loaded runs/ec100_T_vitb_ar2_224/model_ema.pt
+teacher runs/ec100_T_vitb_ar2_224: 85.88M params, 224px, val acc 93.52
+Model: runs/in21kpre_tiny_p8_e60  params: 5.42M  input 32->64px  mean/std [0.485, 0.456, 0.406]/[0.229, 0.224, 0.225]  train images: 50000  batch: 256  steps/epoch: 195
+ep    1/200 | loss 3.1208 | lr 1.68e-04 |  68.12s |     733 img/s
+ep    2/200 | loss 2.7951 | lr 3.34e-04 |  58.94s |     847 img/s
+ep    3/200 | loss 2.6295 | lr 5.00e-04 |  58.92s |     847 img/s
+ep    4/200 | loss 2.4867 | lr 5.00e-04 |  55.75s |     895 img/s
+ep    5/200 | loss 2.4042 | lr 5.00e-04 |  43.52s |    1147 img/s | train acc  52.26 | val acc  51.05 | ema val  36.11
+ep    6/200 | loss 2.3115 | lr 5.00e-04 |  47.46s |    1052 img/s
+ep    7/200 | loss 2.2596 | lr 4.99e-04 |  57.36s |     870 img/s
