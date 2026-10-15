@@ -16,3 +16,25 @@ KD: {'teacher': '/home/ubuntu/workspace/vision_models/ViT/runs/tin_spt_slvit_p8_
 teacher val acc: 68.98%
 ep    1/1000 | loss 2.9489 | lr 1.67e-05 |  46.29s |      2160 img/s | kd 2.9489 agree 0.006 a 1.00  (includes torch.compile warm-up)
 ep    2/1000 | loss 3.0123 | lr 3.34e-05 |  39.22s |      2549 img/s | kd 3.0123 agree 0.009 a 1.00
+ep    3/1000 | loss 2.9271 | lr 5.00e-05 |  39.04s |      2561 img/s | kd 2.9271 agree 0.015 a 1.00
+ep    4/1000 | loss 2.8062 | lr 6.67e-05 |  39.20s |      2550 img/s | kd 2.8062 agree 0.025 a 1.00
+ep    5/1000 | loss 2.7990 | lr 8.34e-05 |  39.20s |      2550 img/s | kd 2.7990 agree 0.033 a 1.00
+ep    6/1000 | loss 2.7270 | lr 1.00e-04 |  39.23s |      2548 img/s | kd 2.7270 agree 0.037 a 1.00
+ep    7/1000 | loss 2.7092 | lr 1.17e-04 |  39.20s |      2550 img/s | kd 2.7092 agree 0.042 a 1.00
+ep    8/1000 | loss 2.6490 | lr 1.33e-04 |  39.19s |      2551 img/s | kd 2.6490 agree 0.050 a 1.00
+ep    9/1000 | loss 2.6023 | lr 1.50e-04 |  39.20s |      2550 img/s | kd 2.6023 agree 0.056 a 1.00
+ep   10/1000 | loss 2.5917 | lr 1.67e-04 |  39.19s |      2551 img/s | kd 2.5917 agree 0.061 a 1.00 | train acc  13.06 | val acc  12.14
+ep   11/1000 | loss 2.5745 | lr 1.83e-04 |  39.21s |      2550 img/s | kd 2.5745 agree 0.067 a 1.00
+ep   12/1000 | loss 2.4993 | lr 2.00e-04 |  39.19s |      2551 img/s | kd 2.4993 agree 0.071 a 1.00
+ep   13/1000 | loss 2.4967 | lr 2.17e-04 |  39.21s |      2550 img/s | kd 2.4967 agree 0.076 a 1.00
+ep   14/1000 | loss 2.4734 | lr 2.33e-04 |  39.24s |      2548 img/s | kd 2.4734 agree 0.081 a 1.00
+ep   15/1000 | loss 2.4423 | lr 2.50e-04 |  39.21s |      2550 img/s | kd 2.4423 agree 0.084 a 1.00
+ep   16/1000 | loss 2.4193 | lr 2.67e-04 |  39.24s |      2547 img/s | kd 2.4193 agree 0.089 a 1.00
+ep   17/1000 | loss 2.4070 | lr 2.83e-04 |  39.20s |      2550 img/s | kd 2.4070 agree 0.093 a 1.00
+ep   18/1000 | loss 2.3704 | lr 3.00e-04 |  39.21s |      2549 img/s | kd 2.3704 agree 0.097 a 1.00
+ep   19/1000 | loss 2.3298 | lr 3.17e-04 |  39.23s |      2548 img/s | kd 2.3298 agree 0.101 a 1.00
+ep   20/1000 | loss 2.3217 | lr 3.33e-04 |  39.21s |      2550 img/s | kd 2.3217 agree 0.104 a 1.00 | train acc  21.98 | val acc  20.77
+ep   21/1000 | loss 2.3087 | lr 3.50e-04 |  39.15s |      2553 img/s | kd 2.3087 agree 0.108 a 1.00
+ep   22/1000 | loss 2.2941 | lr 3.67e-04 |  39.22s |      2549 img/s | kd 2.2941 agree 0.112 a 1.00
+ep   23/1000 | loss 2.2702 | lr 3.83e-04 |  39.22s |      2549 img/s | kd 2.2702 agree 0.118 a 1.00
+ep   24/1000 | loss 2.2350 | lr 4.00e-04 |  39.19s |      2551 img/s | kd 2.2350 agree 0.118 a 1.00
