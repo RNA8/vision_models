@@ -30,7 +30,7 @@ differ, so this is only a hint. The 1000-epoch runs below settle it.
 | `tin_r18w56_sgd_1000ep` | 56 | 8.65M | **69.81** | 764 |
 | ViT reference: `tin_spt_slvit_p8_1000ep{,_s1}` | | 2.9M | 66.26 (2 seeds) | |
 | ViT distilled from a copy of itself: `tin_kd_ba_fm_1000ep{,_s1}` | | 2.9M | 67.99 (2 seeds) | |
-| ViT distilled from 2 copies of itself: `tin_kd_ens2_fm_1000ep` | | 2.9M | 69.66 (1 seed) | 657 |
+| ViT distilled from 2 copies of itself: `tin_kd_ens2_fm_1000ep{,_s1}` | | 2.9M | 69.48 ± 0.26 (2 seeds: 69.66 / 69.29) | 657 / 648 |
 
 GPU minutes are wall-clock with 4 jobs sharing one H100, so they depend on what else was running; the CNN runs
 shared the GPU with each other (~39 s/epoch), the ViT reference runs with lighter neighbours (~25-26 s/epoch).
@@ -42,15 +42,15 @@ Treat them as rough cost, not a speed comparison.
   66.16, 66.36). The 0.26 gap is inside seed noise. With the same augmentation/regularization stack and a tuned
   optimizer, the recipe-trained ViT matches a convnet of its size on 64 px Tiny-ImageNet, but does not beat it.
 - **The ViT's lead comes from distillation, not architecture.** Distilled from its own 2-model ensemble the ViT
-  reaches 69.66, +3.1 over the same-size ResNet. That comparison is not like-for-like (the ResNet had no teacher),
+  reaches 69.48 (2 seeds), +3.0 over the same-size ResNet. That comparison is not like-for-like (the ResNet had no teacher),
   so the fair follow-up is to distill the 2.86M ResNet from the same ViT ensemble (queued as
   `tin_r18w32_kd_ens2_fm_1000ep`, `run_wave19.sh`).
-- **A standard ResNet-18 (11.27M) is the best model here: 69.84** (1 seed), above our best distilled ViT (69.66)
+- **A standard ResNet-18 (11.27M) is the best model here: 69.84** (1 seed), above our best distilled ViT (69.48, 2 seeds)
   at ~4x the parameters, and above the published ResNet-18 + AdAutoMix (69.19, arXiv 2312.11954) with a plain
   recipe. So "best Tiny-ImageNet result under 10M parameters" claims for the ViT must say "pure transformer" and
   "at 2.9M"; a 11M convnet trained the same way still edges it.
 - **Under 10M, a convnet trained our way ties our best ViT.** ResNet-18 at width 56 (8.65M) gets 69.81, level with
-  the distilled 2.9M ViT (69.66; 1 seed each, within noise) at 3x the parameters. The ViT is the better
+  the distilled 2.9M ViT (69.48, 2 seeds; within noise) at 3x the parameters. The ViT is the better
   accuracy-per-parameter model only once it is distilled; per FLOP the comparison is closer, since the CIFAR-stem
   ResNet runs full 64x64 resolution in its first stage.
 

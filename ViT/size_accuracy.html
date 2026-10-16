@@ -146,7 +146,7 @@ const D = {
     y: [57.5, 71.5],
     frontier: [],
     pts: [
-      { id: "kd2", n: "Ours, 2.9M, distilled from 2 copies", p: 2.912, a: 69.66, c: "ours_kd", lab: "2.9M · 69.7", lx: -8, ly: -8, anchor: "end", note: "1000 ep, 1 seed; teacher ensemble 68.98", src: REPO + "/blob/main/ViT/research/tinyimagenet_sota.md" },
+      { id: "kd2", n: "Ours, 2.9M, distilled from 2 copies", p: 2.912, a: 69.48, c: "ours_kd", lab: "2.9M · 69.5", lx: -8, ly: -8, anchor: "end", note: "1000 ep, 2 seeds (69.66 / 69.29); teacher ensemble 68.98", src: REPO + "/blob/main/ViT/research/tinyimagenet_sota.md" },
       { id: "kd1", n: "Ours, 2.9M, distilled from 1 copy", p: 2.912, a: 67.99, c: "ours_kd", lab: "68.0", lx: -8, ly: 4, anchor: "end", note: "1000 ep, 2 seeds (68.09 / 67.89)", src: REPO + "/blob/main/ViT/research/tinyimagenet_sota.md" },
       { id: "pl", n: "Ours, 2.9M, no teacher", p: 2.912, a: 66.26, c: "ours_plain", lab: "66.3", lx: -8, ly: -3, anchor: "end", note: "1000 ep, 2 seeds (66.16 / 66.36)", src: REPO + "/blob/main/ViT/research/tinyimagenet_sota.md" },
       { id: "r18w32", n: "Our ResNet-18, width 32", p: 2.859, a: 66.52, c: "ours_cnn", lab: "ResNet-18 66.5", lx: -8, ly: 22, anchor: "end", note: "same recipe, SGD screened on held-out data, 1000 ep, 1 seed", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
@@ -177,7 +177,7 @@ const TAKE = [
   { k: "0.71M → 78.9%", t: "Our smallest distilled ViT beats published SL-ViT (76.9%, 2.9M) on CIFAR-100 at a quarter of the size (2 seeds)." },
   { k: "1.25M → 81.4%", t: "Half-size distilled ViT beats our own 2.75M model trained without a teacher (80.9%; 2 seeds)." },
   { k: "2.75M → 82.8%", t: "Pure ViT, no extra data, level with CCT (conv-tokenizer hybrid) at 1500–5000 epochs." },
-  { k: "Tiny-ImageNet 69.7%", t: "Best pure transformer ≤10M at 64 px we found. Our own ResNet-18 controls tie it: 66.5 vs 66.3 at the same size, 69.8 at 8.65M.", warn: true },
+  { k: "Tiny-ImageNet 69.5%", t: "Best pure transformer ≤10M at 64 px we found. Our own ResNet-18 controls tie it: 66.5 vs 66.3 at the same size, 69.8 at 8.65M.", warn: true },
 ];
 
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
