@@ -301,3 +301,5 @@ holdout: train 45000, val (held-out train) 5000, test 10000 scored at the end
 Model: resnet18  params: 2.83M  train images: 45000  batch: 128  steps/epoch: 351
 ep    1/100 | loss 4.5912 | lr 2.01e-02 |  13.26s |      3389 img/s  (includes torch.compile warm-up)
 ep    2/100 | loss 4.5089 | lr 4.01e-02 |   8.39s |      5357 img/s
+ep    3/100 | loss 4.4815 | lr 6.01e-02 |   8.39s |      5354 img/s
+ep    4/100 | loss 4.4524 | lr 8.01e-02 |   8.39s |      5358 img/s
