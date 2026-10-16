@@ -128,12 +128,13 @@ Same 3-seed ensemble teacher, same function-matching recipe, 1000 epochs, only t
 | `c100_kd_ens3_fm_d128_1000ep` | 128 / 8 | 1.25M | **81.39** | 81.45 | 274 |
 | `c100_kd_ens3_fm_d128_1000ep_s1` | 128 / 8 | 1.25M | **81.41** | 81.41 | 276 |
 | `c100_kd_ens3_fm_d96_1000ep` | 96 / 6 | 0.71M | **78.38** | 78.64 | 274 |
+| `c100_kd_ens3_fm_d96_1000ep_s1` | 96 / 6 | 0.71M | **79.36** | 79.55 | 268 |
 
 The 1.25M student (2 seeds: 81.39 / 81.41, mean 81.40) is above the undistilled 2.75M model (80.91 ± 0.26, 3 seeds) and above the best
 pure-ViT CIFAR-100 number we found in the literature (79.15, Gani et al.), at less than half the parameters.
 It is 1.4 below the 2.75M distilled student (82.77 ± 0.16). The 0.71M student (a quarter of the parameters) keeps
-78.38, which is still above SL-ViT's published 76.92 at 2.9M. Edge Pareto (distilled, CIFAR-100, 1 seed for the
-small ones): 0.71M 78.4 / 1.25M 81.4 / 2.75M 82.8.
+78.87 (2 seeds: 78.38 / 79.36), still above SL-ViT's published 76.92 at 2.9M. Edge Pareto (distilled, CIFAR-100,
+all multi-seed): 0.71M 78.9 / 1.25M 81.4 / 2.75M 82.8.
 
 ## Longer distillation (2026-10-15, `run_wave13.sh`)
 

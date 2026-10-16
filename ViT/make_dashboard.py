@@ -1415,6 +1415,7 @@ def seeds_line():
                          ("CIFAR-10 SL-ViT + SPT (2.75M), 1000 ep", ["c10_spt_slvit_1000ep", "c10_spt_slvit_1000ep_s1", "c10_spt_slvit_1000ep_s2"]),
                          ("CIFAR-100 SL-ViT + SPT distilled from own 3-seed ensemble, 1000 ep", ["c100_kd_ens3_fm_1000ep", "c100_kd_ens3_fm_1000ep_s1", "c100_kd_ens3_fm_1000ep_s2"]),
                          ("CIFAR-100 1.25M width-128 student, distilled, 1000 ep", ["c100_kd_ens3_fm_d128_1000ep", "c100_kd_ens3_fm_d128_1000ep_s1"]),
+                         ("CIFAR-100 0.71M width-96 student, distilled, 1000 ep", ["c100_kd_ens3_fm_d96_1000ep", "c100_kd_ens3_fm_d96_1000ep_s1"]),
                          ("Tiny-ImageNet SL-ViT + SPT (2.9M), 1000 ep", ["tin_spt_slvit_p8_1000ep", "tin_spt_slvit_p8_1000ep_s1"]),
                          ("Tiny-ImageNet 2.9M born-again distilled (teacher: seed-0 copy, 66.16), 1000 ep", ["tin_kd_ba_fm_1000ep", "tin_kd_ba_fm_1000ep_s1"])]:
         m = ms(names)

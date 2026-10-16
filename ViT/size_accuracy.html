@@ -97,7 +97,7 @@ const D = {
     y: [71, 84], yPre: [71, 91.5],
     frontier: ["kd071", "kd125", "kd275"],
     pts: [
-      { id: "kd071", n: "Ours, width 96", p: 0.713, a: 78.38, c: "ours_kd", lab: "0.71M · 78.4", lx: 8, ly: 16, note: "1000 ep, 1 seed (seed 2 running)", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
+      { id: "kd071", n: "Ours, width 96", p: 0.713, a: 78.87, c: "ours_kd", lab: "0.71M · 78.9", lx: 8, ly: 16, note: "1000 ep, 2 seeds (78.38 / 79.36)", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
       { id: "kd125", n: "Ours, width 128", p: 1.245, a: 81.39, c: "ours_kd", lab: "1.25M · 81.4", lx: -6, ly: -12, anchor: "end", note: "1000 ep, 2 seeds (81.39 / 81.41)", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
       { id: "kd275", n: "Ours, 2.75M", p: 2.753, a: 82.77, c: "ours_kd", lab: "2.75M · 82.8", lx: -8, ly: 9, anchor: "end", note: "1000 ep, 3 seeds (82.88 / 82.85 / 82.59)", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
       { id: "kd2k", n: "Ours, 2.75M, 2000 ep", p: 2.753, a: 83.15, c: "ours_kd", lab: "2000 ep · 83.2", lx: -8, ly: -6, anchor: "end", note: "2000 ep, 1 seed", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
@@ -173,8 +173,8 @@ const D = {
   },
 };
 const TAKE = [
-  { k: "0.71M → 78.4%", t: "Our smallest distilled ViT beats published SL-ViT (76.9%, 2.9M) on CIFAR-100 at a quarter of the size." },
-  { k: "1.25M → 81.4%", t: "Half-size distilled ViT beats our own 2.75M model trained without a teacher (80.9%)." },
+  { k: "0.71M → 78.9%", t: "Our smallest distilled ViT beats published SL-ViT (76.9%, 2.9M) on CIFAR-100 at a quarter of the size (2 seeds)." },
+  { k: "1.25M → 81.4%", t: "Half-size distilled ViT beats our own 2.75M model trained without a teacher (80.9%; 2 seeds)." },
   { k: "2.75M → 82.8%", t: "Pure ViT, no extra data, level with CCT (conv-tokenizer hybrid) at 1500–5000 epochs." },
   { k: "Tiny-ImageNet 69.7%", t: "Best pure transformer ≤10M at 64 px we found. Our own ResNet-18 controls tie it: 66.5 vs 66.3 at the same size, 69.8 at 8.65M.", warn: true },
 ];
