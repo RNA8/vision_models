@@ -5109,3 +5109,96 @@ ep 1941/2000 | loss 0.2117 | lr 1.11e-05 |  19.84s |      2516 img/s | kd 0.2117
 ep 1942/2000 | loss 0.2114 | lr 1.10e-05 |  19.84s |      2516 img/s | kd 0.2114 agree 0.810 a 1.00
 ep 1943/2000 | loss 0.2149 | lr 1.10e-05 |  19.84s |      2517 img/s | kd 0.2149 agree 0.804 a 1.00
 ep 1944/2000 | loss 0.2112 | lr 1.10e-05 |  19.91s |      2507 img/s | kd 0.2112 agree 0.804 a 1.00
+ep 1945/2000 | loss 0.2135 | lr 1.09e-05 |  19.84s |      2517 img/s | kd 0.2135 agree 0.805 a 1.00
+ep 1946/2000 | loss 0.2171 | lr 1.09e-05 |  19.83s |      2518 img/s | kd 0.2171 agree 0.800 a 1.00
+ep 1947/2000 | loss 0.2148 | lr 1.09e-05 |  19.84s |      2516 img/s | kd 0.2148 agree 0.800 a 1.00
+ep 1948/2000 | loss 0.2135 | lr 1.08e-05 |  19.83s |      2518 img/s | kd 0.2135 agree 0.804 a 1.00
+ep 1949/2000 | loss 0.2086 | lr 1.08e-05 |  19.84s |      2516 img/s | kd 0.2086 agree 0.809 a 1.00
+ep 1950/2000 | loss 0.2108 | lr 1.08e-05 |  19.82s |      2519 img/s | kd 0.2108 agree 0.808 a 1.00 | train acc  99.93 | val acc  82.93
+ep 1951/2000 | loss 0.2096 | lr 1.07e-05 |  19.85s |      2515 img/s | kd 0.2096 agree 0.808 a 1.00
+ep 1952/2000 | loss 0.2077 | lr 1.07e-05 |  19.83s |      2517 img/s | kd 0.2077 agree 0.812 a 1.00
+ep 1953/2000 | loss 0.2205 | lr 1.07e-05 |  19.84s |      2517 img/s | kd 0.2205 agree 0.793 a 1.00
+ep 1954/2000 | loss 0.2136 | lr 1.07e-05 |  19.83s |      2518 img/s | kd 0.2136 agree 0.805 a 1.00
+ep 1955/2000 | loss 0.2074 | lr 1.06e-05 |  19.82s |      2518 img/s | kd 0.2074 agree 0.809 a 1.00
+ep 1956/2000 | loss 0.2161 | lr 1.06e-05 |  19.83s |      2518 img/s | kd 0.2161 agree 0.798 a 1.00
+ep 1957/2000 | loss 0.2160 | lr 1.06e-05 |  19.84s |      2516 img/s | kd 0.2160 agree 0.800 a 1.00
+ep 1958/2000 | loss 0.2080 | lr 1.05e-05 |  19.84s |      2517 img/s | kd 0.2080 agree 0.811 a 1.00
+ep 1959/2000 | loss 0.2055 | lr 1.05e-05 |  19.83s |      2517 img/s | kd 0.2055 agree 0.815 a 1.00
+ep 1960/2000 | loss 0.2088 | lr 1.05e-05 |  19.81s |      2520 img/s | kd 0.2088 agree 0.812 a 1.00 | train acc  99.92 | val acc  83.01
+ep 1961/2000 | loss 0.2108 | lr 1.05e-05 |  19.84s |      2516 img/s | kd 0.2108 agree 0.806 a 1.00
+ep 1962/2000 | loss 0.2086 | lr 1.04e-05 |  19.83s |      2518 img/s | kd 0.2086 agree 0.810 a 1.00
+ep 1963/2000 | loss 0.2119 | lr 1.04e-05 |  19.83s |      2517 img/s | kd 0.2119 agree 0.805 a 1.00
+ep 1964/2000 | loss 0.2087 | lr 1.04e-05 |  19.91s |      2508 img/s | kd 0.2087 agree 0.812 a 1.00
+ep 1965/2000 | loss 0.2121 | lr 1.04e-05 |  19.76s |      2526 img/s | kd 0.2121 agree 0.806 a 1.00
+ep 1966/2000 | loss 0.2102 | lr 1.04e-05 |  19.77s |      2526 img/s | kd 0.2102 agree 0.805 a 1.00
+ep 1967/2000 | loss 0.2078 | lr 1.03e-05 |  19.76s |      2526 img/s | kd 0.2078 agree 0.813 a 1.00
+ep 1968/2000 | loss 0.2066 | lr 1.03e-05 |  19.75s |      2527 img/s | kd 0.2066 agree 0.812 a 1.00
+ep 1969/2000 | loss 0.2099 | lr 1.03e-05 |  19.76s |      2526 img/s | kd 0.2099 agree 0.806 a 1.00
+ep 1970/2000 | loss 0.2159 | lr 1.03e-05 |  19.76s |      2527 img/s | kd 0.2159 agree 0.798 a 1.00 | train acc  99.92 | val acc  83.02
+ep 1971/2000 | loss 0.2147 | lr 1.03e-05 |  19.83s |      2518 img/s | kd 0.2147 agree 0.803 a 1.00
+ep 1972/2000 | loss 0.2131 | lr 1.02e-05 |  19.82s |      2518 img/s | kd 0.2131 agree 0.806 a 1.00
+ep 1973/2000 | loss 0.2077 | lr 1.02e-05 |  19.83s |      2517 img/s | kd 0.2077 agree 0.811 a 1.00
+ep 1974/2000 | loss 0.2109 | lr 1.02e-05 |  19.83s |      2517 img/s | kd 0.2109 agree 0.807 a 1.00
+ep 1975/2000 | loss 0.2112 | lr 1.02e-05 |  19.83s |      2517 img/s | kd 0.2112 agree 0.807 a 1.00
+ep 1976/2000 | loss 0.2120 | lr 1.02e-05 |  19.84s |      2517 img/s | kd 0.2120 agree 0.806 a 1.00
+ep 1977/2000 | loss 0.2113 | lr 1.02e-05 |  19.84s |      2516 img/s | kd 0.2113 agree 0.805 a 1.00
+ep 1978/2000 | loss 0.2168 | lr 1.02e-05 |  19.80s |      2521 img/s | kd 0.2168 agree 0.796 a 1.00
+ep 1979/2000 | loss 0.2119 | lr 1.01e-05 |  19.77s |      2525 img/s | kd 0.2119 agree 0.803 a 1.00
+ep 1980/2000 | loss 0.2083 | lr 1.01e-05 |  19.76s |      2526 img/s | kd 0.2083 agree 0.812 a 1.00 | train acc  99.93 | val acc  82.98
+ep 1981/2000 | loss 0.2117 | lr 1.01e-05 |  19.83s |      2517 img/s | kd 0.2117 agree 0.803 a 1.00
+ep 1982/2000 | loss 0.2147 | lr 1.01e-05 |  19.85s |      2515 img/s | kd 0.2147 agree 0.800 a 1.00
+ep 1983/2000 | loss 0.2075 | lr 1.01e-05 |  19.84s |      2516 img/s | kd 0.2075 agree 0.809 a 1.00
+ep 1984/2000 | loss 0.2125 | lr 1.01e-05 |  19.90s |      2508 img/s | kd 0.2125 agree 0.805 a 1.00
+ep 1985/2000 | loss 0.2096 | lr 1.01e-05 |  19.83s |      2518 img/s | kd 0.2096 agree 0.806 a 1.00
+ep 1986/2000 | loss 0.2039 | lr 1.01e-05 |  19.63s |      2543 img/s | kd 0.2039 agree 0.817 a 1.00
+ep 1987/2000 | loss 0.2087 | lr 1.01e-05 |  19.85s |      2515 img/s | kd 0.2087 agree 0.808 a 1.00
+ep 1988/2000 | loss 0.2160 | lr 1.00e-05 |  19.84s |      2516 img/s | kd 0.2160 agree 0.801 a 1.00
+ep 1989/2000 | loss 0.2111 | lr 1.00e-05 |  19.84s |      2517 img/s | kd 0.2111 agree 0.806 a 1.00
+ep 1990/2000 | loss 0.2134 | lr 1.00e-05 |  19.82s |      2519 img/s | kd 0.2134 agree 0.801 a 1.00 | train acc  99.90 | val acc  83.03
+ep 1991/2000 | loss 0.2111 | lr 1.00e-05 |  19.84s |      2516 img/s | kd 0.2111 agree 0.808 a 1.00
+ep 1992/2000 | loss 0.2076 | lr 1.00e-05 |  19.83s |      2518 img/s | kd 0.2076 agree 0.810 a 1.00
+ep 1993/2000 | loss 0.2034 | lr 1.00e-05 |  19.83s |      2517 img/s | kd 0.2034 agree 0.815 a 1.00
+ep 1994/2000 | loss 0.2116 | lr 1.00e-05 |  19.83s |      2518 img/s | kd 0.2116 agree 0.804 a 1.00
+ep 1995/2000 | loss 0.2053 | lr 1.00e-05 |  19.83s |      2517 img/s | kd 0.2053 agree 0.812 a 1.00
+ep 1996/2000 | loss 0.2106 | lr 1.00e-05 |  19.84s |      2517 img/s | kd 0.2106 agree 0.807 a 1.00
+ep 1997/2000 | loss 0.2134 | lr 1.00e-05 |  19.84s |      2516 img/s | kd 0.2134 agree 0.799 a 1.00
+ep 1998/2000 | loss 0.2124 | lr 1.00e-05 |  19.85s |      2515 img/s | kd 0.2124 agree 0.807 a 1.00
+ep 1999/2000 | loss 0.2135 | lr 1.00e-05 |  19.84s |      2517 img/s | kd 0.2135 agree 0.801 a 1.00
+ep 2000/2000 | loss 0.2108 | lr 1.00e-05 |  19.83s |      2518 img/s | kd 0.2108 agree 0.803 a 1.00 | train acc  99.93 | val acc  82.89
+wandb: updating run metadata
+wandb: uploading config.yaml; uploading output.log; uploading wandb-summary.json
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▂▃▃▃▃▃▃▃▃▃▄▄▄▄▄▄▅▅▅▆▆▆▆▆▆▆▇▇█████
+wandb:       epoch_sec ▆▇███████████████████████▆▆▆▆▆▆▆▁▁██████
+wandb:     img_per_sec ▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂█▁▁▁▁▁▁▁▁▁
+wandb:        kd_agree ▁▁▃▅▅▅▆▆▆▆▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇██████████
+wandb:        kd_alpha ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         kd_loss █▇▄▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:              lr ▄███████▇▇▇▇▇▆▆▅▅▅▅▅▄▄▄▃▃▃▃▃▃▃▂▂▁▁▁▁▁▁▁▁
+wandb: train_acc_clean ▁▂▄▅▆▇▇█████████████████████████████████
+wandb:      train_loss █▅▄▄▄▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁
+wandb:         val_acc ▁▃▆▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇████████████████████
+wandb: 
+wandb: Run summary:
+wandb:    best_val_acc 83.12
+wandb:           epoch 2000
+wandb:       epoch_sec 19.82586
+wandb:     img_per_sec 2517.92401
+wandb:        kd_agree 0.80315
+wandb:        kd_alpha 1
+wandb:         kd_loss 0.21078
+wandb:              lr 1e-05
+wandb:   total_minutes 648.89072
+wandb: train_acc_clean 99.93
+wandb:              +2 ...
+wandb: 
+wandb: 🚀 View run c100_kd_ens3_fm_2000ep_s1 at: https://wandb.ai/softeye/vision_transformers/runs/6b3476bf
+wandb: ⭐️ View project at: https://wandb.ai/softeye/vision_transformers
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./runs/c100_kd_ens3_fm_2000ep_s1/wandb/run-20261015_213419-6b3476bf/logs
+
+Done in 648.9 min. final val 82.89% | best val 83.12% | clean train 99.93%
+Steady state (excl. epoch 1): 19.68 s/epoch, 2,536 img/s
+Saved results.json and model.pt to /home/ubuntu/workspace/vision_models/ViT/runs/c100_kd_ens3_fm_2000ep_s1
+== run_wave18 finished Fri Oct 16 08:23:21 UTC 2026

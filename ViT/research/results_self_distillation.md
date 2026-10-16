@@ -141,9 +141,11 @@ all multi-seed): 0.71M 78.9 / 1.25M 81.4 / 2.75M 82.8.
 | Run | Epochs | Final | Best | Minutes |
 |---|---|---|---|---|
 | `c100_kd_ens3_fm_2000ep` | 2000 | **83.15** | 83.27 | 654 |
+| `c100_kd_ens3_fm_2000ep_s1` | 2000 | **82.89** | 83.12 | 649 |
+| **2-seed mean at 2000 ep** | 2000 | **83.02 ± 0.18** | | |
 | 3-seed mean at 1000 ep | 1000 | 82.77 ± 0.16 | | ~330 |
 
-Doubling the distillation schedule adds +0.38 (1 seed, about 2.4 seed-std), unlike plain training, where 2000 epochs
-added only +0.07 over 1000. With a teacher the extra epochs keep paying because the target is the teacher's soft output
-on each new augmented view, not a fixed label. 83.15 is above CCT-7/3x1 at 5000 epochs (82.87), still with a 2.75M pure
-ViT and no extra data.
+Doubling the distillation schedule adds +0.25 (2 seeds; the first seed alone suggested +0.38), against +0.07 for
+plain training. With a teacher the extra epochs keep paying because the target is the teacher's soft output
+on each new augmented view, not a fixed label. The 2-seed mean 83.02 is level with or just above CCT-7/3x1 at 5000 epochs (82.87), still with a
+2.75M pure ViT and no extra data.
