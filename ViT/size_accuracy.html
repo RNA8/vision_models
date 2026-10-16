@@ -93,7 +93,7 @@ const CAT = {
 const D = {
   c100: {
     title: "CIFAR-100, trained from scratch",
-    sub: "Distillation moves the whole family up: the 1.25M student beats our 2.75M model trained without a teacher, and the 2.75M student matches CCT, a conv-tokenizer hybrid, at 1500–5000 epochs. A same-size ResNet-18 trained with our recipe gets 78.6%, 2.3 below our ViT without a teacher.",
+    sub: "Distillation moves the whole family up: the 1.25M student beats our 2.75M model trained without a teacher, and the 2.75M student matches CCT, a conv-tokenizer hybrid, at 1500–5000 epochs. A same-size ResNet-18 trained with our recipe gets 78.6% (79.5% distilled from the same teacher), below our ViT in both cases.",
     y: [71, 84], yPre: [71, 91.5],
     frontier: ["kd071", "kd125", "kd275"],
     pts: [
@@ -103,6 +103,7 @@ const D = {
       { id: "kd2k", n: "Ours, 2.75M, 2000 ep", p: 2.753, a: 83.15, c: "ours_kd", lab: "2000 ep · 83.2", lx: -8, ly: -6, anchor: "end", note: "2000 ep, 1 seed", src: REPO + "/blob/main/ViT/research/results_self_distillation.md" },
       { id: "pl275", n: "Ours, 2.75M, no teacher", p: 2.753, a: 80.91, c: "ours_plain", lab: "80.9", lx: -8, ly: 4, anchor: "end", note: "1000 ep, 3 seeds (80.66 / 81.17 / 80.91)", src: REPO + "/blob/main/README.md" },
       { id: "r18c100", n: "Our ResNet-18, width 32", p: 2.833, a: 78.59, c: "ours_cnn", lab: "ResNet-18 78.6", lx: 9, ly: 16, note: "same recipe, no teacher, 1 seed; lr/wd from the Tiny-ImageNet screen", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
+      { id: "r18c100kd", n: "Our ResNet-18, width 32, distilled from our ViT ensemble", p: 2.833, a: 79.54, c: "ours_cnn", lab: "", note: "same teacher as our 2.75M ViT student, 1 seed; the ViT student gets 82.77", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
       { id: "pl54", n: "Ours, ViT-Tiny shape, no teacher", p: 5.418, a: 79.30, c: "ours_plain", lab: "5.4M · 79.3", lx: 8, ly: 4, note: "1000 ep, 1 seed; wider is not better here", src: REPO + "/blob/main/README.md" },
       { id: "cct5k", n: "CCT-7/3x1, 5000 ep", p: 3.76, a: 82.87, c: "pub_hyb", lab: "CCT 5000 ep", lx: 8, ly: -8, note: "conv tokenizer", src: "https://arxiv.org/abs/2104.05704" },
       { id: "cct", n: "CCT-7/3x1, 300 ep", p: 3.76, a: 80.92, c: "pub_hyb", lab: "CCT 300 ep", lx: 8, ly: 12, note: "conv tokenizer; 82.72 at 1500 ep", src: "https://arxiv.org/abs/2104.05704" },

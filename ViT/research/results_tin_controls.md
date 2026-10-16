@@ -62,9 +62,15 @@ Same CNN recipe (lr 0.1 / wd 5e-4 from the Tiny-ImageNet screen, not re-screened
 |---|---|---|---|
 | `c100_r18w32_sgd_1000ep` (ResNet-18 width 32) | 2.83M | **78.59** (1 seed) | 158 |
 | ViT reference: `c100_spt_slvit_1000ep{,_s1,_s2}` | 2.75M | 80.91 ± 0.26 (3 seeds) | |
+| `c100_r18w32_kd_ens3_fm_1000ep` (ResNet-18 width 32, distilled from the same ViT ensemble, 83.27) | 2.83M | **79.54** (1 seed) | 275 |
 | ViT distilled from its 3-seed ensemble | 2.75M | 82.77 ± 0.16 (3 seeds) | |
 
 On CIFAR-100 at 32 px the recipe-trained ViT is **+2.3 ahead** of a same-size ResNet-18 with no teacher on either
 side, unlike Tiny-ImageNet where they tie. Caveat: the CNN hyperparameters were screened on Tiny-ImageNet, so a
 CIFAR-specific screen could narrow the gap. The distilled-CNN counterpart (`c100_r18w32_kd_ens3_fm_1000ep`, same ViT
 teacher) is queued in `run_wave20.sh`.
+
+**Distilled-student result (2026-10-16 05:05 UTC):** with the same ViT teacher and the same function-matching setup,
+the ResNet student reaches 79.54 (+0.95 from distillation), the ViT student 82.77 (+1.86). The ViT stays 3.2 ahead.
+Caveat: the teacher is a ViT, and students that share the teacher's architecture usually distill better, so this
+measures "best student for this teacher" as much as architecture.
