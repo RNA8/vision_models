@@ -28,6 +28,7 @@ differ, so this is only a hint. The 1000-epoch runs below settle it.
 | `tin_r18w32_sgd_1000ep` | 32 | 2.86M | **66.52** (best 66.67) | 657 |
 | `tin_r18_sgd_1000ep` | 64 | 11.27M | **69.84** | 659 |
 | `tin_r18w56_sgd_1000ep` | 56 | 8.65M | **69.81** | 764 |
+| `tin_r18w32_kd_ens2_fm_1000ep` (width 32, distilled from the 2-ViT ensemble, 68.98) | 32 | 2.86M | **67.18** | 750 |
 | ViT reference: `tin_spt_slvit_p8_1000ep{,_s1}` | | 2.9M | 66.26 (2 seeds) | |
 | ViT distilled from a copy of itself: `tin_kd_ba_fm_1000ep{,_s1}` | | 2.9M | 67.99 (2 seeds) | |
 | ViT distilled from 2 copies of itself: `tin_kd_ens2_fm_1000ep{,_s1}` | | 2.9M | 69.48 ± 0.26 (2 seeds: 69.66 / 69.29) | 657 / 648 |
@@ -43,8 +44,10 @@ Treat them as rough cost, not a speed comparison.
   optimizer, the recipe-trained ViT matches a convnet of its size on 64 px Tiny-ImageNet, but does not beat it.
 - **The ViT's lead comes from distillation, not architecture.** Distilled from its own 2-model ensemble the ViT
   reaches 69.48 (2 seeds), +3.0 over the same-size ResNet. That comparison is not like-for-like (the ResNet had no teacher),
-  so the fair follow-up is to distill the 2.86M ResNet from the same ViT ensemble (queued as
-  `tin_r18w32_kd_ens2_fm_1000ep`, `run_wave19.sh`).
+  so the fair follow-up distilled the 2.86M ResNet from the same ViT ensemble (`tin_r18w32_kd_ens2_fm_1000ep`):
+  **67.18**, only +0.66 from the teacher against +3.2 for the ViT student. With the same teacher the ViT student is
+  2.3 ahead. Caveat: the teacher is a ViT, which may favour a ViT student; CIFAR-100 shows the same pattern
+  (ResNet +0.95, ViT +1.86).
 - **A standard ResNet-18 (11.27M) is the best model here: 69.84** (1 seed), above our best distilled ViT (69.48, 2 seeds)
   at ~4x the parameters, and above the published ResNet-18 + AdAutoMix (69.19, arXiv 2312.11954) with a plain
   recipe. So "best Tiny-ImageNet result under 10M parameters" claims for the ViT must say "pure transformer" and
