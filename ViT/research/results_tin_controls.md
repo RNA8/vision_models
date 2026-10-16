@@ -93,7 +93,7 @@ Best is lr 0.1 / wd 5e-4, the setting already used for `c100_r18w32_sgd_1000ep` 
 
 | Run | Params | Top-1 | Minutes |
 |---|---|---|---|
-| `c10_r18w32_sgd_1000ep` (ResNet-18 width 32, lr 0.1 / wd 5e-4) | 2.81M | **96.12** (1 seed; seed 2 in `run_wave25.sh`) | 127 |
+| `c10_r18w32_sgd_1000ep` (ResNet-18 width 32, lr 0.1 / wd 5e-4) | 2.81M | **96.16 ± 0.06** (2 seeds: 96.12 / 96.20) | 127 / 84 |
 | ViT reference: `c10_spt_slvit_1000ep{,_s1,_s2}` | 2.74M | 96.75 ± 0.26 (3 seeds) | |
 
 Same size, no teacher: the ViT is +0.6 ahead on CIFAR-10 (lr/wd taken from the CIFAR-100 / Tiny-ImageNet screens).

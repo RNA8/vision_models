@@ -521,7 +521,7 @@ def main():
           "## Compute summary", "", "| section | runs done | pending | GPU minutes | cost |", "|---|---|---|---|---|"]
     for s in secs:
         md.append(f"| {s['title']} | {s['n']} | {s['pending']} | {s['minutes']:.1f} | ${cost(s['minutes']):.2f} |")
-    md.append(f"| **Total (sum of run-minutes)** | {len(runs)} | {sum(s['pending'] for s in secs)} | **{total_min:.1f}** ({total_min/60:.2f} h) | ${cost(total_min):.2f} at ${args.rate}/h (upper bound) |")
+    md.append(f"| **Total (sum of run-minutes)** | {len(runs)} | {sum(s['pending'] for s in secs)} | **{total_min:.1f}** ({total_min/60:.2f} h) | ${cost(total_min):.2f} at ${args.rate}/h (sum of run-minutes; overstates cost when runs share the GPU) |")
     iv = run_intervals(args.runs_dir, runs)
     wc = wallclock(iv)
     fmt = lambda t: datetime.datetime.fromtimestamp(t).strftime("%Y-%m-%d %H:%M")
@@ -530,9 +530,14 @@ def main():
         n_run = sum(1 for i in iv if i[2].endswith("(running)"))
         run_min = sum((i[1] - i[0]) / 60 for i in iv if i[2].endswith("(running)"))
         wc_done = wallclock([i for i in iv if not i[2].endswith("(running)")])
-        why = (f"Completed runs rarely overlapped (peak {wc_done['max_conc']}), so the span exceeds the sum of run-minutes by idle gaps and "
-               f"startup/eval time (the sum will overstate wall-clock once the concurrent queues complete); "
-               f"{n_run} runs currently in progress ({run_min:.0f} min elapsed so far; peak concurrency now {wc['max_conc']}) are counted in the span but not in the sum")
+        if total_min > wc['span_min']:
+            why = (f"Runs shared the GPU (up to {wc_done['max_conc']} at once, usually 4), so the sum of run-minutes is "
+                   f"{total_min / wc['span_min']:.1f}x the wall-clock span and overstates cost; the wall-clock figure is the real GPU bill")
+        else:
+            why = (f"Completed runs rarely overlapped (peak {wc_done['max_conc']}), so the span exceeds the sum of run-minutes by idle gaps and "
+                   f"startup/eval time")
+        if n_run:
+            why += f"; {n_run} runs currently in progress ({run_min:.0f} min elapsed so far) are counted in the span but not in the sum"
         wc_lines = [
             f"**Wall-clock (estimated, counting in-progress runs up to now):** {wc['span_min']:.0f} min ({wc['span_min']/60:.2f} h) from the earliest run start ({fmt(wc['start'])}) "
             f"to the latest run end ({fmt(wc['end'])}); **GPU cost on wall-clock: ${cost(wc['span_min']):.2f}** at ${args.rate}/h.",
