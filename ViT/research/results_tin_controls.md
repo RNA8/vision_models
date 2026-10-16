@@ -88,3 +88,12 @@ measures "best student for this teacher" as much as architecture.
 
 Best is lr 0.1 / wd 5e-4, the setting already used for `c100_r18w32_sgd_1000ep` (78.59) and its distilled twin
 (79.54), so no rerun was needed and the CIFAR-100 CNN control stands as a tuned baseline.
+
+## CIFAR-10 counterpart (2026-10-16 11:35 UTC, `run_wave23.sh`)
+
+| Run | Params | Top-1 | Minutes |
+|---|---|---|---|
+| `c10_r18w32_sgd_1000ep` (ResNet-18 width 32, lr 0.1 / wd 5e-4) | 2.81M | **96.12** (1 seed; seed 2 in `run_wave25.sh`) | 127 |
+| ViT reference: `c10_spt_slvit_1000ep{,_s1,_s2}` | 2.74M | 96.75 ± 0.26 (3 seeds) | |
+
+Same size, no teacher: the ViT is +0.6 ahead on CIFAR-10 (lr/wd taken from the CIFAR-100 / Tiny-ImageNet screens).

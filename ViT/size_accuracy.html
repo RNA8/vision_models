@@ -122,12 +122,13 @@ const D = {
   },
   c10: {
     title: "CIFAR-10, trained from scratch",
-    sub: "At 2.75M the recipe alone reaches 96.8%, level with our 5.4M model; distillation adds half a point. CCT's 98.0% needs 5000 epochs and a conv tokenizer.",
+    sub: "At 2.75M the recipe alone reaches 96.8%, level with our 5.4M model; distillation adds half a point. A same-size ResNet-18 trained our way gets 96.1%. CCT's 98.0% needs 5000 epochs and a conv tokenizer.",
     y: [87, 98.6],
     frontier: [],
     pts: [
       { id: "kd", n: "Ours, 2.75M, distilled", p: 2.735, a: 97.22, c: "ours_kd", lab: "2.75M · 97.2", lx: -8, ly: -8, anchor: "end", note: "1000 ep, 1 seed; teacher = our 3 seeds (97.28)", src: REPO + "/blob/main/README.md" },
       { id: "pl", n: "Ours, 2.75M, no teacher", p: 2.735, a: 96.75, c: "ours_plain", lab: "96.8", lx: -8, ly: 12, anchor: "end", note: "1000 ep, 3 seeds (97.03 / 96.51 / 96.71)", src: REPO + "/blob/main/README.md" },
+      { id: "r18c10", n: "Our ResNet-18, width 32", p: 2.81, a: 96.12, c: "ours_cnn", lab: "ResNet-18 96.1", lx: 9, ly: 16, note: "same recipe, no teacher, 1 seed (seed 2 running)", src: REPO + "/blob/main/ViT/research/results_tin_controls.md" },
       { id: "pl54", n: "Ours, ViT-Tiny shape + SPT", p: 5.4, a: 96.87, c: "ours_plain", lab: "5.4M · 96.9", lx: 8, ly: 4, note: "1000 ep, 3 seeds", src: REPO + "/blob/main/README.md" },
       { id: "cct5k", n: "CCT-7/3x1, 5000 ep", p: 3.76, a: 98.00, c: "pub_hyb", lab: "CCT 5000 ep", lx: 8, ly: 4, note: "conv tokenizer", src: "https://arxiv.org/abs/2104.05704" },
       { id: "cct", n: "CCT-7/3x1, 300 ep", p: 3.76, a: 96.53, c: "pub_hyb", lab: "CCT 300 ep", lx: 8, ly: 14, note: "conv tokenizer; 97.48 at 1500 ep", src: "https://arxiv.org/abs/2104.05704" },
