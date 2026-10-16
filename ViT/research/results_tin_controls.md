@@ -63,7 +63,7 @@ Same CNN recipe (lr 0.1 / wd 5e-4 from the Tiny-ImageNet screen, not re-screened
 
 | Run | Params | Top-1 | Minutes |
 |---|---|---|---|
-| `c100_r18w32_sgd_1000ep` (ResNet-18 width 32) | 2.83M | **78.59** (1 seed) | 158 |
+| `c100_r18w32_sgd_1000ep{,_s1}` (ResNet-18 width 32) | 2.83M | **78.81 ± 0.30** (2 seeds: 78.59 / 79.02) | 158 / 149 |
 | ViT reference: `c100_spt_slvit_1000ep{,_s1,_s2}` | 2.75M | 80.91 ± 0.26 (3 seeds) | |
 | `c100_r18w32_kd_ens3_fm_1000ep` (ResNet-18 width 32, distilled from the same ViT ensemble, 83.27) | 2.83M | **79.54** (1 seed) | 275 |
 | ViT distilled from its 3-seed ensemble | 2.75M | 82.77 ± 0.16 (3 seeds) | |
