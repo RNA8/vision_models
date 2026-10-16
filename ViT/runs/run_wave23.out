@@ -8,3 +8,17 @@ wandb: Run `wandb offline` to turn off syncing.
 wandb: Syncing run c100_kd_ens3_fm_d128_1000ep_s2
 wandb: ⭐️ View project at https://wandb.ai/softeye/vision_transformers
 wandb: 🚀 View run at https://wandb.ai/softeye/vision_transformers/runs/f48b34f3
+GPU: NVIDIA H100 PCIe
+Model: slvit  params: 1.25M  train images: 50000  batch: 128  steps/epoch: 390
+teacher /home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep: slvit 2.75M
+teacher /home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep_s1: slvit 2.75M
+teacher /home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep_s2: slvit 2.75M
+KD: {'teacher': '/home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep,/home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep_s1,/home/ubuntu/workspace/vision_models/ViT/runs/c100_spt_slvit_1000ep_s2', 'self_kd': None, 'kd': 'soft', 'kd_tau': 1.0, 'n_teachers': 3, 'teacher_params_M': 8.257875} alpha 1.0
+teacher val acc: 83.27%
+ep    1/1000 | loss 2.9235 | lr 1.67e-05 |  24.26s |      2058 img/s | kd 2.9235 agree 0.011 a 1.00  (includes torch.compile warm-up)
+ep    2/1000 | loss 2.9171 | lr 3.34e-05 |  16.47s |      3030 img/s | kd 2.9171 agree 0.012 a 1.00
+ep    3/1000 | loss 2.8952 | lr 5.00e-05 |  16.48s |      3028 img/s | kd 2.8952 agree 0.018 a 1.00
+ep    4/1000 | loss 2.8216 | lr 6.67e-05 |  16.47s |      3030 img/s | kd 2.8216 agree 0.030 a 1.00
+ep    5/1000 | loss 2.7688 | lr 8.34e-05 |  16.46s |      3033 img/s | kd 2.7688 agree 0.040 a 1.00
+ep    6/1000 | loss 2.7098 | lr 1.00e-04 |  16.53s |      3021 img/s | kd 2.7098 agree 0.047 a 1.00
+ep    7/1000 | loss 2.7110 | lr 1.17e-04 |  16.53s |      3020 img/s | kd 2.7110 agree 0.052 a 1.00
